@@ -26,7 +26,7 @@ const Home = () => {
         <Link to="/testing-component">Testing Component</Link>
         <Link to="/general">General</Link>
         <Link to="/project">Project</Link>
-
+        <Link to="/typescript">Typescript</Link>
       </div>
       
     </>

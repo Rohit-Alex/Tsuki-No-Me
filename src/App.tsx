@@ -10,6 +10,7 @@ import Navigation from './Components/Navigation';
 import MultilingualHeader from './Components/MultilingualHeader/MultilingualHeader';
 import ReduxComponent from './Components/ReduxComponent/reduxComponent';
 import Project from './Components/Project/project';
+import Typescript from './Components/Typescript/Typescript';
 const queryClient = new QueryClient()
 
 
@@ -59,6 +60,7 @@ function App() {
               <Route path='course' element={<LearnCourses />}/> */}
             <Route path='/learn1' element={<Navigate replace to="/learn" />}/>
             <Route path='/project' element={<Project />}/>
+            <Route path='/typescript' element={<Typescript />}/>
           </Routes>
       </div>
       <ReactQueryDevtools initialIsOpen position='bottom-right'/>

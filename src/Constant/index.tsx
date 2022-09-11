@@ -1,5 +1,10 @@
 import { t } from 'i18next'
 import i18next from '../i18n'
+import { FaBeer } from 'react-icons/fa';
+import { WiCloudDown } from 'react-icons/wi';
+import { DiChrome } from 'react-icons/di';
+import { DiCodeigniter } from 'react-icons/di';
+
 export type ILocation  = {
   state: {
     name: 'string',
@@ -92,3 +97,26 @@ export const callAfterTimeout = () => {
         console.log("called inside timeout is over")
     }, 500)
 }
+
+export const COLUMN_DATA: any = [
+    {
+        type: 'settlement',
+        title: 'Settlement',
+        icon: <FaBeer />,
+    },
+    {
+        type: 'calendar',
+        title: 'Calendar',
+        icon: <WiCloudDown />
+    },
+    {
+        type: 'chrome',
+        title: 'Chrome',
+        icon: <DiChrome />
+    },
+    {
+        type: 'igniter',
+        title: 'Igniter',
+        icon: <DiCodeigniter />
+    }
+]

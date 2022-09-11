@@ -158,3 +158,11 @@ const httpCall = (method) => async (url, token, body, timeout) => {
 }
 
 export const POST = httpCall("POST")
+
+export const PxToRem = (px: number) => {
+    return px*0.0625
+}
+
+export const getMonthNames = () => {
+    return ["JAN", 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC']
+}
