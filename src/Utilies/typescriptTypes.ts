@@ -1,0 +1,1 @@
+export type IReducerFun = (a: {[key: string]: any}, b: {type: string, payload: any}) => void

@@ -1,25 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Routes, Route, Navigate, Link, Outlet, useParams } from 'react-router-dom'
+import Home from './Components/Home/Home';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Miscellaneous from './Components/TestingComponent/Miscellaneous';
+import DashboardDetails from './Components/Dashboard/DashboardDetails';
+import Dashboard from './Components/Dashboard/Dashboard';
+import Navigation from './Components/Navigation';
+import MultilingualHeader from './Components/MultilingualHeader/MultilingualHeader';
+import ReduxComponent from './Components/ReduxComponent/reduxComponent';
+import Project from './Components/Project/project';
+const queryClient = new QueryClient()
+
+
+const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
+
+const CourseDetailsByID = () => {
+  const {courseId} = useParams()
+  return (
+    <div>
+      <h4>URL  params is : {courseId}</h4>
+    </div>
+  )
+}
+
+
+const Learn = () => {
+  return (
+    <>
+      <div>This is Learn page</div>
+      <Link to="/learn/course">Courses</Link>
+      <Link to="/learn/test">Test</Link>
+      {/* when you want to render some inner routes inside Learn component just after the above nodes use Outlet */}
+      <Outlet /> 
+    </>
+  )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/navigation' element={<Navigation />} />
+            <Route path='/react-query' element={<MultilingualHeader />} />
+            <Route path='testing-component' element={<Miscellaneous />} />
+            <Route path='redux' element={<ReduxComponent />} />
+            <Route path='/dashboard' element={<Dashboard />} />  {/* this will match with given url with all the query params in it */}
+            <Route path='dashboard/:id/:number' element={<DashboardDetails />} />
+            <Route path='/learn' element={<Learn />}>
+              {/* When nesting needs to be done /learn/course and all data of LearnCourses should come just after Learn and not stand alone */}
+              <Route path='course' element={<LearnCourses />}>
+                <Route path=':courseId' element= {<CourseDetailsByID />} />
+              </Route>
+            </Route>
+            {/* if we write like this then the content of Learn courses would come stand alone
+              <Route path='course' element={<LearnCourses />}/> */}
+            <Route path='/learn1' element={<Navigate replace to="/learn" />}/>
+            <Route path='/project' element={<Project />}/>
+          </Routes>
+      </div>
+      <ReactQueryDevtools initialIsOpen position='bottom-right'/>
+    </QueryClientProvider>
   );
 }
 
