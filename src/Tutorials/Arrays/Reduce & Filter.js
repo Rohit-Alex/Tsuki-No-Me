@@ -48,3 +48,14 @@ const op2 = obj2.reduce((acc, curr) => {
 }, {})
 
 console.log(op2)
+
+
+const arrObj = [{ tag_id: 'lang' }, { tag_id: 'quesType' }, { tag_id: 'other' }, { tag_id: 'board' }]
+// const requiredFiltered = arrObj.filter(e => e.tag_id === 'lang' || e.tag_id === 'other')
+const requiredFiltered = arrObj.filter(e => ['lang', 'other'].includes(e.tag_id))
+
+// const exceptdFiltered = arrObj.filter(e =>  e.tag_id !== 'lang' && e.tag_id !== 'other')
+const exceptdFiltered = arrObj.filter(e => !['lang', 'other'].includes(e.tag_id))
+
+console.log(requiredFiltered);
+console.log(exceptdFiltered);

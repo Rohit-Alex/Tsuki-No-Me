@@ -1,0 +1,41 @@
+
+$primary-color: #272727;
+$accent-color: #ff652f;
+$text-color: #fff;
+$font-weights: ("regular": 400, "medium": 500, "bold": 700); /* creating an array or map */
+// This is how we create a variable in scss 
+
+@function wieght($weight-name) {
+    @return map-get($font-weights, $weight-name)
+}
+
+@mixin flexCenter($direction) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+    @if $light-theme {
+        background: lighten($primary-color, 100%);
+        color: darken($text-color, 100%);
+    }
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+randomClass {
+    background: $primary-color;
+    font-weight: map-get($font-weights, bold); /* using arrays */
+    font-weight: wieght(bold); /* using function */
+    @include flexCenter(row);
+}
+
+.light {
+    @include theme($light-theme: true)
+}

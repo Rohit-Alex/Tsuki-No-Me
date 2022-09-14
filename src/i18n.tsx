@@ -5,7 +5,9 @@ import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 const translationEng = { WELCOME: "welcome", TODOS: 'TODOS', TODO_DETAILS: 'TODO Details', DYNAMIC_PARALLEL: 'Dynamic Parallel Queries', PAGINATED: 'Pagination', INFINITE: 'Infinte Query', MUTATION: 'Mutation Query', DEPENDENT: 'Dependent Query', NAME: 'Name', AGE: 'Age', ADDRESS: 'Address'};
+
 const translationHindi = { WELCOME: "स्वागत हे", PENDING_APPROVAL: 'लंबित अनुमोदन', REJECTED: 'अस्वीकृत', PUBLISHED: 'प्रकाशित', ALL: 'सभी', NAME: 'नाम', AGE: 'आयु', ADDRESS: 'पता' };
+
 const translationChile = { WELCOME: "bienvenidos", PENDING_APPROVAL: 'En attente de validation', REJECTED: 'Rejeté', PUBLISHED: 'Publié', ALL: 'Tout'  };
 i18n
   // load translation using http -> see /public/locales (i.e. https://github.com/i18next/react-i18next/tree/master/example/react/public/locales)

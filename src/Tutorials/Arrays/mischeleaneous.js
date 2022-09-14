@@ -23,6 +23,7 @@ for (var i = 0; i < 3; i++) {
 }
 
 
+
 // PROTOTYPE 
 
 const arr1 = ['one', 'two', 'three', 'four']
