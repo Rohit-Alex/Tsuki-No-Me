@@ -18,11 +18,38 @@ const groupObj1 = {
 }
 
 const op = Object.keys(groupObj1).reduce((acc, curr) => {
-    acc[groupObj1[curr].age] = { ...acc[groupObj1[curr].age], [curr]: groupObj1[curr] }
+    acc[groupObj1[curr].age] = { ...(acc[groupObj1[curr].age] ?? {}), [curr]: groupObj1[curr] }
     return acc
 }, {})
 
 console.log(op)
+// {
+//     23:
+//     {
+//         rohit: { surname: 'yadav', age: 23 },
+//         alex: { surname: 'mason', age: 23 }
+//     },
+//     24:
+//     {
+//         nirali: { surname: 'bhalodiya', age: 24 },
+//         mg: { surname: 'grace', age: 24 }
+//     }
+// }
+
+const output = Object.keys(groupObj1).reduce((acc, curr) => {
+    acc[groupObj1[curr].age] = [...(acc[groupObj1[curr].age] ?? []), { [curr]: groupObj1[curr] }]
+    return acc
+}, {})
+
+console.log(output)
+// {
+//     23:
+//     [{ rohit: { surname: 'yadav', age: 23 } },
+//     { alex: { surname: 'mason', age: 23 } }],
+//         24:
+//     [{ nirali: { surname: 'bhalodiya', age: 24 } },
+//     { mg: { surname: 'grace', age: 24 } }]
+// }
 
 const obj2 = [
     {
@@ -59,3 +86,13 @@ const exceptdFiltered = arrObj.filter(e => !['lang', 'other'].includes(e.tag_id)
 
 console.log(requiredFiltered);
 console.log(exceptdFiltered);
+
+const checkTruthyValueTotally = (value) => {
+    return value && !['0', 'null', 'undefined'].includes(value)
+}
+const treatFalsyAsTruthy = value => {
+    return value || (value === 0)
+}
+
+console.log(checkTruthyValueTotally(23));
+console.log(treatFalsyAsTruthy(NaN));

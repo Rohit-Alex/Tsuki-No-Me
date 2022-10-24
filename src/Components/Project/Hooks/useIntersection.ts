@@ -22,7 +22,7 @@ const useIsVisible = (elementRef: React.RefObject<React.ReactNode>) => {
                     }
                 });
             }, OPTIONS);
-            observer.observe(elementRef.current);
+            observer.observe(elementRef.current as any);
         }
     }, [elementRef]);
 

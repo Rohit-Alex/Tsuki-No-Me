@@ -93,3 +93,42 @@ console.log(counter2.print())
 console.log(counter2.decrement())
 console.log(counter2.decrement())
 console.log(counter2.print())
+
+
+// A minor, but noteworthy feature of includes is that it correctly handles NaN, unlike indexOf:
+
+const arr = [NaN];
+alert(arr.indexOf(NaN)); // -1 (wrong, should be 0)
+alert(arr.includes(NaN));// true (correct)
+
+
+let arr = [1, 2];
+
+// create an array from: arr and [3,4]
+alert(arr.concat([3, 4])); // 1,2,3,4
+
+// create an array from: arr and [3,4] and [5,6]
+alert(arr.concat([3, 4], [5, 6])); // 1,2,3,4,5,6
+
+// create an array from: arr and [3,4], then add values 5 and 6
+alert(arr.concat([3, 4], 5, 6)); // 1,2,3,4,5,6
+
+
+// How to delete an element from the array ?
+
+//     The arrays are objects, so we can try to use delete:
+
+let arr = ["I", "go", "home"];
+
+delete arr[1]; // remove "go"
+
+alert(arr[1]); // undefined
+
+// now arr = ["I",  , "home"];
+alert(arr.length); // 3
+
+
+// different case letters have different codes
+alert("Z".codePointAt(0)); // 90
+alert("z".codePointAt(0)); // 122
+alert("z".codePointAt(0).toString(16)); 

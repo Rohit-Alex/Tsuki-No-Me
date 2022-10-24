@@ -8,7 +8,7 @@ import { useQueryCustomHook } from '../Hooks/useQueryCustomHook';
     2> refetchOnWindowFocus => when enabled, whenever the window size changes query gets fired
     3> enabled => when true it's similar to componentDidMount
     4> caching => by default it caches the data as per key and when trying to get the same query it returns the same cached data
-                In background it re-runs the query and checks if any uupdate was performed in db or not. If any update did take place, then the data is upadted in our UI as well. 
+                In background it re-runs the query and checks if any update was performed in db or not. If any update did take place, then the data is upadted in our UI as well. 
                 This means api is fired and data is fetched and if any changes did occur it will get updated. For a while previous data will be shown then the latest data will get shown.
                 If no data changes are there then you will see the cached data.
             staleTime => Suppose the api data for an endpoint doesn't change quite often and the cached data is being returned

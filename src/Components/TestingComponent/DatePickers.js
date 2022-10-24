@@ -13,7 +13,6 @@ const DatePickers = () => {
     const disabledDateForStartDate = (current) => {
         return current && current.valueOf() > Date.now();
     };
-    console.log("inside")
     return (
         <div>
             {['startDate', 'endDate'].map((type, index) =>

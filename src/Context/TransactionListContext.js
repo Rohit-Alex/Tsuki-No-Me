@@ -2,7 +2,8 @@
 //context file
 import { useReducer, useState } from "react"
 import createUseContext from "constate"
-import { ApiLocations, notificationHandler, POST } from "../Utilies/utils"
+import { ApiLocations, GET, POST } from "../Utilies/utils"
+import {  getRuleEventHelper, handleErrorNotifications } from "../Constant"
 
 jest.mock("../Utilies/utils")
 
@@ -30,6 +31,8 @@ const reducer = (state, action) => {
 
 //some where in constants file
 const requiredKeys = [ "number", "name", "mode", "netAmount", "sellerId", "sellerOrderLineId", "createdAt", "traceId", "transactionId"]
+const token = '213213123123'
+
 
 const defaultState = {
     transactionData: [],
@@ -41,10 +44,10 @@ const initFunction = (initialData) => ({
     ...initialData,
 })
 
+
 const useTransactionSearch = ({ initialData = {} }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [state, dispatch] = useReducer(reducer, initialData, initFunction)
-    const token = '213213123123'
 
     const { transactionData, pagination } = state
 
@@ -71,20 +74,6 @@ const useTransactionSearch = ({ initialData = {} }) => {
         })
         return rowData
     }
-
-    const handleErrorNotifications = (error) => {
-        let { title = "", description = "", duration, url } = error
-        if (!title) title = error?.code ? error?.code : ''
-        if (!description) description = error?.message ? error?.message : ''
-        notificationHandler({
-            type: "error",
-            title: (title),
-            description: (description),
-            duration,
-            url,
-        })
-    }
-
 
     const updateTransactionSearch = (response) => {
         const requiredResposes = formRowData(response?.data?.transactions)
@@ -117,8 +106,38 @@ const useTransactionSearch = ({ initialData = {} }) => {
             //title aur description
             handleErrorNotifications(error)
         } finally {
+            console.log("inside finally")
             setIsLoading(false)
         }
+    }
+
+    const getRuleEvents = async () => {
+        const response = await getRuleEventHelper()
+        if (response) {
+            // updateRuleEvents(response)
+        }
+    }
+
+    const getRule = async (payload) => {
+        try {
+            const [, url] = ApiLocations.GET_TRACE_DETAILS()
+            const response = await POST(url, '2342425', payload)
+            // updateRuleEvents(response)
+        } catch (err) {
+            handleErrorNotifications(err)
+            return null
+        }
+    }
+
+    const getAllRules = async (status, page = 4, name) => {
+        setIsLoading(true)
+        await Promise.all([getRuleEvents(), getRule(status, page, name)])
+        .then(() => {
+            setIsLoading(false)
+        }).catch((err) => {
+            console.log(err, 'inside error promise.all')
+            handleErrorNotifications(err)
+        })
     }
 
     return {
@@ -127,6 +146,8 @@ const useTransactionSearch = ({ initialData = {} }) => {
         pagination,
         getTransactionSearch,
         resetDataOnSearch,
+        getAllRules,
+        getRule
     }
 }
 

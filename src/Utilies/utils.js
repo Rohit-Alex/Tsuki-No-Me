@@ -58,6 +58,79 @@ export const makeHttpRequest = async ({
   }
 };
 
+export const makeHttpRequestWithCancel = async ({
+  path,
+  body = {},
+  method = "GET",
+  header = {},
+  params = {},
+  paramsSerializer = () => {},
+  isTokenEnabled = true,
+  timeout = 60000,
+  isTimeoutEnabled = true,
+  authEnabled = true,
+  // authData = null,
+  isCancelable = false,
+  setSource,
+}) => {
+  axios.interceptors.response.eject(interceptor);
+
+  const source = axios.CancelToken.source();
+  createAxiosResponseInterceptor();
+  try {
+    if (isTimeoutEnabled) {
+      setTimeout(() => {
+        source.cancel("Cancelling after 100ms");
+      }, timeout);
+    }
+    if(isCancelable){
+      setSource(source);
+    }
+    // const accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJleHRyYW1hcmtzdGVhY2hlcnMwMDIiLCJhdXRoX3RpbWUiOjE2Mzk3NDUxOTIsImlzcyI6ImNvZ25pdG8tbG9naW4tc2VydmljZSIsImV4cCI6MTYzOTc0ODc5MiwiaWF0IjoxNjM5NzQ1MTkyLCJhdXRob3JpdGllcyI6WyJST0xFX1RFQUNIRVIiXX0.puPCkWknho1p8zF8V_6SdTnp85FDbcieys3IiGgwmfmE-ZAXRS73YoikvxnSFSJKibNrsfYR_azs_PttuiGTYA"
+    // let auth = isTokenEnabled
+    //   ? {
+    //       token: accessToken,
+    //       Authorization: "Bearer " + accessToken,
+    //     }
+    //   : {
+    //       token: accessToken,
+    //     };
+    // if (!authEnabled) {
+    //   auth = {};
+    // }
+    // const headers = { "content-type": "application/json", ...header, ...auth };
+    const headers = { "content-type": "application/json", ...header };
+
+    const options = {
+      url: `${path}`,
+      method: method,
+      headers,
+      data: body,
+      cancelToken: source.token,
+      params,
+      paramsSerializer
+    };
+    // if (authData) {
+    //   options.auth = authData;
+    // }
+    const response = await axios(options);
+    let apiRes = {};
+    if (response && response.data) {
+      apiRes = response.data;
+    }
+    if (apiRes.session_out === 0) {
+      window.console.log("1");
+    }
+    return apiRes;
+  } catch (error) {
+    return new Promise((resolve, reject) => {
+      reject(error);
+    });
+  } finally {
+    axios.interceptors.response.eject(interceptor);
+  }
+};
+
 export const notificationHandler = ({
   message = "",
   key = "",
@@ -81,6 +154,8 @@ export const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => ` ${lette
 export const firstLetterCapital = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 export const fetchMethod = (url) => axios.get(url)
+export const postMethod = (url, body) => axios.post(url, body)
+
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL
 
@@ -158,6 +233,8 @@ const httpCall = (method) => async (url, token, body, timeout) => {
 }
 
 export const POST = httpCall("POST")
+export const GET = httpCall("GET")
+
 
 export const PxToRem = (px: number) => {
     return px*0.0625
@@ -166,3 +243,7 @@ export const PxToRem = (px: number) => {
 export const getMonthNames = () => {
     return ["JAN", 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC']
 }
+
+// const flexProperties = (alignItems) => ({
+//   display: 'flex', justifyContent: 'space-between', columnGap: '20px'
+// })

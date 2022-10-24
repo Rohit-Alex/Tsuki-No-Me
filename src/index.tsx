@@ -4,21 +4,17 @@ import './i18n'
 import App from './App';
 import "antd/dist/antd.css";
 import reportWebVitals from './reportWebVitals';
-import { BasicInfoProvider } from './Components/BasicInfo.js/BasicInfo';
-import store from './Redux/store';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import AllTheProviders from './Providers/AllProviders';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement!);
 root.render(
-        <Router>
-          <Provider store={store}>
-            <BasicInfoProvider>
-              <App />
-            </BasicInfoProvider>
-          </Provider>
-        </Router>
+  <StyledEngineProvider injectFirst>
+    <AllTheProviders>
+      <App />
+    </AllTheProviders>
+    </StyledEngineProvider>
 );
 
 reportWebVitals();

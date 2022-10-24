@@ -16,29 +16,34 @@
       "alterEgo": "Princess Diana"
     },
     {
-      "name": "Baary allenF",
-      "alterEgo": "FLAS",
+      "name": "mg",
+      "alterEgo": "nirali",
       "id": 4
     },
     {
-      "name": "rohit",
-      "alterEgo": "flash",
+      "name": "mg",
+      "alterEgo": "nirali",
       "id": 5
     },
     {
-      "name": "alex",
-      "alterEgo": "shazam",
+      "name": "Iron man",
+      "alterEgo": "RDJ",
       "id": 6
     },
     {
-      "name": "monu",
-      "alterEgo": "spiderman",
+      "name": "Rohit",
+      "alterEgo": "Iron Man",
       "id": 7
     },
     {
-      "name": "mg",
-      "alterEgo": "wonder woman",
+      "name": "nammoni",
+      "alterEgo": "mg",
       "id": 8
+    },
+    {
+      "name": "naadd",
+      "alterEgo": "fff",
+      "id": 9
     }
   ],
   "friends": [
@@ -74,35 +79,75 @@
   "colors": [
     {
       "id": 1,
-      "label": "red"
+      "label": "Black"
     },
     {
       "id": 2,
-      "label": "blue"
+      "label": "Red"
     },
     {
       "id": 3,
-      "label": "green"
+      "label": "Green"
     },
     {
-      "id": 4,
-      "label": "yellow"
+      "label": "Yellow",
+      "id": 5
     },
     {
-      "id": 5,
-      "label": "black"
+      "label": "maroon",
+      "id": 6
     },
     {
-      "id": 6,
-      "label": "white"
+      "label": "12345678",
+      "id": 7
     },
     {
-      "id": 7,
-      "label": "orange"
+      "label": "asdfdgh",
+      "id": 8
     },
     {
-      "id": 8,
-      "label": "purple"
+      "label": "orangessss",
+      "id": 10
+    },
+    {
+      "label": "unknown",
+      "id": 11
+    },
+    {
+      "label": "pink pink pink",
+      "id": 12
+    },
+    {
+      "label": "kjhgfcxz",
+      "id": 13
+    },
+    {
+      "label": "rtghnjhgfd",
+      "id": 14
+    },
+    {
+      "label": "hgfds",
+      "id": 15
+    },
+    {
+      "label": "9876543",
+      "id": 16
+    },
+    {
+      "label": "",
+      "id": 17
+    },
+    {
+      "label": "123456",
+      "id": 18
+    },
+    {
+      "label": "dsd",
+      "id": 19
+    },
+    {
+      "label": "lad",
+      "id": 20
     }
   ]
 }

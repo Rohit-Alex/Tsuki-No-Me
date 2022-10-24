@@ -9,6 +9,7 @@ import { PaginatedQueriesPage } from "../ReactQuery/PaginatedQueries";
 import { InfiniteQueriesPage } from "../ReactQuery/InfiniteQueryPage";
 import { RQSuperHeroesPage } from "../ReactQuery/AddSuperHereos";
 import DependentQueryPage from "../ReactQuery/DependentQueryPage";
+import { ReactPaginatedQueryProvider } from "../../Context/ReactQueryPaginatedContext";
 
 export default function MultilingualHeader() {
     const { t, i18n } = useTranslation();
@@ -44,11 +45,11 @@ export default function MultilingualHeader() {
             <Segmented options={segmentOptions()} value={value} onChange={(value) => { setValue(value) }} />
             {value === 'react_query' &&  <ReactQueryTodo />}
             {value === 'dynamic_parallel' &&  <DynamicParallelPage todoIds={[1,3]}  />}
-            {value === 'pagination' &&  <PaginatedQueriesPage />}
+            {value === 'pagination' &&  <ReactPaginatedQueryProvider><PaginatedQueriesPage /></ReactPaginatedQueryProvider>}
             {value === 'infinte' &&  <InfiniteQueriesPage />}
             {value === 'mutation' &&  <RQSuperHeroesPage />}
             {value === 'dependent' &&  <DependentQueryPage email={'vishwas@example.com'} />}
-            
+
             <Table dataSource={dataSource} columns={columnsMG()} />;
 
         </div>

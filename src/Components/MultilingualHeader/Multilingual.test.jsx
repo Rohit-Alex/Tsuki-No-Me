@@ -1,9 +1,9 @@
 /* eslint-disable testing-library/no-debugging-utils */
 /* eslint-disable testing-library/no-unnecessary-act */
 import '@testing-library/jest-dom'
+import { renderWithClient } from '../../test-utils'
 
 import MultilingualHeader from './MultilingualHeader'
-import { renderWithClient } from '../ReactQuery/__tests/utils'
 
 window.matchMedia =
     window.matchMedia ||

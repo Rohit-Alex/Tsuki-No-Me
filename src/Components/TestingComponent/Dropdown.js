@@ -4,7 +4,7 @@ import { Button, Checkbox, Col, Dropdown, Menu, Row } from "antd";
 import ProfileOutlined from "@ant-design/icons/ProfileOutlined";
 import { columnList } from "../../Constant";
 
-const DropdownList = ({ selectedValue, handleChangeCheckbox }) => {
+const DropdownList = ({ selectedValue = [], handleChangeCheckbox = () => {}}) => {
     const ColumnNames = ({ columnList, selectedValue, handleChangeCheckbox }) => {
         return (
             (columnList.length && (

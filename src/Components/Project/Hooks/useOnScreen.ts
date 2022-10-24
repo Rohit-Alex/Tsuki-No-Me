@@ -14,7 +14,7 @@ function useOnScreen(ref: RefObject<ReactNode>) {
     );
 
     useEffect(() => {
-        observer.observe(ref.current);
+        observer.observe(ref.current as any);
 
         return () => {
             observer.disconnect();
@@ -27,7 +27,7 @@ function useOnScreen(ref: RefObject<ReactNode>) {
 export default useOnScreen;
 
 /*
-To use
+Used to check if a particular component is being rendered on screen or not
 const ref = useRef(null);
   const onScreen = useOnScreen(ref);
 

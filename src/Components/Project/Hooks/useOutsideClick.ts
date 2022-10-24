@@ -5,7 +5,7 @@ const useOutsideClick = (ref: RefObject<ReactNode>) => {
 
     useEffect(() => {
         function handleClickOutside(event: any) {
-            if (ref.current && !ref.current.contains(event.target)) {
+            if (ref.current && !(ref.current as any).contains(event.target)) {
                 setOutsideClicked(true);
             } else {
                 setOutsideClicked(false);

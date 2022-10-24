@@ -1,8 +1,6 @@
 import './App.css';
 import {Routes, Route, Navigate, Link, Outlet, useParams } from 'react-router-dom'
 import Home from './Components/Home/Home';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Miscellaneous from './Components/TestingComponent/Miscellaneous';
 import DashboardDetails from './Components/Dashboard/DashboardDetails';
 import Dashboard from './Components/Dashboard/Dashboard';
@@ -11,7 +9,9 @@ import MultilingualHeader from './Components/MultilingualHeader/MultilingualHead
 import ReduxComponent from './Components/ReduxComponent/reduxComponent';
 import Project from './Components/Project/project';
 import Typescript from './Components/Typescript/Typescript';
-const queryClient = new QueryClient()
+import ApiCalling from './Components/ApiCallingInReact/ApiCalling';
+import RuleGeneral from './Components/RuleGeneral';
+import FormParent from './Components/FormParent';
 
 
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
@@ -33,14 +33,13 @@ const Learn = () => {
       <Link to="/learn/course">Courses</Link>
       <Link to="/learn/test">Test</Link>
       {/* when you want to render some inner routes inside Learn component just after the above nodes use Outlet */}
-      <Outlet /> 
+      <Outlet />
     </>
   )
 }
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
       <div className="App">
           <Routes>
             <Route path='/' element={<Home />} />
@@ -59,12 +58,13 @@ function App() {
             {/* if we write like this then the content of Learn courses would come stand alone
               <Route path='course' element={<LearnCourses />}/> */}
             <Route path='/learn1' element={<Navigate replace to="/learn" />}/>
-            <Route path='/project' element={<Project />}/>
             <Route path='/typescript' element={<Typescript />}/>
+            <Route path='/api-calling' element={<ApiCalling />}/>
+            <Route path='/project' element={<Project />}/>
+            <Route path='/form-antd' element={<FormParent />}/>
+            <Route path='*' element={<h4>Page not found</h4>}/>
           </Routes>
       </div>
-      <ReactQueryDevtools initialIsOpen position='bottom-right'/>
-    </QueryClientProvider>
   );
 }
 

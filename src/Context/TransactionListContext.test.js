@@ -5,7 +5,9 @@ import '@testing-library/jest-dom'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { TransactionSearchProvider, useTransactionSearchContext } from './TransactionListContext'
 import { ApiLocations, notificationHandler, POST } from '../Utilies/utils'
+import { getRuleEventHelper, handleErrorNotifications } from '../Constant'
 
+jest.mock('../Constant')
 jest.mock('../Utilies/utils')
 
 window.matchMedia =
@@ -64,7 +66,7 @@ describe('Transaction context test cases', () => {
         expect(result.current.pagination).toStrictEqual({ totalPages: 2 })
     })
 
-    it('Should return error if constructing URl is failed', async () => {
+    it('Should return error while constructing URl fails', async () => {
         const error = {
             code: 'INVALID',
             message: 'Invalid Name',
@@ -80,7 +82,33 @@ describe('Transaction context test cases', () => {
             await result.current.getTransactionSearch()
         })
 
-        expect(notificationHandler).toHaveBeenCalledTimes(1)
+        expect(handleErrorNotifications).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should show error notification on api failure', async () => {
+        ApiLocations.GET_TRANSACTION_SEARCH = jest.fn().mockImplementationOnce(() => [null, GET_URL_SAMPLE])
+
+        const { result } = await renderHook(() => useTransactionSearchContext(), {
+            wrapper,
+        })
+        POST.mockReturnValue(Promise.reject('custom error'))
+        await act(async () => {
+            await result.current.getTransactionSearch()
+        })
+
+        expect(handleErrorNotifications).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should check for promise all', async () => {
+        const { result } = await renderHook(() => useTransactionSearchContext(), {
+            wrapper,
+        })
+        getRuleEventHelper.mockReturnValue(Promise.reject('rule event helper reject'))
+
+        await act(async () => {
+            await result.current.getAllRules()
+        })
+
     })
 
     it('Should reset data on calling of reset function', async () => {

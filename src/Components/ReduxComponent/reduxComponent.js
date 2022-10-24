@@ -1,24 +1,19 @@
-import { useEffect } from "react"
+import { Button } from "antd"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { apiCalled, getApiData } from "../../Redux/Actions/GetApiData"
+import InputToDo from "./ToDos/EnterToDo"
+import ShowTodos from "./ToDos/ShowTodos"
 
 const ReduxComponent = () => {
-    const dipatch = useDispatch()
-    const { responseData = [] } = useSelector(state => state.apiData)
-    useEffect(()=>{
-        dipatch(apiCalled())
-
-        console.log("component mounted")
-        // axios.get('https://jsonplaceholder.typicode.com/users')
-        //     .then(res => {
-        //         const users = res.data
-        //         console.log(users)
-        //     })
-        // getApiData()
-    }, [])
+    const [, forceFulRender] = useState(false)
     return (
         <div>
-            Reduc ReduxComponent
+            Redux Component
+            <Button onClick={()=>forceFulRender(prev => !prev)}>Re-Render</Button>
+            <InputToDo />
+            <ShowTodos />
         </div>
     )
 }

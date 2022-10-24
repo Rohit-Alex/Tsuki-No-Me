@@ -66,7 +66,6 @@ name: string;
 details: {nickname: string}
 }
 const { name, details: { nickname} } : IDetails = obj
-console.log(name, nickname)
 interface IObserver {
   current: {
     disconnect: () => void

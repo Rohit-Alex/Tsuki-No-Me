@@ -6,4 +6,50 @@ const matches = str.matchAll(regexp);
 for (const match of matches) {
     console.log(str.slice(match.index, match.index + match[0].length))
     console.log(`Found ${match[0]} start=${match.index} end=${match.index + match[0].length}.`);
+    if (!match[0].substr(str.indexOf("src="), 15).includes('http') && !str.substr(str.indexOf("src="), 15).includes('data:image')) {
+        const contentUrl = 'https://storage.googleapis.com'
+        const replacedString = str.replace(/src=\\*"/g, 'src="' + contentUrl) // this detects if src=///////
+        if (/\.png\\*/gi.test(replacedString)) { // .png/// check
+            replacedString.replace(/\.png\\*/g, '.png')
+        } else if (/\.jpeg\\*/gi.test(replacedString)) { // .png/// check
+            replacedString.replace(/\.jpeg\\*/g, '.jpeg')
+        } else if (/\.jpg\\*/gi.test(replacedString)) { // .png/// check
+            replacedString.replace(/\.jpg\\*/g, '.jpg')
+        } else if (/\.svg\\*/gi.test(replacedString)) { // .png/// check
+            replacedString.replace(/\.svg\\*/g, '.svg')
+        } else if (/\.gif\\*/gi.test(replacedString)) { // .png/// check
+            replacedString.replace(/\.gif\\*/g, '.gif')
+        }
+    }
 }
+export const addImageBaseUrl = (data_html) => {
+    let parser = new DOMParser();
+    let parsedHtml = parser.parseFromString(data_html, "text/html");
+    const baseUrl = 'https://storage.googleapis.com'
+    parsedHtml.querySelectorAll("img").forEach((element, index) => {
+        if (!element.outerHTML.includes(`src="${baseUrl}`) &&
+            !element.outerHTML.includes(`src="data:image/apng`) &&
+            !element.outerHTML.includes(`src="data:image/avif`) &&
+            !element.outerHTML.includes(`src="data:image/gif`) &&
+            !element.outerHTML.includes(`src="data:image/jpeg`) &&
+            !element.outerHTML.includes(`src="data:image/png`) &&
+            !element.outerHTML.includes(`src="data:image/svg+xml`) &&
+            !element.outerHTML.includes(`src="data:image/webp`)
+        ) {
+            const tempHTML = element.outerHTML.replaceAll(`src="`, `src="${baseUrl}`)
+            element.outerHTML = tempHTML
+        }
+    });
+    // Input tag with type image is replaced by img tag
+    parsedHtml.querySelectorAll("input").forEach((element, index) => {
+        if (!element.outerHTML.includes(`src="${baseUrl}`) || element.type === "image") {
+            let tempHTML = element.outerHTML.replaceAll(`input`, `img`).replaceAll(`src="`, `src="${baseUrl}`).replaceAll('type="image"', "")
+            tempHTML = tempHTML.replaceAll("\\&quot;", "")
+            element.outerHTML = tempHTML
+        }
+    });
+
+    return parsedHtml.body.innerHTML.replaceAll("\\text", "")
+}
+
+console.log(addImageBaseUrl(str))

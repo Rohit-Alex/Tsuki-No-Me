@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom"
+import { renderWithClient } from "../../../test-utils"
 import { useQueryCustomHook } from "../../Hooks/useQueryCustomHook"
 import ReactQueryTodo from "../ReactQueryTodo"
-import { renderWithClient } from "./utils"
 
 window.matchMedia =
     window.matchMedia ||

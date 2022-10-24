@@ -24,3 +24,8 @@ const Navigation = () => {
     )
 }
 export default Navigation
+
+/*
+navigate(-1) // history.goBack()
+navigate('/about, {replace: true}) // history.replace('/about)
+*/
