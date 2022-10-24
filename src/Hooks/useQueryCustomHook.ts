@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchMethod } from "../../Utilies/utils"
+import { fetchMethod } from "../Utilies/utils"
 const getTodos = async () => {
     const { data } = await fetchMethod('https://jsonplaceholder.typicode.com/posts')
     return data

@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook } from "@testing-library/react-hooks";
 import axios from "axios";
+import { useQueryCustomHook } from "../../../Hooks/useQueryCustomHook";
+import { useAddColor } from "../../../Hooks/useTodoDetailsQuery";
 import { createWrapper } from "../../../test-utils";
 import { fetchMethod } from "../../../Utilies/utils";
-import { useQueryCustomHook } from "../../Hooks/useQueryCustomHook";
-import { useAddColor } from "../../Hooks/useTodoDetailsQuery";
 const queryClient = new QueryClient();
 jest.mock("axios");
 jest.mock('../../../Utilies/utils')

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Link } from 'react-router-dom'
-import { useAddSuperHeroData, useAddSuperHeroData1, useAddSuperHeroData2, useAddSuperHeroData3, useGetSuperHeroesData } from '../Hooks/useTodoDetailsQuery'
+import { useAddSuperHeroData, useAddSuperHeroData1, useAddSuperHeroData2, useAddSuperHeroData3, useGetSuperHeroesData } from '../../Hooks/useTodoDetailsQuery'
 
 export const RQSuperHeroesPage = () => {
     const [name, setName] = useState('')

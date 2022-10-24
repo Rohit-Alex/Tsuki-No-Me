@@ -4,11 +4,11 @@ He can send how many numbers of Ids as he like to get the details.
 */
 import { useQueries } from "@tanstack/react-query"
 import axios from "axios"
-import { useTodoDetailsMultipleIds } from "../Hooks/useTodoDetailsQuery"
+import { useTodoDetailsMultipleIds } from "../../Hooks/useTodoDetailsQuery"
 
 const DynamicParallelPage = ({todoIds}) => {
     const result = useTodoDetailsMultipleIds(todoIds)
-    const [res1, res2] = result   
+    const [res1, res2] = result
     if (res1.isLoading) {
         return <h2>Loading...</h2>
     }
@@ -20,7 +20,7 @@ const DynamicParallelPage = ({todoIds}) => {
     return (
         <>
         {combinedData.map(e => (
-            <div>{e.title}</div>    
+            <div>{e.title}</div>
         ))}
         </>
     )

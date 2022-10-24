@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom"
 import { renderWithClient } from "../../../test-utils"
-import { useQueryCustomHook } from "../../Hooks/useQueryCustomHook"
+import { useQueryCustomHook } from "../../../Hooks/useQueryCustomHook"
 import ReactQueryTodo from "../ReactQueryTodo"
 
 window.matchMedia =
@@ -12,7 +12,7 @@ window.matchMedia =
             removeListener() { },
         }
     })
-jest.mock('../../Hooks/useQueryCustomHook')
+jest.mock('../../../Hooks/useQueryCustomHook')
 
 
 describe('React Query -> queries', () => {
@@ -22,7 +22,7 @@ describe('React Query -> queries', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    
+
     it('Should return the loading state', async () => {
         const mockedProductData = [{
             title: "Test Title",
