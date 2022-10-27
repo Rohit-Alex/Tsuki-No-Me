@@ -78,68 +78,8 @@
   ],
   "colors": [
     {
-      "id": 1,
-      "label": "Black"
-    },
-    {
-      "id": 2,
-      "label": "Red"
-    },
-    {
-      "id": 3,
-      "label": "Green"
-    },
-    {
-      "label": "Yellow",
-      "id": 5
-    },
-    {
-      "label": "maroon",
-      "id": 6
-    },
-    {
-      "label": "unknown",
-      "id": 11
-    },
-    {
-      "label": "pink pink pink",
-      "id": 12
-    },
-    {
-      "label": "kjhgfcxz",
-      "id": 13
-    },
-    {
-      "label": "rtghnjhgfd",
-      "id": 14
-    },
-    {
-      "label": "hgfds",
-      "id": 15
-    },
-    {
-      "label": "9876543",
-      "id": 16
-    },
-    {
-      "label": "",
-      "id": 17
-    },
-    {
-      "label": "123456",
-      "id": 18
-    },
-    {
-      "label": "dsd",
-      "id": 19
-    },
-    {
-      "label": "lad",
-      "id": 20
-    },
-    {
-      "label": "fsfsdfgsg",
-      "id": 21
+      "label": "Red",
+      "id": 1
     }
   ]
 }

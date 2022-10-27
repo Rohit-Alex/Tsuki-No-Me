@@ -1,6 +1,5 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { postMethod } from "../Utilies/utils"
 const getTodoDetails1 = async (id: any) => {
     try {
         const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`)

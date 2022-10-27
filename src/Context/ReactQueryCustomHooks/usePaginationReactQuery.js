@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { v4 as uuidv4 } from 'uuid';
 
 const fetchColors = async (pageNumber) => {
     const data = await axios.get(`http://localhost:4000/colors?_limit=2&_page=${pageNumber}`)
@@ -42,10 +43,11 @@ export const useAddColorHook = (page) => {
             await queryClient.cancelQueries(['colors', page])
             const previousColorData = queryClient.getQueryData(['colors', page])
             if (previousColorData) {
+                // here we are manually setting the value that we think according to us should happen
                 queryClient.setQueryData(['colors', page], (oldQueryData) => {
                     return {
                         ...oldQueryData,
-                        data: [...oldQueryData.data, { id: oldQueryData?.data?.length + 1, ...color }]
+                        data: [...oldQueryData.data, { id: uuidv4(), ...color }]
                     }
                 })
             }
@@ -54,6 +56,7 @@ export const useAddColorHook = (page) => {
         onSuccess: (response, variables, context) => {
             queryClient.setQueryData(['colors', page], (oldQueryData) => {
                 if (oldQueryData) {
+                    // here we are updating the value as per the response that we received instead of manual value
                     return {
                         ...oldQueryData,
                         data: oldQueryData.data.map(data => data.label === variables.label ? response.data : data)
@@ -78,7 +81,6 @@ export const useAddColorHook = (page) => {
 
 export const useDeleteColorHook = (page) => {
     const queryClient = useQueryClient()
-    console.log(page, 'page while deleting in mutation', 7984)
     return useMutation(deleteColor, {
         // onSuccess: () => {
         //     queryClient.invalidateQueries(['colors', page])

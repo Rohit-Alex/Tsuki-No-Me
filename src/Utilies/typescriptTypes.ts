@@ -1,1 +1,2 @@
 export type IReducerFun = (a: {[key: string]: any}, b: {type: string, payload: any}) => void
+export type IPossibleValidValues = string | number | Array<string | number | {[key: string]: any} | boolean> | {[key: string]: any}
