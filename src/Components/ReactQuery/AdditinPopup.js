@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useReactPaginatedQueryContext } from "../../Context/ReactQueryPaginatedContext";
+import { useDeleteColorHook } from "../../Context/ReactQueryCustomHooks/usePaginationReactQuery";
 
 const theme = createTheme({
     palette: {
@@ -23,9 +24,8 @@ const style = {
 };
 
 export default function ActionModal({ color, handleClose}) {
-    const { useDeleteColor } = useReactPaginatedQueryContext()
-
-    const { mutate: deleteMutate } = useDeleteColor()
+    const { page} = useReactPaginatedQueryContext()
+    const { mutate: deleteMutate } = useDeleteColorHook(page)
 
     return (
         <ThemeProvider theme={theme}>

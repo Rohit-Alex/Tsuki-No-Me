@@ -2,20 +2,20 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Input } from 'antd'
-import { useAddColor, useAddColor1 } from '../Hooks/useTodoDetailsQuery'
 import { useReactPaginatedQueryContext } from '../../Context/ReactQueryPaginatedContext'
 import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material'
 import ActionModal from './AdditinPopup'
+import { useAddColorHook } from '../../Context/ReactQueryCustomHooks/usePaginationReactQuery'
 
 
 
 export const PaginatedQueriesPage = () => {
   const [colorVal, setColorVal] = useState('')
   const [actionModalOpen, setActionModalOpen] = useState(false)
-  const {isLoading, isError, error, data, isFetching, useAddColor, page, setPage, pageSize, setPageSize} = useReactPaginatedQueryContext()
+  const {isLoading, isError, error, data, isFetching, page, setPage, pageSize, setPageSize} = useReactPaginatedQueryContext()
 
-  const { mutate: addMutate } = useAddColor()
+  const { mutate: addMutate } = useAddColorHook(page)
 
   if (isLoading) {
     return <h2>Loading...</h2>

@@ -5,6 +5,7 @@ import AllTheProviders from './Providers/AllProviders'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
+import { ReactPaginatedQueryProvider } from './Context/ReactQueryPaginatedContext';
 
 
 const customRender = (ui, options) =>

@@ -50,12 +50,6 @@ const addSuperHero = async (hero: any) => {
     return data
 }
 
-const addColor = async (color: any) => {
-    const data = await postMethod('http://localhost:4000/colors', color)
-    console.log(data, 'from add color quFun')
-    return data
-}
-
 export const useAddSuperHeroData = () => {
     return useMutation(addSuperHero)
 }
@@ -109,42 +103,6 @@ export const useAddSuperHeroData3 = () => {
             },
             onSettled: () => {
                 queryClient.invalidateQueries(['super-heroes'])
-            }
-        }
-    )
-}
-
-export const useAddColor = (pageNumber: number, onSuccess: any) => {
-    console.log("inside test case")
-    const queryClient = useQueryClient()
-    return useMutation(addColor, {
-        onSuccess: () =>{
-            queryClient.invalidateQueries(['colors', 1])
-            onSuccess()
-        }
-    })
-}
-
-export const useAddColor1 = (pageNumber: number) => {
-    const queryClient = useQueryClient()
-    return useMutation(addColor, {
-                onMutate: async (newColor) => {
-                    // newColor refers to the argument being passed to the mutate function
-                await queryClient.cancelQueries(['colors', pageNumber])
-                const previousHeroData = queryClient.getQueryData(['colors', pageNumber])
-                queryClient.setQueryData(['colors', pageNumber], (oldQueryData: any) => {
-                    return {
-                        ...oldQueryData,
-                        data: [...oldQueryData.data, { id: oldQueryData?.data?.length + 1, ...newColor }]
-                    }
-                })
-            return { previousHeroData }
-            },
-            onError: (_err, _newTodo, context: any) => {
-                queryClient.setQueryData(['colors', pageNumber], context.previousHeroData)
-            },
-            onSettled: () => {
-                // queryClient.invalidateQueries(['colors', pageNumber])
             }
         }
     )

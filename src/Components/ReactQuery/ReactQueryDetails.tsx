@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { useTodoDetailsQuery } from "../Hooks/useTodoDetailsQuery"
+import { useTodoDetailsQuery } from "../../Hooks/useTodoDetailsQuery"
 
 const ReactQueryDetails = () => {
     const { todoId } = useParams()
