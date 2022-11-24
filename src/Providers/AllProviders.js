@@ -22,8 +22,8 @@ const AllTheProviders = ({ children }) => {
             <Provider store={store}>
                 <FormProvider>
                     <QueryClientProvider client={queryClient}>
-                            {children}
-                            <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+                        {children}
+                        <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
                     </QueryClientProvider>
                 </FormProvider>
             </Provider>

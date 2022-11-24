@@ -53,3 +53,38 @@ export const sidebarMenus = [
         clickHandler: () => console.log("caregory")
     },
 ]
+
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand("copy");
+        const msg = successful ? "successful" : "unsuccessful";
+        message.success("Copied Successfully");
+    } catch (err) {
+        message.error("Could not copy ID");
+    }
+
+    document.body.removeChild(textArea);
+}
+
+const copy = async (text) => {
+    // await navigator.clipboard.writeText(ques.question_text);
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function () {
+        message.success('Copied Successfully')
+    }, function (err) {
+        message.error('Could not copy ID');
+    });
+};

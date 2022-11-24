@@ -30,7 +30,7 @@ console.log(favSerires.call(obj1, 'After', 'Namooni'))
 console.log(favSerires.apply(obj, ['GOT']))
 console.log(favSerires.apply(obj1, ['After', 'Namooni']))
 
-//Bind
+// Bind
 const bindFun1 = favSerires.bind(obj, 'GOT')
 const bindFun2 = favSerires.bind(obj1, 'After', 'Namooni')
 console.log(bindFun1())

@@ -25,6 +25,16 @@ the unique exponentiation operator has right-associativity, whereas other arithm
 
 const a = 4 ** 3 ** 2;  // Same as 4 ** (3 ** 2); evaluates to 262144
 
+code splitting: ->
+Code-Splitting is a feature supported by bundlers like Webpack, Rollup and Browserify (via factor-bundle) which can create multiple bundles that can be dynamically loaded at runtime.
+Code-splitting your app can help you “lazy-load” just the things that are currently needed by the user, which can dramatically improve the performance of your app
+The React.lazy function lets you render a dynamic import as a regular component.
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+Error Boundary
+Context
+Webpack
+
 Precedence operators:
 1> ()
 2> ?.
@@ -37,10 +47,48 @@ Precedence operators:
 8> << >>
 9> < > <= >=
 10> == != === !==
-11> | 
+11> |
 12> &
 13> ^
 14> &&
 15> ||
 16> ??
-17> = 
+17> =
+Logger middleware in Redux
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd()
+  return result
+}
+
+const crashReporter = store => next => action => {
+  try {
+    return next(action)
+  } catch (err) {
+    console.error('Caught an exception!', err)
+    Raven.captureException(err, {
+      extra: {
+        action,
+        state: store.getState()
+      }
+    })
+    throw err
+  }
+}
+
+const thunkMiddleware =
+  ({ dispatch, getState }) =>
+  next =>
+  action => {
+    // If the "action" is actually a function instead...
+    if (typeof action === 'function') {
+      // then call the function and pass `dispatch` and `getState` as arguments
+      return action(dispatch, getState)
+    }
+
+    // Otherwise, it's a normal action - send it onwards
+    return next(action)
+  }
