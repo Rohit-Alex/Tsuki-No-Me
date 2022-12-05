@@ -132,3 +132,19 @@ alert(arr.length); // 3
 alert("Z".codePointAt(0)); // 90
 alert("z".codePointAt(0)); // 122
 alert("z".codePointAt(0).toString(16)); 
+
+const arr = [1, 2, [4, 5], [[[6, 9]]]]
+const flatObj = (arr, result) => {
+    arr.map(e => {
+        if (typeof e !== 'object') {
+            return result.push(e)
+        }
+        if (Array.isArray(e)) {
+            return flatObj(e, result)
+        }
+    })
+
+    return result
+}
+const res = []
+console.log(flatObj(arr, res))

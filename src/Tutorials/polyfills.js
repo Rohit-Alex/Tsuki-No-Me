@@ -60,7 +60,7 @@ Function.prototype.myCall = function (context, argArr) {
     let randomUniqueKey = Math.random()
     while (context[randomUniqueKey] !== undefined) randomUniqueKey = Math.random()
     context[randomUniqueKey] = fun
-    const result = context[randomUniqueKey](...args)
+    const result = context[randomUniqueKey](...argArr)
     delete context[randomUniqueKey]
     return result
 }
@@ -86,7 +86,7 @@ const myPromiseAll = promiseArr => {
     //     }
     // }
     // return toReturn
-    return new promiseArr((res, rej)=>{
+    return new Promise((res, rej)=>{
         let resolvedPromise = 0
         let returnArr = []
         promiseArr.forEach((prms, index)=> {
@@ -97,6 +97,6 @@ const myPromiseAll = promiseArr => {
                 rej(err)
             })
         })
-        if (resolvedPromise === promiseArr.length - 1) res(returnArr)
+        if (resolvedPromise === promiseArr.length) res(returnArr)
     })
 }
