@@ -1,11 +1,11 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-unnecessary-act */
 import React from 'react'
-
 import { render, screen, act, fireEvent, prettyDOM } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
 import { callAfterTimeout } from '../../../Constant'
+import { encrpytData } from '../../../Utilies/utils'
 
 
 window.matchMedia = window.matchMedia || (() => {
@@ -46,7 +46,7 @@ describe('Date Picker', () => {
     })
 })
 
-describe('Input', () => { 
+describe('Input', () => {
     it('Test input component', () => {
         render(<Miscellaneous />)
         const inputField = screen.getByPlaceholderText('SEARCH_RULE_NAME')
@@ -56,15 +56,31 @@ describe('Input', () => {
     })
 })
 
-describe('Testing constant functions', ()=>{
+describe('Testing constant functions', () => {
     jest.useFakeTimers();
     jest.spyOn(global, 'setTimeout');
     // jest.setTimeout(30000)
-    it('Should test setTimeout fn', async ()=>{
+    it('Should test setTimeout fn', async () => {
         callAfterTimeout()
         // jest.runAllTimers()
         // jest.advanceTimersByTime(500);
         expect(setTimeout).toHaveBeenCalledTimes(1);
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
     })
+})
+
+describe.only('EncryptData', () => {
+    const sessionStorageMock = {
+        getItem: jest.fn((key) => 'sessionVal'),
+        setItem: jest.fn(),
+        clear: jest.fn()
+    };
+    global.sessionStorage = sessionStorageMock;
+
+    it('Should get data', () => {
+        process.env.REACT_APP_DEVELOPER = "Random value2";
+        const res = encrpytData('key', { payload: '' })
+        console.log(res)
+    })
+
 })

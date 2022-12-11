@@ -4,7 +4,7 @@ JavaScript is a lightweight scripting language.
 It is weakly typed dynamic language.
 --->Dynamic language because no variable is binded to a particular datatype.
 It is used to provide functionality to the webpage.
-Can be used as client side programming language
+mostly used as client side programming language
 
 Instance Of
     The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value. 
@@ -27,7 +27,8 @@ substring => almost same as slice
             if endIndex is less than startIndex then swaps it.
             console.log('mozilla'.substring(4, 7)); // 'lla'
             console.log('mozilla'.substring(7, 4)); // 'lla'
-substr => takes a starting point and goes till 2nd argumnent
+substr => takes a starting point and goes till the length of output string becomes equal to 2nd argument.
+          however, it's deprecated now.
 
 isNaN ===>> isNaN() function determines whether a value is NaN when converted to a number
 Number.isNaN() doesn't attempt to convert the parameter to a number, so non-numbers always return false. The following are all false:
@@ -69,9 +70,24 @@ The React.lazy function lets you render a dynamic import as a regular component.
 const OtherComponent = React.lazy(() => import('./OtherComponent'));
 
 Error Boundary
-Context
 Webpack -> module bundler
 
+Arrow functions cannot be used as constructors and will throw an error when used with new. Because they have a lexical this, and do not have a prototype property, so it would not make much sense.
+
+[null].toString() => ''
+[undefined].toString() => ''
+[] => in number is equivalent to 0
+
+Object.is() determines if two values have the same value or not. It works similar to the === operator but there are a few weird cases:
+NaN is not equal to itself as well. To compare NaN, use Object.is() => It is similar to === except for this case
+Object.is(NaN, NaN); // -> true
+NaN === NaN; // -> false
+
+Object.is(-0, 0); // -> false
+-0 === 0; // -> true
+
+Object.is(NaN, 0 / 0); // -> true
+NaN === 0 / 0; // -> false
 Precedence operators:
 1> ()
 2> ?.
@@ -91,16 +107,15 @@ Precedence operators:
 15> ||
 16> ??
 17> =
-
+typeof 4+5 => 'number5
 
 Logger middleware in Redux
 const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
-  let result = next(action)
   console.log('next state', store.getState())
   console.groupEnd()
-  return result
+  return next(action)
 }
 
 const crashReporter = store => next => action => {
@@ -163,8 +178,8 @@ let b = 2;
 
 let c = 3 - (a = b + 1);
 
-alert( a ); // 3
-alert( c ); // 0
+alert(a); // 3
+alert(c); // 0
 
 
 
@@ -216,3 +231,5 @@ To Learn ---->>>
 4> weakset, weakmap
 5> structuredClone
 6> shadowDOM
+7> context vs Reducer vs Thunk vs Saga
+8> Why can't we use redux state instead of local state

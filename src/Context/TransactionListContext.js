@@ -5,7 +5,6 @@ import createUseContext from "constate"
 import { ApiLocations, GET, POST } from "../Utilies/utils"
 import {  getRuleEventHelper, handleErrorNotifications } from "../Constant"
 
-jest.mock("../Utilies/utils")
 
 const reducer = (state, action) => {
     switch (action.type) {

@@ -1,6 +1,5 @@
 import { notification } from "antd";
 import axios from "axios";
-import { get } from "lodash";
 
 let interceptor;
 const createAxiosResponseInterceptor = () => {
@@ -64,7 +63,7 @@ export const makeHttpRequestWithCancel = async ({
   method = "GET",
   header = {},
   params = {},
-  paramsSerializer = () => {},
+  paramsSerializer = () => { },
   isTokenEnabled = true,
   timeout = 60000,
   isTimeoutEnabled = true,
@@ -83,7 +82,7 @@ export const makeHttpRequestWithCancel = async ({
         source.cancel("Cancelling after 100ms");
       }, timeout);
     }
-    if(isCancelable){
+    if (isCancelable) {
       setSource(source);
     }
     // const accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJleHRyYW1hcmtzdGVhY2hlcnMwMDIiLCJhdXRoX3RpbWUiOjE2Mzk3NDUxOTIsImlzcyI6ImNvZ25pdG8tbG9naW4tc2VydmljZSIsImV4cCI6MTYzOTc0ODc5MiwiaWF0IjoxNjM5NzQ1MTkyLCJhdXRob3JpdGllcyI6WyJST0xFX1RFQUNIRVIiXX0.puPCkWknho1p8zF8V_6SdTnp85FDbcieys3IiGgwmfmE-ZAXRS73YoikvxnSFSJKibNrsfYR_azs_PttuiGTYA"
@@ -237,13 +236,20 @@ export const GET = httpCall("GET")
 
 
 export const PxToRem = (px: number) => {
-    return px*0.0625
+  return px * 0.0625
 }
 
 export const getMonthNames = () => {
-    return ["JAN", 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC']
+  return ["JAN", 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC']
 }
 
 // const flexProperties = (alignItems) => ({
 //   display: 'flex', justifyContent: 'space-between', columnGap: '20px'
 // })
+
+export const encrpytData = (key, data) => {
+  console.log(process.env.REACT_APP_DEVELOPER)
+  const res = sessionStorage.getItem(key)
+  if (!data.payload) return `no payload ${res}`
+  return { ...data, status: 'success' }
+}
