@@ -78,6 +78,11 @@ Arrow functions cannot be used as constructors and will throw an error when used
 [undefined].toString() => ''
 [] => in number is equivalent to 0
 
+const error = { message: 'rohit' }
+const { config: 
+        { headers: { Authorization, ...exceptAuthorization } = {}, ...exceptHeaders } = {}, ...rest 
+      } = error;
+
 Object.is() determines if two values have the same value or not. It works similar to the === operator but there are a few weird cases:
 NaN is not equal to itself as well. To compare NaN, use Object.is() => It is similar to === except for this case
 Object.is(NaN, NaN); // -> true

@@ -5,7 +5,38 @@ import { render, screen, act, fireEvent, prettyDOM } from '@testing-library/reac
 import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
 import { callAfterTimeout } from '../../../Constant'
-import { encrpytData } from '../../../Utilies/utils'
+import { getTokenFromMemCache, TokenExtractor } from '../../../Utilies/utils'
+
+import jwt from 'jsonwebtoken'
+jest.mock('node-cache')
+
+jest.mock('node-cache', () => function NodeCache() {
+    const cachedObj = { testingKey: 'testingValue' }
+    this.get = function (key) {
+        return cachedObj[key]
+    }
+})
+describe('Mg Backend tricky test', () => {
+
+    it('Should extract token', () => {
+        const nextFn = jest.fn()
+        const token = jwt.sign({ aud: 'randomvalue', data: { seller_code: 343 } }, 'secret', { expiresIn: '1min' });
+        process.env.GSC_AUDIENCE = "randomvalue";
+        TokenExtractor({ headers: { authorization: `Bearer ${token}` } }, undefined, nextFn)
+        expect(nextFn).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should return null if no key is found', () => {
+        const response = getTokenFromMemCache('myKey')
+        expect(response).toBe(null)
+    })
+
+    it('Should get value from memCache', () => {
+        const response = getTokenFromMemCache('testingKey')
+        expect(response).toBe('testingValue')
+    })
+
+})
 
 
 window.matchMedia = window.matchMedia || (() => {
@@ -15,7 +46,6 @@ window.matchMedia = window.matchMedia || (() => {
         removeListener() { },
     }
 })
-
 describe('Date Picker', () => {
     it('Test Date Picker component', async () => {
         render(<Miscellaneous />)
@@ -69,18 +99,3 @@ describe('Testing constant functions', () => {
     })
 })
 
-describe.only('EncryptData', () => {
-    const sessionStorageMock = {
-        getItem: jest.fn((key) => 'sessionVal'),
-        setItem: jest.fn(),
-        clear: jest.fn()
-    };
-    global.sessionStorage = sessionStorageMock;
-
-    it('Should get data', () => {
-        process.env.REACT_APP_DEVELOPER = "Random value2";
-        const res = encrpytData('key', { payload: '' })
-        console.log(res)
-    })
-
-})

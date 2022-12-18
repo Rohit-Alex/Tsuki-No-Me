@@ -31,8 +31,10 @@
     "i18next-browser-languagedetector": "^6.1.4",
     "i18next-http-backend": "^1.4.1",
     "json-server": "^0.17.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "nock": "^13.2.9",
+    "node-cache": "^5.1.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-chartjs-2": "^4.3.1",
@@ -91,9 +93,9 @@
       "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
     ],
     "collectCoverageFrom": [
-    "src/**/*.{js,jsx,ts,tsx}",
-    "!src/**/*.d.ts"
-  ]
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ]
   },
   "sideEffects": [
     "./src/i18n.tsx"

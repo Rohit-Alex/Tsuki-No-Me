@@ -1,5 +1,9 @@
 import { notification } from "antd";
 import axios from "axios";
+import jwt from 'jsonwebtoken'
+
+const NodeCache = require("node-cache");
+const myCache = new NodeCache();
 
 let interceptor;
 const createAxiosResponseInterceptor = () => {
@@ -235,7 +239,7 @@ export const POST = httpCall("POST")
 export const GET = httpCall("GET")
 
 
-export const PxToRem = (px: number) => {
+export const PxToRem = (px) => {
   return px * 0.0625
 }
 
@@ -248,8 +252,29 @@ export const getMonthNames = () => {
 // })
 
 export const encrpytData = (key, data) => {
-  console.log(process.env.REACT_APP_DEVELOPER)
   const res = sessionStorage.getItem(key)
   if (!data.payload) return `no payload ${res}`
   return { ...data, status: 'success' }
+}
+
+export const TokenExtractor =  (request, reply,next) => {
+  const { GSC_AUDIENCE } = process.env
+  request.headers.auth_info = { is_gsc_request: false }
+  const authHeader = request.headers["authorization"]
+  if (authHeader && GSC_AUDIENCE) {
+    const token = authHeader.split(" ")[1]
+    let decodedData = jwt.decode(token)
+    console.log(decodedData, 'decodedData')
+    if (decodedData && decodedData.aud === GSC_AUDIENCE && decodedData.data && decodedData.data.seller_code) {
+      request.headers.auth_info = { ...decodedData.data, is_gsc_request: true }
+    }
+  }
+  return next()
+}
+
+export const getTokenFromMemCache = (tokenKey) => {
+  if (myCache.get(tokenKey)) {
+    return myCache.get(tokenKey)
+  }
+  return null
 }
