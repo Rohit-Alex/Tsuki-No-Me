@@ -7,7 +7,7 @@ import Miscellaneous from '../Miscellaneous'
 import { callAfterTimeout } from '../../../Constant'
 import { getTokenFromMemCache, TokenExtractor } from '../../../Utilies/utils'
 
-import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken'
 jest.mock('node-cache')
 
 jest.mock('node-cache', () => function NodeCache() {
@@ -18,13 +18,13 @@ jest.mock('node-cache', () => function NodeCache() {
 })
 describe('Mg Backend tricky test', () => {
 
-    it('Should extract token', () => {
-        const nextFn = jest.fn()
-        const token = jwt.sign({ aud: 'randomvalue', data: { seller_code: 343 } }, 'secret', { expiresIn: '1min' });
-        process.env.GSC_AUDIENCE = "randomvalue";
-        TokenExtractor({ headers: { authorization: `Bearer ${token}` } }, undefined, nextFn)
-        expect(nextFn).toHaveBeenCalledTimes(1)
-    })
+    // it('Should extract token', () => {
+    //     const nextFn = jest.fn()
+    //     const token = jwt.sign({ aud: 'randomvalue', data: { seller_code: 343 } }, 'secret', { expiresIn: '1min' });
+    //     process.env.GSC_AUDIENCE = "randomvalue";
+    //     TokenExtractor({ headers: { authorization: `Bearer ${token}` } }, undefined, nextFn)
+    //     expect(nextFn).toHaveBeenCalledTimes(1)
+    // })
 
     it('Should return null if no key is found', () => {
         const response = getTokenFromMemCache('myKey')

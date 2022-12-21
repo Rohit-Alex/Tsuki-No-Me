@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import axios from "axios";
-import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken'
 
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
@@ -257,20 +257,20 @@ export const encrpytData = (key, data) => {
   return { ...data, status: 'success' }
 }
 
-export const TokenExtractor =  (request, reply,next) => {
-  const { GSC_AUDIENCE } = process.env
-  request.headers.auth_info = { is_gsc_request: false }
-  const authHeader = request.headers["authorization"]
-  if (authHeader && GSC_AUDIENCE) {
-    const token = authHeader.split(" ")[1]
-    let decodedData = jwt.decode(token)
-    console.log(decodedData, 'decodedData')
-    if (decodedData && decodedData.aud === GSC_AUDIENCE && decodedData.data && decodedData.data.seller_code) {
-      request.headers.auth_info = { ...decodedData.data, is_gsc_request: true }
-    }
-  }
-  return next()
-}
+// export const TokenExtractor =  (request, reply,next) => {
+//   const { GSC_AUDIENCE } = process.env
+//   request.headers.auth_info = { is_gsc_request: false }
+//   const authHeader = request.headers["authorization"]
+//   if (authHeader && GSC_AUDIENCE) {
+//     const token = authHeader.split(" ")[1]
+//     let decodedData = jwt.decode(token)
+//     console.log(decodedData, 'decodedData')
+//     if (decodedData && decodedData.aud === GSC_AUDIENCE && decodedData.data && decodedData.data.seller_code) {
+//       request.headers.auth_info = { ...decodedData.data, is_gsc_request: true }
+//     }
+//   }
+//   return next()
+// }
 
 export const getTokenFromMemCache = (tokenKey) => {
   if (myCache.get(tokenKey)) {
