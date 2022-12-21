@@ -2,6 +2,7 @@ import { ImHome } from 'react-icons/im';
 import { DownCircleOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Hotjar from '../../../Assests/icons/hotjar.svg'
+import { message } from 'antd';
 
 export const sidebarMenus = [
     {
@@ -79,7 +80,7 @@ function fallbackCopyTextToClipboard(text) {
 const copy = async (text) => {
     // await navigator.clipboard.writeText(ques.question_text);
     if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
+        // fallbackCopyTextToClipboard(text);
         return;
     }
     navigator.clipboard.writeText(text).then(function () {

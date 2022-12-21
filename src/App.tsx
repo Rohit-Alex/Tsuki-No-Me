@@ -12,6 +12,7 @@ import Typescript from './Components/Typescript/Typescript';
 import ApiCalling from './Components/ApiCallingInReact/ApiCalling';
 import RuleGeneral from './Components/RuleGeneral';
 import FormParent from './Components/FormParent';
+import StyledComponent from 'Components/styledComponent';
 
 
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
@@ -62,6 +63,7 @@ function App() {
             <Route path='/api-calling' element={<ApiCalling />}/>
             <Route path='/project' element={<Project />}/>
             <Route path='/form-antd' element={<FormParent />}/>
+            <Route path='/styled-comp' element={<StyledComponent />} />
             <Route path='*' element={<h4>Page not found</h4>}/>
           </Routes>
       </div>

@@ -1,9 +1,10 @@
-import { Select } from "antd"
+import { Select, Tooltip } from "antd"
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
 // import { useBasicInfoContext } from "../BasicInfo.js/BasicInfo";
 import DropdownList from "../TestingComponent/Dropdown";
+import Widget from "../TestingComponent/widget2";
 type IUserDetails = {
   firstName: string
   lastName: string
@@ -29,6 +30,7 @@ const Home = () => {
         <Link to="/typescript">Typescript</Link>
         <Link to="/api-calling">ApiCalls</Link>
         <Link to="/form-antd">FORM</Link>
+        <Link to="/styled-comp">Styled components</Link>
         <DropdownList />
       </div>
 
