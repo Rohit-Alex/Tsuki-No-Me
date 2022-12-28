@@ -10,7 +10,7 @@ const SelectWrapper = () => {
             placeholder='Normal select box'
             allowClear
             onChange={value => setValue(value)}
-                getPopupContainer={() => { return document.getElementById('area') }}
+            getPopupContainer={() => { return document.getElementById('area') }}
             filterOption={(input, option) => {  return (option.children).includes(input) }}
             value={value}
         >

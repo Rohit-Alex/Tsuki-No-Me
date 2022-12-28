@@ -44,6 +44,7 @@ forIn, forOf, forEach
 Object methods --> keys, values, entries, fromEntries, hasOwnProperty
 JSON.stringify, JSON.parse, structureClone
 freeze, seal
+crypto randomUUID
 
 shallow copy/deep copy
 local storage/session storage
@@ -62,3 +63,27 @@ Classes
 Debouncing & throttling
 
 https://javascript.info/ (From introduction to events)
+
+locale
+currency short form
+
+INTL DateTimeFormat
+options -> 
+            dateStyle, timeStyle => 'full', 'short', 'long'
+            hour, minute, second => 'numeric'
+            hour12 => false/true (to show am/pm or not)
+            fractionalSecondDigits (to show miliseconds can have values 1,2,3 i.e to show how many digits of miliseconds. Max 3)
+            day, month, year => 'numeric', 'short', 'long'
+            weekday => 'short'/'long'
+            timezone(Time zone 'Australia/Sydney'/'America/Los_Angeles')
+            timeZoneName => 'short'/'long'
+
+INTL NumberFormat
+options-> 
+         style => currency/unit
+         currency => 'EUR'/'JPY'/'INR'
+         unit => 'kilometer-per-hour'/'liter'
+         unitDisplay => 'long'/'short'
+         maximumSignificantDigits
+         maximumFractionDigits => numeric
+         minimumFractionDigits => numeric

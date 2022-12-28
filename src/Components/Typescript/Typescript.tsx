@@ -55,6 +55,13 @@ const data: ({'STATUS': string} | null)[] = [null, {STATUS: 'status'}]
 const exportStatus: {[key: string] : string} = {STATUS: "SUCCESS"}
 const description=  messageObject[exportStatus?.STATUS].message
 
+type IKeysVal = "pending" | "resolved" | "rejected";
+const obj1: { [key in IKeysVal]: string } = {
+  pending: "pending",
+  resolved: "resolved",
+  rejected: "rejected",
+};
+
 const obj = {
   name: 'rohit',
   details: {

@@ -171,6 +171,7 @@ Semicolon: =>>
 
 Number range => (2^53 - 1) in total 16 digit
 
+to swap two numbers: [a,b] = [b,a]
 
 Assignment = returns a value ===>>
 The fact of = being an operator, not a “magical” language construct has an interesting implication.

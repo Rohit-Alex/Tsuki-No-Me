@@ -1,6 +1,6 @@
 import { render, screen, act, fireEvent, prettyDOM, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import Widget from './widget2'
+import Widget from '../widget2'
 
 
 window.matchMedia = window.matchMedia || (() => {
