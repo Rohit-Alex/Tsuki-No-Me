@@ -5,7 +5,6 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import FakeTimer from "../FakeTimer";
-// import { act, renderHook } from '@testing-library/react'
 
 window.matchMedia =
     window.matchMedia ||

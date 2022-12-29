@@ -251,10 +251,9 @@ export const getMonthNames = () => {
 //   display: 'flex', justifyContent: 'space-between', columnGap: '20px'
 // })
 
-export const encrpytData = (key, data) => {
+export const encrpytData = (key) => {
   const res = sessionStorage.getItem(key)
-  if (!data.payload) return `no payload ${res}`
-  return { ...data, status: 'success' }
+  return { res, status: 'success' }
 }
 
 // export const TokenExtractor =  (request, reply,next) => {
