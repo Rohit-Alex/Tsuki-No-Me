@@ -150,3 +150,5 @@ export const handleErrorNotifications = (error: any) => {
         url,
     })
 }
+
+export const IS_CAPITALIZE = true

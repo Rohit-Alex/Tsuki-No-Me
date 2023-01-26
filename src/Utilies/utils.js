@@ -1,9 +1,10 @@
 import { notification } from "antd";
 import axios from "axios";
+import { IS_CAPITALIZE } from "Constant";
 // import jwt from 'jsonwebtoken'
 
-const NodeCache = require("node-cache");
-const myCache = new NodeCache();
+// const NodeCache = import("node-cache");
+// const myCache = new NodeCache();
 
 let interceptor;
 const createAxiosResponseInterceptor = () => {
@@ -247,10 +248,6 @@ export const getMonthNames = () => {
   return ["JAN", 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC']
 }
 
-// const flexProperties = (alignItems) => ({
-//   display: 'flex', justifyContent: 'space-between', columnGap: '20px'
-// })
-
 export const encrpytData = (key) => {
   const res = sessionStorage.getItem(key)
   return { res, status: 'success' }
@@ -278,12 +275,6 @@ export const getTokenFromMemCache = (tokenKey) => {
   return null
 }
 
-export const apiLocations = {
-  GET_ONE: (type) => {
-    return `https://www.google.com/${type}`;
-  }
-};
-
 export const getOptions = (page) => {
   return new Promise((resolve) => {
     const newData = new Array(20).fill(0).map((_, index) => ({
@@ -292,4 +283,16 @@ export const getOptions = (page) => {
     }));
     resolve(newData);
   });
+};
+
+export const sayHello = (name) => {
+  let result = 'Hi, ';
+  console.log(IS_CAPITALIZE, 'fsf')
+  if (IS_CAPITALIZE) {
+    result += name[0].toUpperCase() + name.substring(1, name.length);
+  } else {
+    result += name;
+  }
+
+  return result;
 };

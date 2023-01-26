@@ -1,15 +1,24 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-unnecessary-act */
 import React from 'react'
-import { render, screen, act, fireEvent, prettyDOM } from '@testing-library/react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
-import { callAfterTimeout } from '../../../Constant'
-import { apiLocations, getTokenFromMemCache, TokenExtractor } from '../../../Utilies/utils'
+// import { callAfterTimeout, IS_CAPITALIZE } from '../../../Constant'
+import * as Constant from "../../../Constant"
+import { ApiLocations, getTokenFromMemCache, sayHello, TokenExtractor } from '../../../Utilies/utils'
 
 // import jwt from 'jsonwebtoken'
 jest.mock('node-cache')
-jest.mock('../../../Utilies/utils')
+jest.mock("../../../Constant", () => ({
+    __esModule: true,
+    ...jest.requireActual("../../../Constant"),
+    IS_CAPITALIZE: null
+}));
+jest.mock("../../../Utilies/utils", () => ({
+    __esModule: true,
+    ...jest.requireActual("../../../Utilies/utils"),
+}));
 jest.mock('node-cache', () => function NodeCache() {
     const cachedObj = { testingKey: 'testingValue' }
     this.get = function (key) {
@@ -91,7 +100,7 @@ describe('Testing constant functions', () => {
     jest.spyOn(global, 'setTimeout');
     // jest.setTimeout(30000)
     it('Should test setTimeout fn', async () => {
-        callAfterTimeout()
+        Constant.callAfterTimeout()
         // jest.runAllTimers()
         // jest.advanceTimersByTime(500);
         expect(setTimeout).toHaveBeenCalledTimes(1);
@@ -99,9 +108,19 @@ describe('Testing constant functions', () => {
     })
 
     it('Testing url formation', () => {
-        apiLocations.GET_ONE = jest.fn().mockReturnValue('someRandomUrl.com')
-        console.log(apiLocations.GET_ONE())
+        ApiLocations.GET_ONE = jest.fn().mockReturnValue('someRandomUrl.com')
+        console.log(ApiLocations.GET_TRACE_DETAILS())
     })
 
+    it('Should capitalize first character', () => {
+        const res = sayHello('rohit')
+        expect(res).toBe('Hi, Rohit')
+    })
+
+    it('Should not capitalize first character', () => {
+        Constant.IS_CAPITALIZE = false
+        const res = sayHello('rohit')
+        expect(res).toBe('Hi, rohit')
+    })
 })
 
