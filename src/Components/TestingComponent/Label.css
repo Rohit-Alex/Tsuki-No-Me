@@ -1,0 +1,8 @@
+.uci__label {
+  margin-bottom: 8px;
+  display: flex;
+  color: var(--c-paragraph);
+  font-size: 12px;
+  letter-spacing: -0.1px;
+  line-height: 15px;
+}

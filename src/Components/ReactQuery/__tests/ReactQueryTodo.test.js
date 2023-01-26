@@ -33,6 +33,5 @@ describe('React Query -> queries', () => {
         }];
         useQueryCustomHook.mockImplementationOnce(() => ({ isLoading: false, data: mockedProductData }));
         const result = renderWithClient(<BrowserRouter><ReactQueryTodo /></BrowserRouter>)
-        console.log(result.debug())
     })
 })

@@ -27,9 +27,8 @@ console.log([5,7,9].myFilter((e,idx)=> e % 2 === 0))
 //Reduce method
 Array.prototype.myReduce = function(cb, initialValue) {
     // initialValue => acc = initialValue
-    //                currIndex = 0 : 1
     //                currElement = arr[0] : arr[1]
-    //                iteration = element.length
+    //                currIndex = 0 : 1
     let accumulator = initialValue !== undefined ? initialValue : this[0]
     for(let i = initialValue !== undefined ? 0 : 1; i < this.length; i++) {
         accumulator = cb(accumulator, this[i], i, this)
@@ -55,7 +54,7 @@ Function.prototype.myCall = function(context, ...args) {
 }
 
 // Apply method
-Function.prototype.myCall = function (context, argArr) {
+Function.prototype.myApply = function (context, argArr) {
     const fun = this
     let randomUniqueKey = Math.random()
     while (context[randomUniqueKey] !== undefined) randomUniqueKey = Math.random()
@@ -73,24 +72,26 @@ Function.prototype.myBind = function(context, ...args) {
     }
 }
 
-// Promise.All
+/*
+    *  ******Promises******
+    ! Fullfils -> resolved
+    ? settled -> resolved or rejected. only needs to be fulfilled
+    * Prmomise.resolve(prms) used so that if we pass static values/non-promise values then also the code works for us. As, Promise.resolve() returns a promise
+    ******* <<<------>>>
+*/
 
-const myPromiseAll = promiseArr => {
-    // let toReturn = []
-    // for (const prms of promiseArr) {
-    //     try {
-    //         const data = await prms
-    //         toReturn.push(data)
-    //     } catch (err) {
-    //         toReturn = err
-    //     }
-    // }
-    // return toReturn
+/*
+    ******* <<<------>>>
+    * Promise.All
+    ! Fulfills when all of the promises fulfill; rejects when any of the promises rejects.
+    ******* <<<------>>>
+*/
+Promise.prototype.myPromiseAll = promiseArr => {
     return new Promise((res, rej)=>{
         let resolvedPromise = 0
         let returnArr = []
         promiseArr.forEach((prms, index)=> {
-            prms.then((val)=>{
+            Promise.resolve(prms).then((val)=>{
                 returnArr[index] = val
                 resolvedPromise += 1
             }).catch((err) => {
@@ -100,3 +101,70 @@ const myPromiseAll = promiseArr => {
         if (resolvedPromise === promiseArr.length) res(returnArr)
     })
 }
+
+/*
+    ******* <<<------>>>
+    * Promise.allSettled()
+    ! Fulfills when all promises settle.
+    ******* <<<------>>>
+*/
+Promise.prototype.mySettledAll = function (promiseArr) {
+    return new Promise((res) => {
+        const resolvedPromises = [];
+        promiseArr.forEach((prms, idx) => {
+            Promise.resolve(prms)
+                .then((response) => {
+                    resolvedPromises[idx] = response;
+                })
+                .catch((err) => {
+                    resolvedPromises[idx] = err;
+                });
+        });
+        res(resolvedPromises);
+    });
+};
+
+/*
+    ******* <<<------>>>
+    * Promise.race()
+    ! Settles when any of the promises settles. In other words, fulfills when any of the promises fulfills; rejects when any of the promises rejects.
+    ******* <<<------>>>
+*/
+Promise.prototype.myRace = function (promiseArr) {
+    return new Promise((resolve, reject) => {
+        promiseArr.forEach((prms) => {
+            Promise.resolve(prms)
+                .then((res) => {
+                    resolve(res);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
+    });
+};
+
+/*
+    ******* <<<------>>>
+    * Promise.any()
+    ! Fulfills when any of the promises fulfills; rejects when all of the promises reject.
+    ******* <<<------>>>
+*/
+Promise.prototype.myAny = function (promiseArr) {
+    return new Promise((resolve, reject) => {
+        let rejectedPrms = 0;
+        const rejectedPrmsVals = [];
+        promiseArr
+            .forEach((prms, idx) => {
+                Promise.resolve(prms).then((res) => {
+                    resolve(res);
+                });
+            })
+            .catch((err) => {
+                rejectedPrmsVals[idx] = err;
+                rejectedPrms++;
+                if (rejectedPrms === promiseArr.length) reject(new Error("Aggregate"));
+            });
+    });
+};
+

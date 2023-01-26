@@ -5,11 +5,11 @@ import { render, screen, act, fireEvent, prettyDOM } from '@testing-library/reac
 import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
 import { callAfterTimeout } from '../../../Constant'
-import { getTokenFromMemCache, TokenExtractor } from '../../../Utilies/utils'
+import { apiLocations, getTokenFromMemCache, TokenExtractor } from '../../../Utilies/utils'
 
 // import jwt from 'jsonwebtoken'
 jest.mock('node-cache')
-
+jest.mock('../../../Utilies/utils')
 jest.mock('node-cache', () => function NodeCache() {
     const cachedObj = { testingKey: 'testingValue' }
     this.get = function (key) {
@@ -97,5 +97,11 @@ describe('Testing constant functions', () => {
         expect(setTimeout).toHaveBeenCalledTimes(1);
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
     })
+
+    it('Testing url formation', () => {
+        apiLocations.GET_ONE = jest.fn().mockReturnValue('someRandomUrl.com')
+        console.log(apiLocations.GET_ONE())
+    })
+
 })
 

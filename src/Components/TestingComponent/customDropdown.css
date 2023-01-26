@@ -1,0 +1,278 @@
+.uci__dropdown {
+  box-shadow: none;
+  cursor: default;
+  flex-wrap: wrap;
+  display: inline-block;
+  height: auto;
+  position: relative;
+  width: 100%;
+  font-size: 14px;
+  min-height: 34px;
+}
+
+.uci__dropdown > button {
+  position: relative;
+  border: solid 2px #f2f3f5;
+  background-color: #f2f3f5;
+  padding: 6px 34px 6px 8px;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+  height: 40px;
+  border-radius: 3px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.uci__dropdown > button:not(:disabled):hover {
+  background-color: #ebecf0;
+  border-color: #dfe1e6;
+}
+
+.uci__dropdown > button > span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "Open Sans Regular";
+  font-size: 14px;
+}
+
+.uci__dropdown > i,
+.uci__dropdown button i {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  pointer-events: none;
+}
+
+.uci__dropdown.ucidropdown--open > i,
+.ucidropdown.uci__dropdown--open button i {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  pointer-events: none;
+  color: var(--c-primary);
+}
+
+.uci__dropdown > i svg,
+.uci__dropdown button i svg {
+  width: 24px;
+}
+
+.uci__dropdown.ucidropdown--open > button,
+.ucidropdown.ucidropdown--open > button:not(:disabled),
+.ucidropdown.ucidropdown--open > button:not(:disabled),
+.ucidropdown > button:active:not(:disabled),
+.uci__dropdown > button:focus:not(:disabled) {
+  background-color: var(--c-light);
+  border-color: rgb(76, 154, 255);
+  outline: none;
+}
+
+.uci__dropdown > ul {
+  z-index: 1;
+  margin: 0;
+  display: none;
+  position: absolute;
+  box-shadow: 0 2px 4px 0 #cbcbcb, 0 0 2px 0 #cbcbcb;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 9px 0;
+  overflow-y: auto;
+  max-height: 265px;
+}
+
+.uci__dropdown--disabled .uciinputinput-wrapper,
+.ucidropdown--disabled > button,
+.uci__dropdown--disabled input {
+  border-color: #dfe1e6 !important;
+  background-color: hsl(210, 25%, 93%) !important;
+  cursor: not-allowed;
+}
+
+.uci__dropdown--disabled > button {
+  color: #757575 !important;
+}
+
+.uci__dropdown--disabled button i,
+.ucidropdown.ucidropdown--disabled > i,
+.ucidropdown.ucidropdown--disabled
+  button
+  i
+  .uci__dropdown--disabled
+  button:disabled
+  span {
+  color: #afb1b6 !important;
+}
+
+.uci__dropdown--disabled input,
+.ucidropdown.uci__dropdown--disabled > i {
+  color: #afb1b6 !important;
+}
+
+.uci__dropdown > ul > li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uci__dropdown > ul > li .uci_checkbox {
+  vertical-align: bottom;
+  outline: none !important;
+}
+
+.uci__dropdown > ul > li > * {
+  color: #232533;
+  border: none;
+  background: var(--c-light);
+  padding: 8px 6px;
+  display: block;
+  border-radius: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.uci__dropdown > ul > li > div {
+  text-align: center;
+}
+
+.uci__dropdown--options-checkbox.ucidropdown
+  ul
+  > li.ucidropdownitem--active
+  > button:not(.ucidropdown_option-button--custom) {
+  background-color: transparent;
+  color: #232533;
+}
+
+.uci__dropdown > ul > li > button:hover {
+  background-color: #f2f3f5;
+}
+
+.uci__dropdown > ul > li > button:focus,
+.uci__dropdown > ul > li > button:active {
+  outline: none;
+  background-color: rgb(216, 216, 218);
+}
+
+.uci__dropdown > ul {
+  left: 0;
+  min-width: 100%;
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.uci__dropdown ul > li.ucidropdown_item--active > button {
+  background-color: #5468ff;
+  color: var(--c-light);
+}
+
+.uci__dropdown > ul > li > button:hover,
+.ucidropdown ul > li.ucidropdown_item--active > button:hover {
+  background-color: #6b7cff;
+  color: var(--c-light);
+}
+
+.uci__dropdown ul > li.ucidropdownitem--active > button:active,
+.ucidropdown ul > li.ucidropdown_item--active > button:focus {
+  background-color: #4459fa;
+  color: var(--c-light);
+}
+
+.uci__dropdown .uci_chips {
+  padding-right: 34px;
+}
+
+.uci__dropdown .uci_checkbox--box {
+  margin: 2px 5px 0 0px;
+}
+
+.uci__dropdown .ucidropdown_loading-indicator {
+  position: absolute;
+  right: 32px;
+  z-index: 1;
+  top: 10px;
+  color: var(--c-primary);
+}
+
+.uci__dropdown span.ucidropdown_loading-indicator > svg {
+  width: 20px;
+  animation: uci_anim_rotating 1.5s linear infinite;
+}
+
+/* Disabled Multiple with chips */
+
+.uci__dropdown--disabled {
+  cursor: not-allowed;
+}
+
+.uci__dropdown--disabled .uci_chips button {
+  pointer-events: none;
+}
+
+.uci__dropdown--disabled .uci_chips {
+  background: var(--c-disabled);
+  pointer-events: none;
+}
+
+.uci__dropdown--color-dark > button {
+  background-color: var(--c-background-dark);
+  color: var(--c-secondary-dark);
+  border-color: var(--c-background-dark);
+}
+
+.uci__dropdown--color-dark > button:not(:disabled):hover {
+  background-color: var(--c-background-very-dark);
+  color: var(--c-secondary-dark);
+  border-color: var(--c-background-very-dark);
+}
+
+.uci_dropdown--color-dark.uci_dropdown--open > button,
+.uci_dropdown--color-dark.uci_dropdown--open > button:not(:disabled),
+.uci_dropdown--color-dark.uci_dropdown--open > button:not(:disabled),
+.uci__dropdown--color-dark > button:active:not(:disabled),
+.uci__dropdown--color-dark > button:focus:not(:disabled) {
+  background-color: var(--c-background-dark);
+  border-color: var(--c-background-dark);
+  color: var(--c-info--light);
+  outline: none;
+}
+
+.uci_dropdown--color-dark.uci_dropdown--open > i,
+.uci_dropdown--color-dark.uci_dropdown--open button i {
+  color: var(--c-info--light);
+}
+
+.uci__dropdown--color-very-dark > button {
+  background-color: var(--c-background-dark-alt);
+  color: var(--c-info--light);
+  border-color: var(--c-background-dark-alt);
+}
+
+.uci__dropdown--color-very-dark > button:not(:disabled):hover {
+  background-color: var(--c-background-very-dark);
+  color: var(--c-secondary-dark);
+  border-color: var(--c-background-very-dark);
+}
+
+.uci_dropdown--color-very-dark.uci_dropdown--open > button,
+.uci_dropdown--color-very-dark.uci_dropdown--open > button:not(:disabled),
+.uci_dropdown--color-very-dark.uci_dropdown--open > button:not(:disabled),
+.uci__dropdown--color-very-dark > button:active:not(:disabled),
+.uci__dropdown--color-very-dark > button:focus:not(:disabled) {
+  background-color: var(--c-background-dark);
+  border-color: var(--c-background-dark);
+  color: var(--c-info--light);
+  outline: none;
+}
+
+.uci_dropdown--color-very-dark.uci_dropdown--open > i,
+.uci_dropdown--color-very-dark.uci_dropdown--open button i {
+  color: var(--c-info--light);
+}

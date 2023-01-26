@@ -5,6 +5,7 @@ import DatePickers from "../CustomDatepicker";
 import { sub } from "date-fns";
 import { columnList } from "../../Constant";
 import SelectWrapper from "./Select";
+import AllInOne from "./AllInOne";
 
 const Miscellaneous = () => {
     const [searchValue, setSearchValue] = useState('')
@@ -51,6 +52,9 @@ const Miscellaneous = () => {
             />
         )}
         <SelectWrapper />
+        <div>
+                <AllInOne />
+        </div>
         </>
     )
 }

@@ -23,7 +23,6 @@ function Search({ handleSearch }) {
         return current && current.valueOf() > Date.now();
     };
 
-    // console.log(endDate, 'endDate');
     return (
         <div data-testid="search-test">
             {filterValue === 'createdAt' ? ['startDate', 'endDate'].map((type, index) =>

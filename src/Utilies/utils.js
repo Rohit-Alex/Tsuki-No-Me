@@ -277,3 +277,19 @@ export const getTokenFromMemCache = (tokenKey) => {
   }
   return null
 }
+
+export const apiLocations = {
+  GET_ONE: (type) => {
+    return `https://www.google.com/${type}`;
+  }
+};
+
+export const getOptions = (page) => {
+  return new Promise((resolve) => {
+    const newData = new Array(20).fill(0).map((_, index) => ({
+      label: `Option${(page - 1) * 20 + index + 1}`,
+      value: `opt${page * 20 + index + 1}`
+    }));
+    resolve(newData);
+  });
+};

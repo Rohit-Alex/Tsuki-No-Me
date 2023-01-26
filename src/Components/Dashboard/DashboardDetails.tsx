@@ -10,7 +10,6 @@ const DashboardDetails = () => {
     const { nickname, trademark } = queryParams; // using this query params get method, we won't be able to give default value while destructuring 
     const { state } = location as ILocation
     const { name = 'Default name', age = 'Default age' } = state || {}
-    console.log("Inside Dashboard Details Component -------->>>")
     return (
         <>
             <div>This is the dashboard details </div>

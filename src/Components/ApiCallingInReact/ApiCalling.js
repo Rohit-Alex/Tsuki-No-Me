@@ -5,7 +5,6 @@ function ApiCalling() {
 
     useEffect(() => {
         const res = getAllProducts();
-        console.log(res, 'response')
     }, [])
 
 
@@ -13,7 +12,6 @@ function ApiCalling() {
         const helperFun = async () => {
             try {
                 const res = await getAllProducts();
-                console.log(res, 'response')
             } catch (err) {
                 console.log(err)
             }

@@ -25,6 +25,11 @@ export const segmentOptions = () => [
   {label: t('MUTATION'), value: 'mutation'},
 ]
 
+export const segmentOptions1 = [
+  {label: ('TODOS'), value: 'react_query'},
+  {label: ('TODO_DETAILS'), value: 'todo_details'},
+  {label: ('DYNAMIC_PARALLEL'), value: 'dynamic_parallel'}
+]
 
 export const columnsMG = () =>[
   {
@@ -134,7 +139,6 @@ export const getRuleEventHelper = async () => {
 }
 
 export const handleErrorNotifications = (error: any) => {
-    console.log("inside error notifications", error)
     let { title = "", description = "", duration, url } = error
     if (!title) title = error?.code ? error?.code : ''
     if (!description) description = error?.message ? error?.message : ''

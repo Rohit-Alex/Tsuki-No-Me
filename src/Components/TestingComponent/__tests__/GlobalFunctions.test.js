@@ -60,7 +60,6 @@ window.matchMedia =
             fireEvent.click(consoleBtn)
         })
         
-
         it('Should encrypt data using session storage', () => {
             sessionStorage.setItem('some_key', 'some_value')
             const res = encrpytData('some_key')

@@ -23,7 +23,6 @@ export const apiHandleError = (err) => {
 
 export const getApiData = () => {
     return (dispatch) => {
-        console.log("inside dispatch")
         dispatch(apiCalled())
         axios.get('https://jsonplaceholder.typicode.com/users')
         .then(res => {

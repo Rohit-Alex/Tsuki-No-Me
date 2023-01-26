@@ -1,0 +1,35 @@
+import { useEffect } from "react";
+
+function useOnClickOutside(ref, handler) {
+    useEffect(() => {
+        const listener = (event) => {
+            // Do nothing if clicking ref's element or descendent elements
+            if (ref instanceof Array) {
+                for (let i = 0; i < ref.length; i++) {
+                    if (!ref[i].current || ref[i].current.contains(event.target)) {
+                        return;
+                    }
+                }
+            } else {
+                if (!ref.current || ref.current.contains(event.target)) {
+                    return;
+                }
+            }
+
+            handler(event);
+        };
+
+        document.addEventListener("mousedown", listener);
+        document.addEventListener("touchstart", listener);
+
+        document.addEventListener("focusin", listener);
+        // document.addEventListener('touchstart', listener)
+
+        return () => {
+            document.removeEventListener("mousedown", listener);
+            document.removeEventListener("touchstart", listener);
+        };
+    }, [ref, handler]);
+}
+
+export default useOnClickOutside;

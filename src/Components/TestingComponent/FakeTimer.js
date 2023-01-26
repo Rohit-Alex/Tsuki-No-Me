@@ -6,7 +6,6 @@ export default function FakeTimer() {
     const [flag, setFlag] = React.useState(false);
 
     const btnClickHandler = () => {
-        console.log("Inside handler fn")
         setTimeout(() => {
             console.log("Inside setTimeout fn")
             setFlag((prev) => !prev);
