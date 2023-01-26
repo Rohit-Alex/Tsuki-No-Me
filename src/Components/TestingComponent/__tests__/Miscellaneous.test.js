@@ -10,15 +10,12 @@ import { ApiLocations, getTokenFromMemCache, sayHello, TokenExtractor } from '..
 
 // import jwt from 'jsonwebtoken'
 jest.mock('node-cache')
-jest.mock("../../../Constant", () => ({
-    __esModule: true,
-    ...jest.requireActual("../../../Constant"),
-    IS_CAPITALIZE: null
-}));
+
 jest.mock("../../../Utilies/utils", () => ({
     __esModule: true,
     ...jest.requireActual("../../../Utilies/utils"),
 }));
+
 jest.mock('node-cache', () => function NodeCache() {
     const cachedObj = { testingKey: 'testingValue' }
     this.get = function (key) {

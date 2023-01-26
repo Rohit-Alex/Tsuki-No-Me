@@ -287,12 +287,10 @@ export const getOptions = (page) => {
 
 export const sayHello = (name) => {
   let result = 'Hi, ';
-  console.log(IS_CAPITALIZE, 'fsf')
   if (IS_CAPITALIZE) {
     result += name[0].toUpperCase() + name.substring(1, name.length);
   } else {
     result += name;
   }
-
   return result;
 };
