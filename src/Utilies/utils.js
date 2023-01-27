@@ -3,8 +3,8 @@ import axios from "axios";
 import { IS_CAPITALIZE } from "Constant";
 // import jwt from 'jsonwebtoken'
 
-// const NodeCache = import("node-cache");
-// const myCache = new NodeCache();
+const NodeCache = import("node-cache");
+const myCache = new NodeCache();
 
 let interceptor;
 const createAxiosResponseInterceptor = () => {
