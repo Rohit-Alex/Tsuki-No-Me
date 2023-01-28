@@ -1,16 +1,12 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-unnecessary-act */
-import React from 'react'
 import '@testing-library/jest-dom'
-import { useTransactionSearchContext } from './TransactionData'
-import TransactionList from '../Components/TransactionList'
-import { cleanup, fireEvent, prettyDOM, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import { wait } from '@testing-library/user-event/dist/utils'
-import { ApiLocations } from '../utils'
+import { useTransactionSearchContext } from 'Context/TransactionListContext'
+import TransactionList from '../TestingComponent'
 
-jest.mock('./TransactionData')
-
+jest.mock('Context/TransactionListContext')
 window.matchMedia =
     window.matchMedia ||
     (() => {
@@ -102,10 +98,10 @@ describe('Transaction list test case', () => {
         await act(async () =>
             await render(<TransactionList />)
         )
-        await wait(async () =>
+        await waitFor(async () =>
             await screen.findByText('SHIPPING_FEE_ITEM_LEVEL')
         )
-        await wait(async () => {
+        await waitFor(async () => {
             const div = await screen.findByRole('link', { name: 'VIEW' })
             expect(div).toBeInTheDocument()
         })
