@@ -6,6 +6,9 @@ It is weakly typed dynamic language.
 It is used to provide functionality to the webpage.
 mostly used as client side programming language
 
+To add props conditionally => {...(condition && {disable: true})}
+To add keys conditionally in object => {...obj, ...(condition && {key: 1})}
+
 Instance Of
     The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value. 
     object instanceof constructor
@@ -239,3 +242,4 @@ To Learn ---->>>
 6> shadowDOM
 7> context vs Reducer vs Thunk vs Saga
 8> Why can't we use redux state instead of local state
+
