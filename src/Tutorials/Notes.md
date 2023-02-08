@@ -6,6 +6,8 @@ It is weakly typed dynamic language.
 It is used to provide functionality to the webpage.
 mostly used as client side programming language
 
+If a function accepts more than 2 arguments then it's better to send an object rather than other values.
+
 To add props conditionally => {...(condition && {disable: true})}
 To add keys conditionally in object => {...obj, ...(condition && {key: 1})}
 

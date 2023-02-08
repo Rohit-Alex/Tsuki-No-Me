@@ -1,6 +1,6 @@
-Javascript definition
-scripting/dynamic/JIT compilation
-single threaded/synchronous/asynchronous
+Javascript definition : mentioned key point in Notes.md file
+    scripting/dynamic/JIT compilation
+    single threaded/synchronous/asynchronous
 
 async/defer scripts
 
