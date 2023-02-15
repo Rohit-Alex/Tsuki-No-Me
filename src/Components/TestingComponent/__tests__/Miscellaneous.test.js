@@ -4,17 +4,16 @@ import React from 'react'
 import { render, screen, act, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
-// import { callAfterTimeout, IS_CAPITALIZE } from '../../../Constant'
 import * as Constant from "../../../Constant"
 import { ApiLocations, getTokenFromMemCache, sayHello, TokenExtractor } from '../../../Utilies/utils'
 
 // import jwt from 'jsonwebtoken'
 jest.mock('node-cache')
 
-jest.mock("../../../Utilies/utils", () => ({
-    __esModule: true,
-    ...jest.requireActual("../../../Utilies/utils"),
-}));
+// jest.mock("../../../Utilies/utils", () => ({
+//     __esModule: true,
+//     ...jest.requireActual("../../../Utilies/utils"),
+// }));
 
 jest.mock('node-cache', () => function NodeCache() {
     const cachedObj = { testingKey: 'testingValue' }
