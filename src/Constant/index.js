@@ -81,7 +81,7 @@ export const columnList = [
     dataIndex: "sellerOrderLineId",
   },
   {
-    title: "Created At",
+    title: "Transaction Created At",
     value: "createdAt",
     dataIndex: "createdAt",
   },

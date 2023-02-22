@@ -1,4 +1,7 @@
 .fixed-wrapper {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
+  .ctn-bdy {
+    margin: 24px 16px;
+  }
 }

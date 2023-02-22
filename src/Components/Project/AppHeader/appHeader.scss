@@ -1,24 +1,23 @@
 .app-header-ctn {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background-color: #f1e5d3;
+  //   height: 9vh;
+  &.expanded {
+    // width: 100%;
+  }
+  &.collapsed {
+    // width: 100%;
+  }
+  .left-part {
     display: flex;
     justify-content: space-between;
-    padding: 12px 18px;
-    background-color: #f1e5d3;
-    height: 9vh;
-    &.expanded {
-        width: 88%;
+    // width: 20%;
+    .app-logo-ctn {
+      img {
+        width: 50px;
+      }
     }
-    &.collapsed {
-        width: 95%;
-    }
-    .left-part {
-        display: flex;
-        justify-content: space-between;
-        width: 20%;
-        .app-logo-ctn{
-            img {
-                width: 50px;
-            }
-        }
-    }
-    
+  }
 }

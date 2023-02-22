@@ -268,12 +268,12 @@ export const encrpytData = (key) => {
 //   return next()
 // }
 
-export const getTokenFromMemCache = (tokenKey) => {
-  if (myCache.get(tokenKey)) {
-    return myCache.get(tokenKey)
-  }
-  return null
-}
+// export const getTokenFromMemCache = (tokenKey) => {
+//   if (myCache.get(tokenKey)) {
+//     return myCache.get(tokenKey)
+//   }
+//   return null
+// }
 
 export const getOptions = (page) => {
   return new Promise((resolve) => {
