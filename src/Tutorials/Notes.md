@@ -7,10 +7,10 @@ It is weakly typed dynamic language.
 It is used to provide functionality to the webpage.
 mostly used as client side programming language
 
-2>
+2> Best Practices
 If a function accepts more than 2 arguments then it's better to send an object rather than other values.
 
-3>
+3> conditionally add props and object property
 To add props conditionally => {...(condition && {disable: true})}
 To add keys conditionally in object => {...obj, ...(condition && {key: 1})}
 
@@ -44,6 +44,8 @@ console.log('mozilla'.substring(7, 4)); // 'lla'
 substr => takes a starting point and goes till the length of output string becomes equal to 2nd argument.
 however, it's deprecated now.
 
+Note: When NaN is provided as index, then it's treated as 0 for every above method.
+
 10>
 isNaN ===>> isNaN() function determines whether a value is NaN when converted to a number
 Number.isNaN() doesn't attempt to convert the parameter to a number, so non-numbers always return false. The following are all false:
@@ -72,12 +74,7 @@ HOC => making reuse of the component logic and functionality that is commonly re
 DOMContentLoaded => The DOMContentLoaded event fires when the HTML document has been completely parsed, and all deferred scripts (<script defer src="…"> and <script type="module">) have downloaded and executed. It doesn't wait for other things like images, subframes, and async scripts to finish loading.
 componentDidMount is triggered as soon as the instance of the componenet is created. Wheras, DOMContentLoaded is fired once only in entire webPage life.
 
-15>
-Call, apply & bind
-async & defer
-throttling & debouncing
-
-16>
+16> Exponential operator
 the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
 const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
 
@@ -100,7 +97,7 @@ Arrow functions cannot be used as constructors and will throw an error when used
 [undefined].toString() => ''
 [] => in number is equivalent to 0
 
-21>
+21> Destructuring
 const error = { message: 'rohit' }
 const { config:
 { headers: { Authorization, ...exceptAuthorization } = {}, ...exceptHeaders } = {}, ...rest
@@ -204,10 +201,10 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 29>
 Number range => (2^53 - 1) in total 16 digit
 
-30>
+30> Swap
 to swap two numbers: [a,b] = [b,a]
 
-31>
+31> Assignment operator
 Assignment = returns a value ===>>
 The fact of = being an operator, not a “magical” language construct has an interesting implication.
 All operators in JavaScript return a value. That’s obvious for + and -, but also true for =.
@@ -231,7 +228,7 @@ https://javascript.info/comparison
 33>
 null and undefined equal each other and don’t equal anything else.
 
-34>
+34> Switch example
 https://javascript.info/switch
 
 Default parameters are only applied when undefined is passed to it or nothing which is equivalent to undefined itself

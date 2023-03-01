@@ -6,10 +6,10 @@ import '@testing-library/jest-dom'
 import Miscellaneous from '../Miscellaneous'
 import * as Constant from "../../../Constant"
 import { ApiLocations, getTokenFromMemCache, sayHello, TokenExtractor } from '../../../Utilies/utils'
-
 // import jwt from 'jsonwebtoken'
+import debounce from 'lodash/debounce'
 jest.mock('node-cache')
-
+jest.useFakeTimers()
 // jest.mock("../../../Utilies/utils", () => ({
 //     __esModule: true,
 //     ...jest.requireActual("../../../Utilies/utils"),
@@ -81,15 +81,43 @@ describe('Date Picker', () => {
     })
 })
 
-describe('Input', () => {
-    it('Test input component', () => {
-        render(<Miscellaneous />)
-        const inputField = screen.getByPlaceholderText('SEARCH_RULE_NAME')
+describe.only('Lodash', () => {
+    afterEach(() => {
+        jest.clearAllTimers(); // Clear all timers after each test
+        jest.restoreAllMocks(); // Restore all mocks after each test
+    });
+
+    it('should debounce the search input', async () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        const debounceMock = jest.fn((fn, timeout) => {
+            return function debounced(...args) {
+                const context = this;
+                clearTimeout(debounced.timeoutId);
+                debounced.timeoutId = setTimeout(() => fn.apply(context, args), timeout);
+            };
+        });
+
+        jest.doMock('lodash/debounce', () => debounceMock);
+
+        const { getByPlaceholderText } = render(<Miscellaneous />);
+        const input = getByPlaceholderText('SEARCH_RULE_NAME');
+
+        fireEvent.change(input, { target: { value: 'search term' } });
+        fireEvent.change(input, { target: { value: 'search term2' } });
+        fireEvent.change(input, { target: { value: 'search term3' } });
+
+        expect(debounceMock).toHaveBeenCalledTimes(3);
+        expect(debounceMock).toHaveBeenLastCalledWith(expect.any(Function), 400);
+
         act(() => {
-            fireEvent.change(inputField, { target: { value: 'Debit' } })
-        })
-    })
-})
+            jest.runAllTimers(); // Fast-forward all timers
+        });
+
+        expect(consoleSpy).toHaveBeenCalledTimes(1);
+        expect(consoleSpy).toHaveBeenCalledWith('inside debounce after 400', 'search term3');
+    });
+});
+
 
 describe('Testing constant functions', () => {
     jest.useFakeTimers();

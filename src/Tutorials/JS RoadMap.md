@@ -1,6 +1,6 @@
 Javascript definition : mentioned key point in Notes.md file
-    scripting/dynamic/JIT compilation
-    single threaded/synchronous/asynchronous
+scripting/dynamic/JIT compilation
+single threaded/synchronous/asynchronous
 
 async/defer scripts
 
@@ -13,11 +13,11 @@ truthy/falsy
 switch statement
 
 Array methods
--->> push,pop,shift,unshift,concat,findIndexOf,findLastIndexOf,flat
--->> map,filter,reduce, reduceRight, find,some,every, slice, splice
+-->> push,pop,shift,unshift,concat,findIndexOf,findLastIndexOf,flat,includes,indexOf
+-->> map,filter,reduce,reduceRight,find,some,every,slice,splice,group,groupMap
 
 String methods
--->> slice, substring, substr(deprecated but still should know), includes
+-->> slice, substring, substr(deprecated but still should know), includes, at, trim, padStart, padEnd, split, match, matchAll
 
 sort method on array and strings
 
@@ -68,22 +68,22 @@ locale
 currency short form
 
 INTL DateTimeFormat
-options -> 
-            dateStyle, timeStyle => 'full', 'short', 'long'
-            hour, minute, second => 'numeric'
-            hour12 => false/true (to show am/pm or not)
-            fractionalSecondDigits (to show miliseconds can have values 1,2,3 i.e to show how many digits of miliseconds. Max 3)
-            day, month, year => 'numeric', 'short', 'long'
-            weekday => 'short'/'long'
-            timezone(Time zone 'Australia/Sydney'/'America/Los_Angeles')
-            timeZoneName => 'short'/'long'
+options ->
+dateStyle, timeStyle => 'full', 'short', 'long'
+hour, minute, second => 'numeric'
+hour12 => false/true (to show am/pm or not)
+fractionalSecondDigits (to show miliseconds can have values 1,2,3 i.e to show how many digits of miliseconds. Max 3)
+day, month, year => 'numeric', 'short', 'long'
+weekday => 'short'/'long'
+timezone(Time zone 'Australia/Sydney'/'America/Los_Angeles')
+timeZoneName => 'short'/'long'
 
 INTL NumberFormat
-options-> 
-         style => currency/unit
-         currency => 'EUR'/'JPY'/'INR'
-         unit => 'kilometer-per-hour'/'liter'
-         unitDisplay => 'long'/'short'
-         maximumSignificantDigits
-         maximumFractionDigits => numeric
-         minimumFractionDigits => numeric
+options->
+style => currency/unit
+currency => 'EUR'/'JPY'/'INR'
+unit => 'kilometer-per-hour'/'liter'
+unitDisplay => 'long'/'short'
+maximumSignificantDigits
+maximumFractionDigits => numeric
+minimumFractionDigits => numeric
