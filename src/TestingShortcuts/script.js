@@ -1,3 +1,3 @@
-function iterateVibhu() {
-    console.log('vibhu')
+function iterateMaster() {
+    console.log('Master')
 }
