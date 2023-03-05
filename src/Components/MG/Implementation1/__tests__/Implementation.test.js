@@ -4,13 +4,13 @@ import AddDetailsModal from "../AddDetailsModal";
 import Implementation1 from "../Implementation1";
 
 describe("Implementation1", () => {
-  it("Should open modal for showing details", () => {
+  it("Should open modal for showing details", async () => {
     render(<Implementation1 />);
     const modalOpenBtn = screen.getByRole("button", {
       name: "modal-state-trigger",
     });
     fireEvent.click(modalOpenBtn);
-    expect(screen.getByRole("presentation")).toBeInTheDocument();
+    expect(await screen.findByRole("presentation")).toBeInTheDocument();
   });
 
   it("Should be able to close the modal", () => {

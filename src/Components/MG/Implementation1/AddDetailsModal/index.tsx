@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useState, lazy } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -25,11 +25,11 @@ import {
   IUpdatedStatementNoList,
 } from "./types";
 import "./styles.scss";
-import DetailsListingAccordian from "../DetailsListingAccordian";
+// import DetailsListingAccordian from "../DetailsListingAccordian";
 
-// const DetailsListingAccordian = lazy(
-//   () => import("../DetailsListingAccordian")
-// );
+const DetailsListingAccordian = lazy(
+  () => import("../DetailsListingAccordian")
+);
 
 const style = {
   position: "absolute",
