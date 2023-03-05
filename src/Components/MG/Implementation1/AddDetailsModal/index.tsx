@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ChangeEvent, FC, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -7,21 +7,30 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
-import DetailsListingAccordian from "../DetailsListingAccordian";
 import {
   IAddedListDetails,
+  IInputData,
+  IInputTypeObj,
   IProps,
   IStatementNo,
   IUpdatedStatementNoList,
 } from "./types";
 import "./styles.scss";
+import DetailsListingAccordian from "../DetailsListingAccordian";
+
+// const DetailsListingAccordian = lazy(
+//   () => import("../DetailsListingAccordian")
+// );
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,19 +42,33 @@ const style = {
   p: 4,
 };
 
-const AddDetailsModal: React.FC<IProps> = ({
+const inputTypeObj: IInputTypeObj = {
+  paymentReference: {
+    translatedKey: "PAYMENT_REFERENCE",
+    placeholder: "Enter Payment reference",
+    ariaLabelText: "payment-reference-input",
+    name: "paymentReference",
+  },
+  note: {
+    translatedKey: "NOTE",
+    placeholder: "Enter Note",
+    ariaLabelText: "note-input",
+    name: "note",
+  },
+};
+
+const AddDetailsModal: FC<IProps> = ({
   statementNoList,
   open,
   handleClose,
 }) => {
   const [updatedStatementNoList, setUpdatedStatementNoList] =
-    React.useState<IUpdatedStatementNoList>(statementNoList);
-  const [paymentReference, setPaymentReference] = React.useState("");
-  const [note, setNote] = React.useState("");
-  const [statementNo, setStatementNo] = React.useState<IStatementNo>({});
-  const [addedListDetails, setAddedListDetails] = React.useState<
-    IAddedListDetails[]
-  >([]);
+    useState<IUpdatedStatementNoList>(statementNoList);
+  const [inputData, setInputData] = useState<IInputData>({});
+  const [statementNo, setStatementNo] = useState<IStatementNo>({});
+  const [addedListDetails, setAddedListDetails] = useState<IAddedListDetails[]>(
+    []
+  );
 
   const { t } = useTranslation();
 
@@ -53,17 +76,24 @@ const AddDetailsModal: React.FC<IProps> = ({
     setStatementNo(statementData);
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleAdd = () => {
     // First add it to the details list
     setAddedListDetails((prev) => [
       ...prev,
-      { ...statementNo, note, referenceId: paymentReference },
+      {
+        ...statementNo,
+        note: inputData.note,
+        referenceId: inputData.paymentReference,
+      },
     ]);
     // Now added statementNo should be disabled so that it can't be added again
     setUpdatedStatementNoList((prev) => {
       // const prevCloned = structuredClone(prev);
       const prevCloned = [...prev];
-
       const addedOptionIndex = prevCloned.findIndex(
         (item: IStatementNo) => item.id === statementNo.id
       );
@@ -76,8 +106,9 @@ const AddDetailsModal: React.FC<IProps> = ({
     });
     // Now clear every fields
     setStatementNo({});
-    setPaymentReference("");
-    setNote("");
+    setInputData({});
+    // setPaymentReference("");
+    // setNote("");
   };
 
   const handleDelete = (itemToBeRemoved: IAddedListDetails) => {
@@ -105,6 +136,11 @@ const AddDetailsModal: React.FC<IProps> = ({
       prevCloned[addedOptionIndex] = requiredDataCloned;
       return prevCloned;
     });
+  };
+
+  const handleSave = () => {
+    console.log(addedListDetails);
+    setAddedListDetails([]);
   };
 
   return (
@@ -137,15 +173,18 @@ const AddDetailsModal: React.FC<IProps> = ({
             {t("PAYOUT_TITLE")}
           </Typography>
           <FormControl fullWidth sx={{ marginTop: "24px" }}>
-            <InputLabel id="demo-controlled-open-select-label">
+            {/* <InputLabel id="demo-controlled-open-select-label">
               Statement No
-            </InputLabel>
+            </InputLabel> */}
+            <FormLabel component="legend">{t("SELECT_NO")}</FormLabel>
             <Select
               aria-label="select-ctn-statement-no"
               labelId="demo-controlled-open-select-label"
               id="demo-controlled-open-select"
               value={statementNo.number ?? ""}
-              label="Statement No"
+              inputProps={{ "aria-label": "Statement No" }}
+              data-testid="select-no-testid"
+              // label="Statement No"
             >
               {updatedStatementNoList.map((statementData, index) => (
                 <MenuItem
@@ -160,17 +199,40 @@ const AddDetailsModal: React.FC<IProps> = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{ margin: "24px 0" }}>
-            <TextField
-              id="payment-reference-id"
-              label={t("PAYMENT_REFERENCE")}
+          {["paymentReference", "note"].map((type: string) => {
+            const currentInputData = inputTypeObj[type as keyof IInputTypeObj];
+            return (
+              <FormControl fullWidth sx={{ marginTop: "24px" }}>
+                <FormLabel component="legend">
+                  {t(`${currentInputData.translatedKey}`)}
+                </FormLabel>
+                <OutlinedInput
+                  placeholder={`${currentInputData.placeholder}`} // Should you translated placeholder
+                  inputProps={{
+                    "aria-label": currentInputData.ariaLabelText,
+                    name: currentInputData.name,
+                  }}
+                  type="text"
+                  value={inputData[type as keyof IInputData] ?? ""}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+            );
+          })}
+          {/* <FormControl fullWidth sx={{ margin: "24px 0" }}>
+            <FormLabel component="legend">{t("PAYMENT_REFERENCE")}</FormLabel>
+            <OutlinedInput
               placeholder="Enter Payment reference"
-              variant="outlined"
-              onChange={(e) => setPaymentReference(e.target.value)}
+              inputProps={{
+                "aria-label": "payment-reference-input",
+                name: "note",
+              }}
+              type="text"
               value={paymentReference}
+              onChange={handleInputChange}
             />
-          </FormControl>
-          <FormControl fullWidth sx={{ marginBottom: "24px" }}>
+          </FormControl> */}
+          {/* <FormControl fullWidth sx={{ marginBottom: "24px" }}>
             <TextField
               id="note-id"
               label="NOTE"
@@ -179,11 +241,12 @@ const AddDetailsModal: React.FC<IProps> = ({
               onChange={(e) => setNote(e.target.value)}
               value={note}
             />
-          </FormControl>
+          </FormControl> */}
           <Box
             sx={{
               display: "flex",
               justifyContent: "flex-end",
+              marginTop: "24px",
             }}
           >
             <Stack spacing={1.5} direction="row">
@@ -210,11 +273,7 @@ const AddDetailsModal: React.FC<IProps> = ({
             }}
           >
             <Stack spacing={1.5} direction="row">
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => console.log(addedListDetails)}
-              >
+              <Button variant="contained" size="small" onClick={handleSave}>
                 {"SAVE"}
               </Button>
               <Button variant="outlined" size="small" onClick={handleClose}>

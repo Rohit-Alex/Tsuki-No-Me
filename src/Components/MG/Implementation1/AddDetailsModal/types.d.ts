@@ -3,6 +3,11 @@ export interface IStatementNo {
   number?: string;
 }
 
+export interface IInputData {
+  note?: string;
+  paymentReference?: string;
+}
+
 export interface IProps {
   statementNoList: IStatementNo[];
   open: boolean;
@@ -14,6 +19,18 @@ export type IUpdatedStatementNoList = (IStatementNo & {
 })[];
 
 export type IAddedListDetails = IStatementNo & {
-  note: string;
-  referenceId: string;
+  note?: string;
+  referenceId?: string;
 };
+
+export interface IIndividualInputData {
+  translatedKey: string;
+  placeholder: string;
+  ariaLabelText: string;
+  name: string;
+}
+
+export interface IInputTypeObj {
+  paymentReference: IIndividualInputData;
+  note: IIndividualInputData;
+}

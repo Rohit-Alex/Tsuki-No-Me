@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState, FC } from "react";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -11,19 +11,20 @@ import ListItemText from "@mui/material/ListItemText";
 import Badge from "@mui/material/Badge";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MailIcon from "@mui/icons-material/Mail";
-
 import IconButton from "@mui/material/IconButton";
+
 import { IProps } from "./types";
 
-const DetailsListingAccordian: React.FC<IProps> = ({
+const DetailsListingAccordian: FC<IProps> = ({
   addedListDetails,
   handleDelete,
 }) => {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (addedListDetails.length === 0) setExpanded(false);
   }, [addedListDetails.length]);
+
   return (
     <Accordion
       disableGutters
@@ -83,7 +84,9 @@ const DetailsListingAccordian: React.FC<IProps> = ({
               }
             >
               <ListItemText
-                primary={`${value.number} ${value.note} ${value.referenceId}`}
+                primary={`${value.number}${
+                  value.referenceId && `-${value.referenceId}`
+                }`}
               />
             </ListItem>
           ))}

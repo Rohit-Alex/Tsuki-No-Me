@@ -3,10 +3,12 @@ import { selectOptions } from "Constant";
 import { useState } from "react";
 import AddDetailsModal from "./AddDetailsModal";
 
+// const AddDetailsModal = lazy(() => import("./AddDetailsModal"));
 const Implementation1: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
+      {/* <Suspense fallback={<div>Loading...</div>}> */}
       <Button
         onClick={() => setIsModalOpen(true)}
         aria-label="modal-state-trigger"
@@ -21,6 +23,7 @@ const Implementation1: React.FC = () => {
           handleClose={() => setIsModalOpen(false)}
         />
       )}
+      {/* </Suspense> */}
     </>
   );
 };

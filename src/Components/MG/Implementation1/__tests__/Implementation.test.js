@@ -33,9 +33,7 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
-    const selectCtnBtn = screen.getByRole("button", {
-      name: /statement no ​/i,
-    });
+    const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const allOptions = screen.getAllByRole("option");
     expect(allOptions.length).toBe(10);
@@ -49,15 +47,13 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
-    const selectCtnBtn = screen.getByRole("button", {
-      name: /statement no ​/i,
-    });
+    const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-2" });
     fireEvent.click(secondOption);
 
     const paymentTextArea = screen.getByRole("textbox", {
-      name: /payment_reference/i,
+      name: /payment\-reference\-input/i,
     });
     fireEvent.change(paymentTextArea, { target: { value: "some_payment" } });
 
@@ -91,9 +87,7 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
-    const selectCtnBtn = screen.getByRole("button", {
-      name: /statement no ​/i,
-    });
+    const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-1" });
     fireEvent.click(secondOption);
@@ -113,9 +107,7 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
-    const selectCtnBtn = screen.getByRole("button", {
-      name: /statement no ​/i,
-    });
+    const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-3" });
     fireEvent.click(secondOption);
