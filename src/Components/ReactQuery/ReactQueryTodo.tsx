@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
-import { Button } from 'antd';
-import { Link } from 'react-router-dom';
-import { useQueryCustomHook } from '../../Hooks/useQueryCustomHook';
-import { fetchMethod } from '../../Utilies/utils';
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "antd";
+import { Link } from "react-router-dom";
+import { useQueryCustomHook } from "../../Hooks/useQueryCustomHook";
+import { fetchMethod } from "../../Utilies/utils";
 /*
     1> refetchOnMount => when true the query is fetched or a network call is made every time the component mounts irrespective of stale or not
     2> refetchOnWindowFocus => when enabled, whenever the window size changes query gets fired
@@ -26,34 +26,34 @@ import { fetchMethod } from '../../Utilies/utils';
                     refetchIntervalInBackground => To re-run the query after every given interval even though the tab isn't in focus then use
 */
 const ReactQueryTodo = () => {
-    const getPhotos = async () => {
-        const { data } = await fetchMethod('https://jsonplaceholder.typicode.com/photos')
-        return data
-    }
+  const getPhotos = async () => {
+    const { data } = await fetchMethod(
+      "https://jsonplaceholder.typicode.com/photos"
+    );
+    return data;
+  };
 
-    const { data, error, refetch, isError } = useQueryCustomHook()
+  const { data, error, refetch, isError } = useQueryCustomHook();
 
-    // const {data: photosData, isLoading: photosLoading } = useQuery(['photos'], getPhotos, {refetchOnWindowFocus: false})
-    // if (isLoading) {
-    //     return <h2>Loading...</h2>
-    // }
-    if (isError) {
-        return <div>Error: {(error as any).message}</div>
-    }
-    return (
-        <>
-            <div>
-                <Button onClick={() => refetch()}>Click to trigger API call</Button>
-            {(data ?? []).map((e: any) => (
-                <div key={e.id}>
-                    <Link to={`/todoDetails/${e.id}`}>
-                        {e.title}
-                    </Link>
-                </div>
-            ))}
-            </div>
-        </>
-    )
-}
+  // const {data: photosData, isLoading: photosLoading } = useQuery(['photos'], getPhotos, {refetchOnWindowFocus: false})
+  // if (isLoading) {
+  //     return <h2>Loading...</h2>
+  // }
+  if (isError) {
+    return <div>Error: {(error as any).message}</div>;
+  }
+  return (
+    <>
+      <div>
+        <Button onClick={() => refetch()}>Click to trigger API call</Button>
+        {(data ?? []).map((e: any) => (
+          <div key={e.id}>
+            <Link to={`/todoDetails/${e.id}`}>{e.title}</Link>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
-export default ReactQueryTodo
+export default ReactQueryTodo;

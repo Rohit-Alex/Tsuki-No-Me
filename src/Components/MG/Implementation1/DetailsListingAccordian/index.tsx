@@ -45,22 +45,24 @@ const DetailsListingAccordian: React.FC<IProps> = ({
             </Badge>
           </>
         </Typography>
-        <Button
-          variant="outlined"
-          aria-label="expand-accordion"
-          size="small"
-          onClick={() => setExpanded((prev) => !prev)}
-          endIcon={
-            <ArrowForwardIosSharpIcon
-              sx={{
-                fontSize: "0.9rem",
-                ...(expanded && { transform: "rotate(90deg)" }),
-              }}
-            />
-          }
-        >
-          {expanded ? "Collapse" : "Expand"}
-        </Button>
+        {addedListDetails.length > 0 && (
+          <Button
+            variant="outlined"
+            aria-label="expand-accordion"
+            size="small"
+            onClick={() => setExpanded((prev) => !prev)}
+            endIcon={
+              <ArrowForwardIosSharpIcon
+                sx={{
+                  fontSize: "0.9rem",
+                  ...(expanded && { transform: "rotate(90deg)" }),
+                }}
+              />
+            }
+          >
+            {expanded ? "Collapse" : "Expand"}
+          </Button>
+        )}
       </AccordionSummary>
       <AccordionDetails className="acc_details_ctn">
         <List
