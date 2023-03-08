@@ -14,9 +14,9 @@ export interface IProps {
   handleClose: () => void;
 }
 
-export type IUpdatedStatementNoList = (IStatementNo & {
+export type IUpdatedStatementNoList = IStatementNo & {
   isDisable?: boolean;
-})[];
+};
 
 export type IAddedListDetails = IStatementNo & {
   note?: string;

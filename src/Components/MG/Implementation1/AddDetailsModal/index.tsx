@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useState, lazy } from "react";
+import { ChangeEvent, FC, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -9,13 +10,19 @@ import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import DetailsListingAccordian from "../DetailsListingAccordian";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import FormHelperText from "@mui/material/FormHelperText";
 import CloseIcon from "@mui/icons-material/Close";
-import { useTranslation } from "react-i18next";
 import {
   IAddedListDetails,
   IInputData,
@@ -25,22 +32,6 @@ import {
   IUpdatedStatementNoList,
 } from "./types";
 import "./styles.scss";
-// import DetailsListingAccordian from "../DetailsListingAccordian";
-
-const DetailsListingAccordian = lazy(
-  () => import("../DetailsListingAccordian")
-);
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 550,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
 
 const inputTypeObj: IInputTypeObj = {
   paymentReference: {
@@ -63,17 +54,41 @@ const AddDetailsModal: FC<IProps> = ({
   handleClose,
 }) => {
   const [updatedStatementNoList, setUpdatedStatementNoList] =
-    useState<IUpdatedStatementNoList>(statementNoList);
+    useState<IUpdatedStatementNoList[]>(statementNoList);
   const [inputData, setInputData] = useState<IInputData>({});
-  const [statementNo, setStatementNo] = useState<IStatementNo>({});
+  const [statementNo, setStatementNo] = useState<IStatementNo[]>([]);
   const [addedListDetails, setAddedListDetails] = useState<IAddedListDetails[]>(
     []
   );
 
   const { t } = useTranslation();
 
-  const handleChange = (statementData: IStatementNo) => {
-    setStatementNo(statementData);
+  const activeMenus = useMemo(
+    () => updatedStatementNoList.filter((e) => !e.isDisable),
+    [updatedStatementNoList]
+  );
+
+  const handleChange = (data: IStatementNo | "all") => {
+    if (data === "all") {
+      setStatementNo((prev) => {
+        if (prev.length === activeMenus.length) return [];
+        return activeMenus;
+      });
+      return;
+    }
+
+    setStatementNo((prev) => {
+      const cloned = [...prev];
+      const requiredIndex = prev.findIndex(
+        (e: IStatementNo) => e.id === data.id
+      );
+      if (requiredIndex !== -1) {
+        cloned.splice(requiredIndex, 1);
+        return cloned;
+      } else {
+        return [...cloned, data];
+      }
+    });
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,38 +96,32 @@ const AddDetailsModal: FC<IProps> = ({
   };
 
   const handleAdd = () => {
-    // First add it to the details list
-    setAddedListDetails((prev) => [
-      ...prev,
-      {
-        ...statementNo,
-        note: inputData.note,
-        referenceId: inputData.paymentReference,
-      },
-    ]);
-    // Now added statementNo should be disabled so that it can't be added again
+    const updatedList = statementNo.map((selectedData) => ({
+      ...selectedData,
+      note: inputData.note,
+      referenceId: inputData.paymentReference,
+    }));
+    setAddedListDetails((prev) => [...prev, ...updatedList]);
+
     setUpdatedStatementNoList((prev) => {
       // const prevCloned = structuredClone(prev);
       const prevCloned = [...prev];
-      const addedOptionIndex = prevCloned.findIndex(
-        (item: IStatementNo) => item.id === statementNo.id
-      );
-      // prevCloned[addedOptionIndex].isDisable = true;
-      // return prevCloned;
-      const requiredDataCloned = { ...prevCloned[addedOptionIndex] };
-      requiredDataCloned.isDisable = true;
-      prevCloned[addedOptionIndex] = requiredDataCloned;
+      statementNo.forEach((e) => {
+        const addedOptionIndex = prevCloned.findIndex(
+          (item: IStatementNo) => item.id === e.id
+        );
+        const requiredDataCloned = { ...prevCloned[addedOptionIndex] };
+        requiredDataCloned.isDisable = true;
+        prevCloned[addedOptionIndex] = requiredDataCloned;
+        // prevCloned[addedOptionIndex].isDisable = true;
+      });
       return prevCloned;
     });
-    // Now clear every fields
-    setStatementNo({});
+    setStatementNo([]);
     setInputData({});
-    // setPaymentReference("");
-    // setNote("");
   };
 
   const handleDelete = (itemToBeRemoved: IAddedListDetails) => {
-    //Remove the item from added list:
     setAddedListDetails((prev) => {
       const prevCloned = [...prev];
       const requiredIndex = prevCloned.findIndex(
@@ -122,7 +131,6 @@ const AddDetailsModal: FC<IProps> = ({
       return prevCloned;
     });
 
-    // Now enable the statementNo options that got removed
     setUpdatedStatementNoList((prev) => {
       // const prevCloned = structuredClone(prev);
       const prevCloned = [...prev];
@@ -144,146 +152,154 @@ const AddDetailsModal: FC<IProps> = ({
   };
 
   return (
-    <Modal
+    <Dialog
       className="modalbox-mutliSelector"
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       open={open}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
+      onClose={handleClose}
     >
-      <Fade in={open}>
-        <Box sx={style}>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
+      <DialogTitle id="scroll-dialog-title">
+        {t("PAYOUT_TITLE")}
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
+        <FormControl fullWidth sx={{ marginTop: "24px" }}>
+          <FormLabel>Statement No</FormLabel>
+          <Select
+            inputProps={{ "aria-label": "Statement No" }}
+            multiple
+            displayEmpty
+            size="small"
+            value={statementNo}
+            input={<OutlinedInput />}
+            renderValue={(selected: IStatementNo[]) =>
+              `${
+                selected.length === 0
+                  ? "Placeholder"
+                  : `${selected.length} item selected`
+              }`
+            }
+            MenuProps={{
+              BackdropProps: { "aria-label": "backdrop-select" },
             }}
           >
-            <CloseIcon />
-          </IconButton>
-          <Typography id="transition-modal-title" variant="h6" component="h2">
-            {t("PAYOUT_TITLE")}
-          </Typography>
-          <FormControl fullWidth sx={{ marginTop: "24px" }}>
-            {/* <InputLabel id="demo-controlled-open-select-label">
-              Statement No
-            </InputLabel> */}
-            <FormLabel component="legend">{t("SELECT_NO")}</FormLabel>
-            <Select
-              aria-label="select-ctn-statement-no"
-              labelId="demo-controlled-open-select-label"
-              id="demo-controlled-open-select"
-              value={statementNo.number ?? ""}
-              inputProps={{ "aria-label": "Statement No" }}
-              data-testid="select-no-testid"
-              // label="Statement No"
+            <MenuItem
+              value="all"
+              onClick={() => handleChange("all")}
+              aria-label={"select-all"}
+              disabled={
+                addedListDetails.length === updatedStatementNoList.length
+              }
             >
-              {updatedStatementNoList.map((statementData, index) => (
+              <Checkbox
+                indeterminate={
+                  statementNo.length > 0 &&
+                  statementNo.length < activeMenus.length
+                }
+                checked={
+                  addedListDetails.length === updatedStatementNoList.length
+                    ? false
+                    : statementNo.length === activeMenus.length
+                }
+              />
+              <ListItemText primary="Select All" />
+            </MenuItem>
+            {updatedStatementNoList.map(
+              (statementData: IUpdatedStatementNoList, index: number) => (
                 <MenuItem
                   key={statementData.id}
-                  value={statementData.number}
-                  disabled={statementData?.isDisable}
+                  value={statementData.id}
                   onClick={() => handleChange(statementData)}
+                  disabled={statementData.isDisable}
                   aria-label={`option-${index + 1}`}
                 >
-                  {statementData.number}
+                  <Checkbox
+                    checked={
+                      statementNo.findIndex(
+                        (e: IStatementNo) => e.id === statementData.id
+                      ) !== -1
+                    }
+                  />
+                  <ListItemText primary={statementData.number} />
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {["paymentReference", "note"].map((type: string) => {
-            const currentInputData = inputTypeObj[type as keyof IInputTypeObj];
-            return (
-              <FormControl fullWidth sx={{ marginTop: "24px" }}>
-                <FormLabel component="legend">
-                  {t(`${currentInputData.translatedKey}`)}
-                </FormLabel>
-                <OutlinedInput
-                  placeholder={`${currentInputData.placeholder}`} // Should you translated placeholder
-                  inputProps={{
-                    "aria-label": currentInputData.ariaLabelText,
-                    name: currentInputData.name,
-                  }}
-                  type="text"
-                  value={inputData[type as keyof IInputData] ?? ""}
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            );
-          })}
-          {/* <FormControl fullWidth sx={{ margin: "24px 0" }}>
-            <FormLabel component="legend">{t("PAYMENT_REFERENCE")}</FormLabel>
-            <OutlinedInput
-              placeholder="Enter Payment reference"
-              inputProps={{
-                "aria-label": "payment-reference-input",
-                name: "note",
-              }}
-              type="text"
-              value={paymentReference}
-              onChange={handleInputChange}
-            />
-          </FormControl> */}
-          {/* <FormControl fullWidth sx={{ marginBottom: "24px" }}>
-            <TextField
-              id="note-id"
-              label="NOTE"
-              placeholder="Enter note"
+              )
+            )}
+          </Select>
+        </FormControl>
+        {["paymentReference", "note"].map((type: string) => {
+          const currentInputData = inputTypeObj[type as keyof IInputTypeObj];
+          return (
+            <FormControl key={type} fullWidth sx={{ marginTop: "24px" }}>
+              <FormLabel sx={{ marginBottom: "24px" }} component="legend">
+                {t(`${currentInputData.translatedKey}`)}
+              </FormLabel>
+              <OutlinedInput
+                placeholder={`${currentInputData.placeholder}`} // Should you translated placeholder
+                inputProps={{
+                  "aria-label": currentInputData.ariaLabelText,
+                  name: currentInputData.name,
+                }}
+                type="text"
+                value={inputData[type as keyof IInputData] ?? ""}
+                onChange={handleInputChange}
+              />
+              <FormHelperText>Some text</FormHelperText>
+            </FormControl>
+          );
+        })}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "24px",
+          }}
+        >
+          <Stack spacing={1.5} direction="row">
+            <Button
+              aria-label="btn-add"
               variant="outlined"
-              onChange={(e) => setNote(e.target.value)}
-              value={note}
-            />
-          </FormControl> */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "24px",
-            }}
-          >
-            <Stack spacing={1.5} direction="row">
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAdd}
-                disabled={Object.keys(statementNo).length === 0}
-              >
-                {"ADD +"}
-              </Button>
-            </Stack>
-          </Box>
-
-          <DetailsListingAccordian
-            addedListDetails={addedListDetails}
-            handleDelete={handleDelete}
-          />
-
-          <Box
-            sx={{
-              paddingTop: "10px",
-              marginTop: "15px",
-            }}
-          >
-            <Stack spacing={1.5} direction="row">
-              <Button variant="contained" size="small" onClick={handleSave}>
-                {"SAVE"}
-              </Button>
-              <Button variant="outlined" size="small" onClick={handleClose}>
-                {"CANCEL"}
-              </Button>
-            </Stack>
-          </Box>
+              size="small"
+              onClick={handleAdd}
+              disabled={statementNo.length === 0}
+            >
+              {"ADD +"}
+            </Button>
+          </Stack>
         </Box>
-      </Fade>
-    </Modal>
+
+        <DetailsListingAccordian
+          addedListDetails={addedListDetails}
+          handleDelete={handleDelete}
+        />
+
+        <Box
+          sx={{
+            marginTop: "15px",
+          }}
+        >
+          <Stack spacing={1.5} direction="row">
+            <Button variant="contained" size="small" onClick={handleSave}>
+              {"SAVE"}
+            </Button>
+            <Button variant="outlined" size="small" onClick={handleClose}>
+              {"CANCEL"}
+            </Button>
+          </Stack>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 

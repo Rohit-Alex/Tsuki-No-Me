@@ -1,5 +1,6 @@
-import { fireEvent, prettyDOM, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { selectOptions } from "Constant";
+import { act } from "react-dom/test-utils";
 import AddDetailsModal from "../AddDetailsModal";
 import Implementation1 from "../Implementation1";
 
@@ -36,7 +37,7 @@ describe("Implementation1", () => {
     const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const allOptions = screen.getAllByRole("option");
-    expect(allOptions.length).toBe(10);
+    expect(allOptions.length).toBe(11);
   });
 
   it("Should be able to add data with all entries filled", () => {
@@ -51,16 +52,17 @@ describe("Implementation1", () => {
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-2" });
     fireEvent.click(secondOption);
-
-    const paymentTextArea = screen.getByRole("textbox", {
-      name: /payment\-reference\-input/i,
+    act(() => {
+      screen.getByLabelText("backdrop-select").click();
     });
+
+    const paymentTextArea = screen.getByLabelText("payment-reference-input");
     fireEvent.change(paymentTextArea, { target: { value: "some_payment" } });
 
-    const noteTextArea = screen.getByRole("textbox", { name: /note/i });
+    const noteTextArea = screen.getByLabelText("note-input");
     fireEvent.change(noteTextArea, { target: { value: "some_note" } });
 
-    const addDataBtn = screen.getByRole("button", { name: /add \+/i });
+    const addDataBtn = screen.getByRole("button", { name: "btn-add" });
     fireEvent.click(addDataBtn);
 
     const badgeCount = screen.getByTestId("badge-count-testid");
@@ -75,7 +77,7 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
-    const addDataBtn = screen.getByRole("button", { name: /add \+/i });
+    const addDataBtn = screen.getByRole("button", { name: "btn-add" });
     expect(addDataBtn).toBeDisabled();
   });
 
@@ -87,12 +89,16 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
+
     const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-1" });
     fireEvent.click(secondOption);
+    act(() => {
+      screen.getByLabelText("backdrop-select").click();
+    });
+    const addDataBtn = screen.getByRole("button", { name: /btn\-add/i });
 
-    const addDataBtn = screen.getByRole("button", { name: /add \+/i });
     fireEvent.click(addDataBtn);
 
     fireEvent.mouseDown(selectCtnBtn);
@@ -107,19 +113,22 @@ describe("Implementation1", () => {
         statementNoList={selectOptions}
       />
     );
+
     const selectCtnBtn = screen.getByRole("button", { name: /statement no/i });
     fireEvent.mouseDown(selectCtnBtn);
     const secondOption = screen.getByRole("option", { name: "option-3" });
     fireEvent.click(secondOption);
 
-    const addDataBtn = screen.getByRole("button", { name: /add \+/i });
-    fireEvent.click(addDataBtn);
+    act(() => {
+      screen.getByLabelText("backdrop-select").click();
+    });
+    const addBtn = screen.getByRole("button", { name: /btn\-add/i });
+    fireEvent.click(addBtn);
 
     const expandBtn = screen.getByRole("button", {
       name: /expand\-accordion/i,
     });
     fireEvent.click(expandBtn);
-
     const addedItems = screen.getAllByRole("listitem");
     expect(addedItems.length).toBe(1);
 

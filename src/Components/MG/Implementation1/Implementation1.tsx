@@ -1,9 +1,8 @@
 import { Button } from "@mui/material";
 import { selectOptions } from "Constant";
-import { Suspense, useState, lazy } from "react";
-// import AddDetailsModal from "./AddDetailsModal";
+import { Suspense, useState } from "react";
+import AddDetailsModal from "./AddDetailsModal";
 
-const AddDetailsModal = lazy(() => import("./AddDetailsModal"));
 const Implementation1: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (

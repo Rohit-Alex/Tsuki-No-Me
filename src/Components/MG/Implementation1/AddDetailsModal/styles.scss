@@ -1,29 +1,53 @@
-.accordion_ctn {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin: 24px 0px;
+.modalbox-mutliSelector {
+  .accordion_ctn {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    margin: 24px 0px;
 
-  &:before {
-    display: none;
-  }
-  .accordion_summary_ctn {
-    & > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    &:before {
+      display: none;
+    }
+    .accordion_summary_ctn {
+      & > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    .acc_details_ctn {
+      &-list_ctn {
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
+        max-height: 100px;
+        overflow: hidden;
+        overflow-y: auto;
+      }
     }
   }
-  .acc_details_ctn {
-    border-top: 1px solid rgba(0, 0, 0, 0.125);
-    height: 100px;
-    overflow: hidden;
-    overflow-y: auto;
-    // &-list_ctn {
-    //   width: 100%;
-    // }
-  }
 }
+
 .MuiPaper-root {
   > ul {
     height: 200px;
+  }
+  &::-webkit-scrollbar {
+    width: 1em;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 100vw;
+    margin-block: 0.5em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #7f7f7f;
+    border: 0.25em solid transparent;
+    background-clip: content-box;
+    border-radius: 100vw;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #656565;
+    border: 0.25em solid transparent;
+    background-clip: content-box;
+    border-radius: 100vw;
   }
 }
