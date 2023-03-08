@@ -1,4 +1,33 @@
+@mixin customizeScrollBar {
+  &::-webkit-scrollbar {
+    width: 1em;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 100vw;
+    margin-block: 0.5em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #7f7f7f;
+    border: 0.25em solid transparent;
+    background-clip: content-box;
+    border-radius: 100vw;
+    min-height: 3em;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #656565;
+    border: 0.25em solid transparent;
+    background-clip: content-box;
+    border-radius: 100vw;
+  }
+}
+
 .modalbox-mutliSelector {
+  & * {
+    @include customizeScrollBar;
+  }
   .accordion_ctn {
     border: 1px solid rgba(0, 0, 0, 0.12);
     margin: 24px 0px;
@@ -24,30 +53,31 @@
   }
 }
 
-.MuiPaper-root {
-  > ul {
-    height: 200px;
-  }
-  &::-webkit-scrollbar {
-    width: 1em;
-  }
+div[aria-label="backdrop-select"] ~ div:nth-child(3) {
+  max-height: 200px;
 
-  &::-webkit-scrollbar-track {
-    border-radius: 100vw;
-    margin-block: 0.5em;
-  }
+  @include customizeScrollBar;
+  // &::-webkit-scrollbar {
+  //   width: 1em;
+  // }
 
-  &::-webkit-scrollbar-thumb {
-    background: #7f7f7f;
-    border: 0.25em solid transparent;
-    background-clip: content-box;
-    border-radius: 100vw;
-  }
+  // &::-webkit-scrollbar-track {
+  //   border-radius: 100vw;
+  //   margin-block: 0.5em;
+  // }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background: #656565;
-    border: 0.25em solid transparent;
-    background-clip: content-box;
-    border-radius: 100vw;
-  }
+  // &::-webkit-scrollbar-thumb {
+  //   background: #7f7f7f;
+  //   border: 0.25em solid transparent;
+  //   background-clip: content-box;
+  //   border-radius: 100vw;
+  //   min-height: 3em;
+  // }
+
+  // &::-webkit-scrollbar-thumb:hover {
+  //   background: #656565;
+  //   border: 0.25em solid transparent;
+  //   background-clip: content-box;
+  //   border-radius: 100vw;
+  // }
 }
