@@ -55,29 +55,5 @@
 
 div[aria-label="backdrop-select"] ~ div:nth-child(3) {
   max-height: 200px;
-
   @include customizeScrollBar;
-  // &::-webkit-scrollbar {
-  //   width: 1em;
-  // }
-
-  // &::-webkit-scrollbar-track {
-  //   border-radius: 100vw;
-  //   margin-block: 0.5em;
-  // }
-
-  // &::-webkit-scrollbar-thumb {
-  //   background: #7f7f7f;
-  //   border: 0.25em solid transparent;
-  //   background-clip: content-box;
-  //   border-radius: 100vw;
-  //   min-height: 3em;
-  // }
-
-  // &::-webkit-scrollbar-thumb:hover {
-  //   background: #656565;
-  //   border: 0.25em solid transparent;
-  //   background-clip: content-box;
-  //   border-radius: 100vw;
-  // }
 }
