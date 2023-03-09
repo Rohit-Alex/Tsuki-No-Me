@@ -1,4 +1,4 @@
-import { useEffect, useState, FC } from "react";
+import { useEffect, useState, FC, useRef } from "react";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -20,10 +20,26 @@ const DetailsListingAccordian: FC<IProps> = ({
   handleDelete,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const listCtn = useRef(null);
 
   useEffect(() => {
     if (addedListDetails.length === 0) setExpanded(false);
   }, [addedListDetails.length]);
+
+  useEffect(() => {
+    let timerId: any;
+    if (expanded) {
+      timerId = setTimeout(() => {
+        console.log("list", listCtn.current);
+        (listCtn.current as unknown as HTMLElement).scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 300);
+    }
+    return () => {
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [expanded]);
 
   return (
     <Accordion
@@ -70,7 +86,7 @@ const DetailsListingAccordian: FC<IProps> = ({
           sx={{ width: "100%", bgcolor: "background.paper" }}
           className="acc_details_ctn-list_ctn"
         >
-          {addedListDetails.map((value) => (
+          {addedListDetails.map((value, index) => (
             <ListItem
               key={value.id}
               secondaryAction={
@@ -92,6 +108,7 @@ const DetailsListingAccordian: FC<IProps> = ({
           ))}
         </List>
       </AccordionDetails>
+      <div ref={listCtn} />
     </Accordion>
   );
 };

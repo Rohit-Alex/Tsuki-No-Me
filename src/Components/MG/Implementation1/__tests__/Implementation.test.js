@@ -5,6 +5,14 @@ import AddDetailsModal from "../AddDetailsModal";
 import Implementation1 from "../Implementation1";
 
 describe("Implementation1", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("Should open modal for showing details", () => {
     render(<Implementation1 />);
     const modalOpenBtn = screen.getByRole("button", {
@@ -106,6 +114,7 @@ describe("Implementation1", () => {
   });
 
   it("Should be able to remove the added data from the list", () => {
+    window.HTMLElement.prototype.scrollIntoView = function () {};
     render(
       <AddDetailsModal
         open
@@ -129,6 +138,7 @@ describe("Implementation1", () => {
       name: /expand\-accordion/i,
     });
     fireEvent.click(expandBtn);
+    jest.advanceTimersByTime(300);
     const addedItems = screen.getAllByRole("listitem");
     expect(addedItems.length).toBe(1);
 

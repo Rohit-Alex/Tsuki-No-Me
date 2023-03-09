@@ -28,6 +28,9 @@
   & * {
     @include customizeScrollBar;
   }
+  .dialog__content-ctn {
+    padding-block: 0;
+  }
   .accordion_ctn {
     border: 1px solid rgba(0, 0, 0, 0.12);
     margin: 24px 0px;

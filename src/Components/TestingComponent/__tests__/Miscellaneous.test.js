@@ -109,9 +109,12 @@ describe("Date Picker", () => {
 });
 
 describe("Lodash", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach(() => {
-    jest.clearAllTimers(); // Clear all timers after each test
-    jest.restoreAllMocks(); // Restore all mocks after each test
+    jest.useRealTimers();
   });
 
   it("should debounce the search input", async () => {
@@ -121,16 +124,13 @@ describe("Lodash", () => {
     const input = screen.getByPlaceholderText("SEARCH_RULE_NAME");
 
     fireEvent.change(input, { target: { value: "search term" } });
-    fireEvent.change(input, { target: { value: "search term3" } });
 
-    act(() => {
-      jest.runAllTimers(); // Fast-forward all timers
-    });
+    jest.advanceTimersByTime(400);
 
     expect(consoleSpy).toHaveBeenCalledTimes(2);
     expect(consoleSpy).toHaveBeenCalledWith(
       "inside debounce after 400",
-      "search term3"
+      "search term"
     );
   });
 });

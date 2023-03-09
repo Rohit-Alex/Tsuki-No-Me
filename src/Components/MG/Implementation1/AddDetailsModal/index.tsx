@@ -68,6 +68,16 @@ const AddDetailsModal: FC<IProps> = ({
     [updatedStatementNoList]
   );
 
+  const sanitizedOptions = useMemo(() => {
+    const disabledOptions = updatedStatementNoList.filter(
+      (obj) => obj?.isDisable
+    );
+    const enabledOptions = updatedStatementNoList.filter(
+      (obj) => !obj.isDisable
+    );
+    return [...enabledOptions, ...disabledOptions];
+  }, [addedListDetails.length]);
+
   const handleChange = (data: IStatementNo | "all") => {
     if (data === "all") {
       setStatementNo((prev) => {
@@ -159,7 +169,7 @@ const AddDetailsModal: FC<IProps> = ({
       open={open}
       onClose={handleClose}
     >
-      <DialogTitle id="scroll-dialog-title">
+      <DialogTitle>
         {t("PAYOUT_TITLE")}
         <IconButton
           aria-label="close"
@@ -216,7 +226,7 @@ const AddDetailsModal: FC<IProps> = ({
               />
               <ListItemText primary="Select All" />
             </MenuItem>
-            {updatedStatementNoList.map(
+            {sanitizedOptions.map(
               (statementData: IUpdatedStatementNoList, index: number) => (
                 <MenuItem
                   key={statementData.id}
@@ -242,7 +252,7 @@ const AddDetailsModal: FC<IProps> = ({
           const currentInputData = inputTypeObj[type as keyof IInputTypeObj];
           return (
             <FormControl key={type} fullWidth sx={{ marginTop: "24px" }}>
-              <FormLabel sx={{ marginBottom: "24px" }} component="legend">
+              <FormLabel sx={{ marginBottom: "6px" }} component="legend">
                 {t(`${currentInputData.translatedKey}`)}
               </FormLabel>
               <OutlinedInput
@@ -286,7 +296,9 @@ const AddDetailsModal: FC<IProps> = ({
 
         <Box
           sx={{
-            marginTop: "15px",
+            marginBlock: "24px",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <Stack spacing={1.5} direction="row">
