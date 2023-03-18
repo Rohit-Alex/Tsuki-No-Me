@@ -46,37 +46,11 @@ however, it's deprecated now.
 
 Note: When NaN is provided as index, then it's treated as 0 for every above method.
 
-10>
-isNaN ===>> isNaN() function determines whether a value is NaN when converted to a number
-Number.isNaN() doesn't attempt to convert the parameter to a number, so non-numbers always return false. The following are all false:
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
-
-11>
-Closure => combination of function bundled together with it's lexical environment
-
-12>
-Freeze vs Seal
-Seal => Naruto sealing corpses
-=> can't add or remove any properties.
-=> However, can change the existing properties.
-
-Freeze => Max privacy in object
-=> Can't add, modify or delete any properties.
-=> Only applicable at top level. i.e. Shallow freezing
-
 13>
 HOC => making reuse of the component logic and functionality that is commonly required at different level of hierarchy
 => It's a pure function that takes a component as a parameter and returns a new component without changing the original component.
 => We can pass all the common functionality in props to the newly created component and acces these props in the actual component.
 => The props passed into these wrappedComponent can't be accessed there and needs to spread in the hoc to be able to use it.
-
-14>
-DOMContentLoaded => The DOMContentLoaded event fires when the HTML document has been completely parsed, and all deferred scripts (<script defer src="…"> and <script type="module">) have downloaded and executed. It doesn't wait for other things like images, subframes, and async scripts to finish loading.
-componentDidMount is triggered as soon as the instance of the componenet is created. Wheras, DOMContentLoaded is fired once only in entire webPage life.
-
-16> Exponential operator
-the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
-const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
 
 17>
 code splitting: ->
@@ -92,10 +66,6 @@ Webpack -> module bundler
 19>
 Arrow functions cannot be used as constructors and will throw an error when used with new. Because they have a lexical this, and do not have a prototype property, so it would not make much sense.
 
-20>
-[null].toString() => ''
-[undefined].toString() => ''
-[] => in number is equivalent to 0
 
 21> Destructuring
 const error = { message: 'rohit' }
@@ -220,16 +190,9 @@ alert(a); // 3
 alert(c); // 0
 
 32>
-https://javascript.info/comparison
-
 > ,<,<=,>=,==, != triggers numeric conversion when comparison is between different types.
 > However, it always returs boolean value
 
-33>
-null and undefined equal each other and don’t equal anything else.
-
-34> Switch example
-https://javascript.info/switch
 
 Default parameters are only applied when undefined is passed to it or nothing which is equivalent to undefined itself
 
