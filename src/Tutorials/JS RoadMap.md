@@ -87,6 +87,7 @@ Polyfills for
 
 event-bubbling, event-capturing, event-delegation
 Prototype chaining
+
 Event loop
 
 Classes
