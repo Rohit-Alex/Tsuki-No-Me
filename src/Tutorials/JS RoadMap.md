@@ -1,15 +1,19 @@
 Javascript definition : mentioned key point in Notes.md file
 scripting/dynamic/JIT compilation
 single threaded/synchronous/asynchronous
-
 async/defer scripts: https://javascript.info/script-async-defer
 
 Datatypes
 typeof
+Difference between null and undefined
 instanceof: Mentioned key points in Notes.md (Pt. 4)
 
+typeof null => 'object'
+    -->>This is because in the implementation of the language, the type of null is represented by a bit pattern that is the same as    the bit pattern used to represent an object reference. This mistake was made in the early days of JavaScript development.
+
+
 truthy/falsy
-Operators (>, <, <=, >=, ||, &&, ==, === !, comma, ??, =, isNaN, Number.isNaN())
+Operators (>, <, <=, >=, ||, &&, ==, === !, comma, ??, =, isNaN(), Number.isNaN())
     --->>> Exponential operator
             the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
             const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
@@ -26,10 +30,13 @@ coercion
            [undefined].toString() => ''
            [] => in number is equivalent to 0
 
+break and continue
 switch statement: https://javascript.info/switch
 
+forIn, forOf, forEach --> covered in Iterators.js file
+
 Objects, Maps 
-    --->>> Go through their differences. Which to use and when.
+    --->>> Go through their differences. Which one to use and when.
     --->>> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects
     --->>> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map (Difference is also provided)
 
@@ -43,6 +50,9 @@ Object.Freeze vs Object.Seal
                   => Only applicable at top level. i.e. Shallow freezing
                   Arrays, Sets
 
+Object methods --> keys, values, entries, fromEntries, hasOwnProperty
+
+delete operator -> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 
 Array methods
 -->> push,pop,shift,unshift,concat,findIndexOf,findLastIndexOf,flat,includes,indexOf
@@ -55,27 +65,24 @@ sort method on array and strings
 
 functions/constructor functions/arrow functions/generator/currying
 
-this operator
+order of precedence -> not necessary
 
-order of precedence
-
-Hoisting
-closure
+Hoisting ---> covered in Function&Hoisting.js file
+closure ---> covered in mischeleaneous.js file
 IIFE
-call, apply, bind
+call, apply, bind ---> covered in callApplyBind.js file
 Prototype Inheritance
 
 var,let,const
 template strings
 spread, rest, optional chaining
-forIn, forOf, forEach
-Object methods --> keys, values, entries, fromEntries, hasOwnProperty
 JSON.stringify, JSON.parse, structureClone
-freeze, seal
 crypto randomUUID
 
-shallow copy/deep copy
+shallow copy/deep copy ---> covered in shallow&DeepCopy.js file
 local storage/session storage
+
+this operator ---> covered in thisExample.js file
 
 setTimeout, setInterval, callback
 Promises
