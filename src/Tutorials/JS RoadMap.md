@@ -22,6 +22,26 @@ Operators (>, <, <=, >=, ||, &&, ==, === !, comma, ??, =, isNaN(), Number.isNaN(
     --->>> Number.isNaN() doesn't attempt to convert the parameter to a number, so non-numbers always return false
     --->>> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
     
+Ternary operator:
+
+    --->>> c ? p : q     <====> (c && p) || (!c && q)
+
+    --->>> c ? true : p  <====> (c || p)
+    --->>> c ? p : true  <====> (!c || p)
+
+    --->>> c ? false : p <====> (!c && p)
+    --->>> c ? p : false <====> (c && p)
+
+    e.g. 
+    boolean b;
+    if (i > 5) {
+        b = (j == 3);
+    } else {
+        b = false;
+    }
+
+    equivalent to: boolean b = (i > 5) && (j == 3)
+
 coercion
     --->>> == and === (in details using coercion)
     --->>> https://javascript.info/comparison

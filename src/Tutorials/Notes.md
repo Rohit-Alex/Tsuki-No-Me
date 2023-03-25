@@ -6,6 +6,7 @@ It is weakly typed dynamic language.
 --->Dynamic language because no variable is binded to a particular datatype.
 It is used to provide functionality to the webpage.
 mostly used as client side programming language
+Intepreted language but modern browser search engine uses JIT compilation which makes it ultra fast
 
 2> Best Practices
 If a function accepts more than 2 arguments then it's better to send an object rather than other values.
@@ -65,7 +66,6 @@ Webpack -> module bundler
 
 19>
 Arrow functions cannot be used as constructors and will throw an error when used with new. Because they have a lexical this, and do not have a prototype property, so it would not make much sense.
-
 
 21> Destructuring
 const error = { message: 'rohit' }
@@ -190,9 +190,9 @@ alert(a); // 3
 alert(c); // 0
 
 32>
+
 > ,<,<=,>=,==, != triggers numeric conversion when comparison is between different types.
 > However, it always returs boolean value
-
 
 Default parameters are only applied when undefined is passed to it or nothing which is equivalent to undefined itself
 
