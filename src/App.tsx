@@ -13,6 +13,7 @@ import ApiCalling from './Components/ApiCallingInReact/ApiCalling';
 import RuleGeneral from './Components/RuleGeneral';
 import FormParent from './Components/FormParent';
 import StyledComponent from 'Components/styledComponent';
+import { useEffect } from 'react';
 
 
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
@@ -40,6 +41,14 @@ const Learn = () => {
 }
 
 function App() {
+
+  useEffect(() => {
+    fetch('.gitbranch')
+      .then(response => response.text())
+      .then(data => console.log(data.trim()))
+      .catch(error => console.error(error));
+  }, []);
+  
   return (
       <div className="App">
           <Routes>
