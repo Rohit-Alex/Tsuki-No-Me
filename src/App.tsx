@@ -13,8 +13,9 @@ import ApiCalling from './Components/ApiCallingInReact/ApiCalling';
 import RuleGeneral from './Components/RuleGeneral';
 import FormParent from './Components/FormParent';
 import StyledComponent from 'Components/styledComponent';
-import { useEffect } from 'react';
 
+import packageData from '../package.json'
+import { GIT_BRANCH } from 'git-info';
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
 
 const CourseDetailsByID = () => {
@@ -40,14 +41,7 @@ const Learn = () => {
 }
 
 function App() {
-
-  useEffect(() => {
-    fetch('.gitbranch')
-      .then(response => response.text())
-      .then(data => console.log(data.trim(), 'data'))
-      .catch(error => console.error(error));
-  }, []);
-  
+  console.log(`Version: ${packageData.version} ---- BranchName: ${GIT_BRANCH}`)
   return (
       <div className="App">
           <Routes>

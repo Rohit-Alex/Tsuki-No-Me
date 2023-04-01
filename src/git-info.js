@@ -1,1 +1,1 @@
-export const GIT_BRANCH = '';
+export const GIT_BRANCH = 'feat/advance';
