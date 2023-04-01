@@ -2,5 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 echo "Running pre-commit hook"
 echo 'Current branch: $(git branch --show-current)'
+branch=$(git rev-parse --abbrev-ref HEAD)
 git branch --show-current > .gitbranch
 echo "export const GIT_BRANCH = '$branch';" > ./src/git-info.js
