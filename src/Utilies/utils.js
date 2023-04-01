@@ -68,7 +68,6 @@ export const makeHttpRequestWithCancel = async ({
   method = "GET",
   header = {},
   params = {},
-  paramsSerializer = () => { },
   isTokenEnabled = true,
   timeout = 60000,
   isTimeoutEnabled = true,
@@ -112,7 +111,7 @@ export const makeHttpRequestWithCancel = async ({
       data: body,
       cancelToken: source.token,
       params,
-      paramsSerializer
+      // paramsSerializer
     };
     // if (authData) {
     //   options.auth = authData;

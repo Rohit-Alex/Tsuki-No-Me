@@ -8,7 +8,7 @@ import AllTheProviders from './Providers/AllProviders';
 import { StyledEngineProvider } from '@mui/material/styles';
 
 const rootElement = document.getElementById('root');
-const root = createRoot(rootElement!);
+const root = createRoot(rootElement!); 
 root.render(
   <StyledEngineProvider injectFirst>
     <AllTheProviders>

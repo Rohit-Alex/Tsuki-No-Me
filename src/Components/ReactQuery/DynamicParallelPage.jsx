@@ -20,7 +20,7 @@ const DynamicParallelPage = ({todoIds}) => {
     return (
         <>
         {combinedData.map(e => (
-            <div>{e.title}</div>
+            <div key={crypto.randomUUID()}>{e.title}</div>
         ))}
         </>
     )

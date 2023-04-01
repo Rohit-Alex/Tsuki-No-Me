@@ -1,9 +1,9 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import './sidebar.scss'
+import './sidebar.scss' 
 import { sidebarMenus } from '../Utils/utilities';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSidebarState } from '../../../Redux/Actions/Dashboard';
-const Sidebar = () => {
+const Sidebar = () => { 
     const dipatch = useDispatch()
     const { isExpanded } = useSelector((state: any) => state.dashboard)
     
@@ -20,7 +20,7 @@ const Sidebar = () => {
                 </div>
                 <div className='sidebar-menus'>
                     {sidebarMenus.map(e => (
-                        <div className='sidebar-menu' onClick={e.clickHandler}>
+                        <div key={crypto.randomUUID()} className='sidebar-menu' onClick={e.clickHandler}>
                             <div className='menu-icon'>{e.icon}</div>
                             <div className='menu-title'>{e.title}</div>
                         </div>
@@ -34,7 +34,7 @@ const Sidebar = () => {
                     </div>
                     <div className='sidebar-menus'>
                         {sidebarMenus.map(e => (
-                            <div className='sidebar-menu' onClick={e.clickHandler}>
+                            <div key={crypto.randomUUID()} className='sidebar-menu' onClick={e.clickHandler}>
                                 <div className='menu-icon'>{e.icon}</div>
                             </div>
                         ))}

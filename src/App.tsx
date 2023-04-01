@@ -15,7 +15,6 @@ import FormParent from './Components/FormParent';
 import StyledComponent from 'Components/styledComponent';
 import { useEffect } from 'react';
 
-
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
 
 const CourseDetailsByID = () => {
@@ -45,7 +44,7 @@ function App() {
   useEffect(() => {
     fetch('.gitbranch')
       .then(response => response.text())
-      .then(data => console.log(data.trim()))
+      .then(data => console.log(data.trim(), 'data'))
       .catch(error => console.error(error));
   }, []);
   

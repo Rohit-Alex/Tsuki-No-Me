@@ -29,6 +29,22 @@ module.exports = {
         customValidators: null,
         skipUndeclared: null
       }
+    ],
+    "no-empty-function": [
+      "off",
+      {
+        allow: [
+          "arrowFunctions"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "off",
+      {
+        allow: [
+          "arrowFunctions"
+        ]
+      }
     ]
   }
 };

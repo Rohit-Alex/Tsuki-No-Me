@@ -86,10 +86,10 @@ const initialValueForInputValue = () => {
   return ''
 }
 
-let isMounted: boolean = true;
+let isMounted = true;
 
 const Typescript: React.FC<IAppProps> = ({comments}: IAppProps) => {
-  const [userDetails, setUserDetails] = useState<IUser | {}>({})
+  const [userDetails, setUserDetails] = useState<Partial<IUser>>({})
   // const [inputName, setInputName] = useState<string>('') // initializing like this causes the state to initialize every time
   // const [inputName, setInputName] = useState<string>(initialValueForInputValue()) // This also runs at each re-render but can we used if some slow process or logic is used for its default value
   const [inputName, setInputName] = useState<string>(() => initialValueForInputValue()) // This also runs for 1st time and best way to initialize a state variable. The setupFunction can be a slow process as well. Preffred for slow and complex functions used to initialize default value
@@ -114,7 +114,7 @@ const Typescript: React.FC<IAppProps> = ({comments}: IAppProps) => {
         [isLoading]
     );
 
-    const apiCall = async (startIndex: number, pagination: boolean = false) => {
+    const apiCall = async (startIndex: number, pagination = false) => {
       setIsLoading(true)
       try {
         const body = {

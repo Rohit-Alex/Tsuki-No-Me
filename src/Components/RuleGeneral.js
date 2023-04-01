@@ -5,13 +5,6 @@ import { useFormContext } from '../Context/FormContext'
 import { Card, Input } from 'antd'
 
 
-// const constructOption = (value, label) => {
-//     return {
-//         label: label || value,
-//         value,
-//     }
-// }
-
 const RuleGeneral = () => {
     const { setFormData, setFormValidity, formState } = useFormContext()
     const { data: formData } = formState
@@ -35,7 +28,7 @@ const RuleGeneral = () => {
     return (
         <div type="modal">
             <div>
-                <h2 tag="h3">{('RULE_SECTION_GENERAL')}</h2>
+                <h3>{('RULE_SECTION_GENERAL')}</h3>
             </div>
             <div>
                 <div data-testid="ruledetails-general" className="ruledetails-general">
