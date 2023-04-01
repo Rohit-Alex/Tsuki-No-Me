@@ -104,10 +104,5 @@
   },
   "sideEffects": [
     "./src/i18n.tsx"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "echo 'Running pre-commit hook' && git branch --show-current > .gitbranch"
-    }
-  }
+  ]
 }
