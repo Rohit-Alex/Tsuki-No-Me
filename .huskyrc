@@ -1,0 +1,6 @@
+{
+    "hooks": {
+        "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+        "pre-commit": "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD) && echo \"export const GIT_BRANCH = '${GIT_BRANCH}';\" > ./src/git-info.ts && git add ./src/git-info.ts"
+    }
+}

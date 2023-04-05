@@ -61,8 +61,7 @@
     "lint": "eslint src/*.{js,jsx,tsx,ts} --ignore-path .gitignore",
     "lint:fix": "eslint fix",
     "validate": "npm run lint",
-    "serve-json": "json-server --watch db.json --port 4000",
-    "prepare": "husky install"
+    "serve-json": "json-server --watch db.json --port 4000"
   },
   "eslintConfig": {
     "extends": [
