@@ -35,6 +35,7 @@ describe("Fake Timer", () => {
             ! Not recommended 
             ******* <<<------>>>
         */
+       console.info('<<<== efsd ==>>>', {output: 2}, '<<<==||==>>>');
         render(<FakeTimer />);
         const timeoutBtn = screen.getByRole("button", { name: /timeout/i });
         act(() => { fireEvent.click(timeoutBtn) });

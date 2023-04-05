@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-echo "Running pre-commit hook"
-
-branch=$(git rev-parse --abbrev-ref HEAD)
-echo "export const GIT_BRANCH = '$branch';" > ./src/git-info.js
