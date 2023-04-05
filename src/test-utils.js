@@ -1,18 +1,18 @@
-import {render} from '@testing-library/react'
+import {render, waitForElementToBeRemoved} from '@testing-library/react'
 import AllTheProviders from './Providers/AllProviders'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 export * from '@testing-library/react'
 
-const customRender = (ui: any, options: any) =>
+const customRender = (ui, options) =>
     render(ui, {wrapper: AllTheProviders, ...options})
 
 
 // override render method
 export {customRender as render}
 
-export const createTestQueryClient = (key?: any, value?: any) => {
+export const createTestQueryClient = (key, value) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -30,9 +30,10 @@ export const createTestQueryClient = (key?: any, value?: any) => {
   return queryClient
 };
 
-export function createWrapper(key?: any, value?: any) {
+export function createWrapper(key, value) {
   const testQueryClient = createTestQueryClient(key, value);
-  return ({ children }: any) => (
+  // eslint-disable-next-line react/display-name
+  return ({ children }) => (
     <QueryClientProvider client={testQueryClient}>
       {children}
     </QueryClientProvider>
@@ -40,14 +41,14 @@ export function createWrapper(key?: any, value?: any) {
 }
 
 
-export function renderWithClient(ui: any) {
+export function renderWithClient(ui) {
   const testQueryClient = createTestQueryClient();
   const { rerender, ...result } = render(
     <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>
   );
   return {
     ...result,
-    rerender: (rerenderUi: any) =>
+    rerender: (rerenderUi) =>
       rerender(
         <QueryClientProvider client={testQueryClient}>
           {rerenderUi}
@@ -56,10 +57,24 @@ export function renderWithClient(ui: any) {
   };
 }
 
-export const renderWithRouter = (ui: any, { route = '/' } = {}, state = {}) => {
+export const renderWithRouter = (ui, { route = '/' } = {}, state = {}) => {
   window.history.pushState({data: 'mg'}, '', route)
   return {
     user: userEvent.setup(),
     ...render(ui, { wrapper: BrowserRouter }),
   }
 }
+
+export const testTooltip = async (testId, content, options) => {
+  userEvent.hover(screen.getByTestId(testId));
+  screen.getByText(content, options);
+  userEvent.unhover(screen.getByTestId(testId));
+  await waitForElementToBeRemoved(screen.getByText(content, options));
+};
+
+export const testInput = (testId, inputValue, expectedValue) => {
+  const input = screen.getByTestId(testId);
+  userEvent.type(input, `{selectall}${inputValue}`);
+  userEvent.click(input.ownerDocument.body);
+  expect(input).toHaveValue(expectedValue);
+};
