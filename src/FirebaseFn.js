@@ -4,11 +4,9 @@ import { getDoc, doc, setDoc } from "@firebase/firestore";
 const getterFn = async () => {
     try {
         const docSnap = await getDoc(doc(db, 'yin', 'pac1zajMuyJNsXKkIqqC'))
-        if (docSnap.exists()) {
-            
-        } else {
+        if (!docSnap.exists()) {
             console.log("no data found")
-        }
+        } 
     }
     catch (e) {
         console.log("Error", e)
