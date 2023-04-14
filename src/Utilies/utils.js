@@ -293,3 +293,10 @@ export const sayHello = (name) => {
   }
   return result;
 };
+
+export class EntityService {
+  entities() {
+    Promise.resolve('Passed')
+  }
+}
+
