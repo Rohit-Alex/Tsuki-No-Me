@@ -1,6 +1,4 @@
-/* eslint-disable testing-library/no-node-access */
-
-import { render, screen, act, fireEvent, prettyDOM } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import SelectWrapper from '../Select'
 

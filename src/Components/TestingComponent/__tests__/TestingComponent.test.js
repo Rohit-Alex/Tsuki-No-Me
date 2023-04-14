@@ -1,5 +1,3 @@
-/* eslint-disable testing-library/no-node-access */
-/* eslint-disable testing-library/no-unnecessary-act */
 import "@testing-library/jest-dom";
 import {
   cleanup,

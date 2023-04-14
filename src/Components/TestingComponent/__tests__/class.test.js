@@ -1,3 +1,4 @@
+import { cleanup } from "@testing-library/react";
 import { testFn } from "TestFunctionUtils";
 import { EntityService } from "Utilies/utils";
 
@@ -8,7 +9,11 @@ describe('Class test cases', () => {
         EntityService.mockImplementation(() => ({
             entities: jest.fn(() =>Promise.resolve('Default'))
         }))
-        // EntityService.mockClear();
+    })
+
+    afterEach(() => {
+        jest.clearAllMocks()
+        cleanup()
     })
    
 
@@ -29,9 +34,9 @@ describe('Class test cases', () => {
     })
 
     it('Should return FAILED', async () => {
-        EntityService.mockImplementationOnce(() => ({
-            entities: jest.fn(() =>Promise.resolve('FAILED'))
-        }))
+        EntityService.mockReturnValue({
+            entities: () => Promise.resolve('FAILED')
+        })
         const data = await testFn()
         expect(data).toEqual('FAILED')
     })

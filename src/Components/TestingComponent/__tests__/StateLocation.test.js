@@ -1,9 +1,5 @@
 import {
   render,
-  screen,
-  act,
-  fireEvent,
-  prettyDOM,
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import StateLocation from "../StateLocation";

@@ -1,5 +1,4 @@
-/* eslint-disable testing-library/no-unnecessary-act */
-import { fireEvent, render, screen, within } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { act } from "react-dom/test-utils"
 import { getOptions } from "Utilies/utils"
 import AllInOne from "../AllInOne"
