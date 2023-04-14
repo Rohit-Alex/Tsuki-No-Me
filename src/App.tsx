@@ -27,6 +27,7 @@ const CourseDetailsByID = () => {
   )
 }
 
+console.log("hi")
 
 const Learn = () => {
   return (
