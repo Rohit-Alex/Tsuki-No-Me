@@ -1,7 +1,8 @@
-console.log(...[1, 2, 3])
+1> console.log(...[1, 2, 3])
 
 //Hoisting Questions...
 
+2>
 var a = 1;
 function b() {
     a = 10; return;
@@ -10,7 +11,19 @@ function b() {
 b();
 console.log(a);
 
+3>
+function print() {
+  var square1 = number * number
+  console.log(square1)
 
+  var number = 50
+
+  var square2 = number * number
+  console.log(square2)
+}
+print()
+
+4>
 function foo() {
     function bar() {
         return 3;
@@ -22,7 +35,7 @@ function foo() {
 }
 console.log(foo());
 
-
+5>
 function parent() {
     var hoisted = "I'm a variable";
     function hoisted() {
@@ -33,7 +46,7 @@ function parent() {
 console.log(parent());
 
 
-
+6>
 console.log(foo1());
 function foo1() {
     var bar = function () {
@@ -45,7 +58,7 @@ function foo1() {
     };
 }
 
-
+7>
 (function () {
     console.log('Original value was: ' + myVar);
     var myVar = 'bar';

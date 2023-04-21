@@ -1,46 +1,133 @@
-# Getting Started with Create React App
+# Interview Prepartion and Cheat Sheet
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1> What is JavaScript?
+Ans: 
+-> It is weakly typed dynamic language. As no variable is bound to any datatype and it might change over the next successive execution.
+-> Scripting language as it uses browser do all the work. 
+-> Can be used for both client side as well as server side.
+-> Single threaded ( JavaScript code is executed in a single call stack and can only perform one task at a time.)
+-> Synchronous ( code is executed sequentially in a single thread. This means that each line of code is executed one after another, and the program must wait for each operation to complete before moving on to the next one.)
+However, JavaScript also has built-in support for asynchronous programming, which allows code to execute non-sequentially. Asynchronous JavaScript code does not block the main thread of execution and can perform multiple operations simultaneously. This is achieved through the use of callbacks, setTimeout, promises, and async/await syntax.
+-> JavaScript is an interpreted language, However, modern JavaScript engines have become very fast and efficient at interpreting code, often using just-in-time (JIT) compilation to optimize performance.
+ As a result, JavaScript code can be executed at speeds that are comparable to compiled languages.
 
-## Available Scripts
+2> What is the difference between interpreted and compiled language?
+Ans:
+Interpreted Language:  
+    i> Source code -> executable code
+    ii> Executed line by line
+    iii> More flexible and easier to use
+    iv> Doesn't require the creation of executable file.
+    e.g. Javascript, Python
 
-In the project directory, you can run:
+Compiled Language:
+    i> Source code -> Machine code -> Executable code
+    ii> Executes the entire line in one go.
+    iii> compiled code is optimized for execution and can be executed more quickly than interpreted code.Hence, better performance.
 
-### `yarn start`
+3> Difference between Client side and server side?
+Ans:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Client-side refers to the code that is executed on the user's device (usually a web browser), such as HTML, CSS, and JavaScript. The client-side code is responsible for rendering the web page and handling user interactions, such as clicking on a button or filling out a form.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Server-side refers to the code that is executed on the server (web server, application server, or database server). It usually involves technologies like PHP, Python, or Node.js. The server-side code is responsible for processing requests from the client, interacting with databases or other resources, and generating dynamic content that is sent back to the client.
 
-### `yarn test`
+JavaScript can be used for both client-side and server-side programming. On the client-side, JavaScript is used to create interactive web pages, validate form data, and provide visual effects. On the server-side, JavaScript is used in Node.js to build server applications, interact with databases, and handle incoming HTTP requests.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4> What are different Datatypes?
+Ans> 
+i> Primitive Datatypes
+    a> Number
+    number in the range ±(2-¹⁰⁷⁴(Number.MIN_VALUE) to 2¹⁰²⁴(Number.MAX_VALUE))
+    Positive values greater than Number.MAX_VALUE are converted to +Infinity.
+    Positive values smaller than Number.MIN_VALUE are converted to +0.
+    Negative values smaller than -Number.MAX_VALUE are converted to -Infinity.
+    Negative values greater than -Number.MIN_VALUE are converted to -0.
+    b> Bigint
+    
+     number can only safely store integers in the range -(2⁵³ − 1) (Number.MIN_SAFE_INTEGER) to 2⁵³ − 1 (Number.MAX_SAFE_INTEGER)
+     With BigInts, you can safely store and operate on large integers even beyond the safe integer limit (Number.MAX_SAFE_INTEGER) for Numbers.
+    c> String
+    d> Boolean
+    e> null
+    f> undefined
+    g> Symbol
 
-### `yarn build`
+ii> Non-primitive Datatypes
+    a> Object
+    b> Functions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5> Difference between null and undefined?
+Ans: 
+"null" indicates that the variable or property has no value. In other words, null is a value that has been explicitly assigned to a variable or property to indicate that it does not have a meaningful value.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+"Undefined", on the other hand, is a value that is automatically assigned to a variable or property that has been declared but not yet assigned a value. It indicates that a variable or property has not been initialized with a value.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+let x; // x is undefined by default
+let y = null; // y is explicitly assigned the null value
+console.log(x); // Output: undefined
+console.log(y); // Output: null
 
-### `yarn eject`
+6> Why is typeof operator?
+Ans:
+The typeof operator returns a string indicating the type of the operand's value.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+7> Why do we get typeof null as object?
+Ans: It's basically a bug in JS.
+In the first implementation of JavaScript, JavaScript values were represented as a type tag and a value. The type tag for objects was 0. null was represented as the NULL pointer (0x00 in most platforms). Consequently, null had 0 as type tag, hence the typeof return value "object"
+                OR
+Both null and Object are represented in similar bit pattern as that of object reference. Hence, we get object for null as well.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+8> What are thruthy and falsy values?
+Ans:
+    All values are truthy except 
+    i> false
+    ii> 0
+    iii> -0
+    iv> 0n
+    v> ""
+    vi> null
+    vii> undefined
+    viii> NaN.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+9> What does instanceof operator do?
+The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value.
+object instanceof constructor.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+10> Scopes in JS.
+Global scope: Variables declared outside of all functions.
+These are accessible throughout the entire program, including within functions and other blocks of code.
 
-## Learn More
+let globalVariable = "I am in global scope";
+function globalFunction() {
+  console.log(globalVariable);
+}
+globalFunction(); // Output: "I am in global scope"
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Functional scope: variable will only be available to use inside the function it declared, will not be accessible outside of function.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+function name() {
+    var myAge = 22;
+    console.log(myAge); 
+}
+name() //output => 22
+console.log(myAge); //output => ReferenceError
+
+Local scope: Variables declared inside of function. These are also accessible within that block and can't be accessed outside of it.
+
+function localFunction() {
+  let localVariable = "I am in local scope";
+  console.log(localVariable);
+}
+localFunction(); // Output: "I am in local scope"
+console.log(localVariable); // Output: Uncaught ReferenceError: localVariable is not defined
+
+Block Scope: Variables declared inside of curly braces {} have block scoped. It can't be accessed outside of it.
+
+{
+  let x = 2;
+}
+// x can NOT be used here
+
+11> Var, let and const?
+12> Shadowing and Illegal Shadowing?

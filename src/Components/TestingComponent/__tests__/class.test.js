@@ -9,6 +9,7 @@ describe('Class test cases', () => {
         EntityService.mockImplementation(() => ({
             entities: jest.fn(() =>Promise.resolve('Default'))
         }))
+        // EntityService.entities.mockResolvedValue('Default') //can't write like these because EntityService is named export
     })
 
     afterEach(() => {

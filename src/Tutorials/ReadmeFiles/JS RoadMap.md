@@ -4,7 +4,7 @@ single threaded/synchronous/asynchronous
 async/defer scripts: https://javascript.info/script-async-defer
 
 Datatypes
-typeof
+typeof => Returns the datatype of the variable. It's return string.
 Difference between null and undefined
 instanceof: Mentioned key points in Notes.md (Pt. 4)
 
@@ -50,10 +50,14 @@ coercion
            [undefined].toString() => ''
            [] => in number is equivalent to 0
 
+How can convert any variable into boolean? (!!)
 break and continue
 switch statement: https://javascript.info/switch
 
 forIn, forOf, forEach --> covered in Iterators.js file
+
+var,let,const
+How are we able to change a constant variable with array but not a variable having primitive value?
 
 Objects, Maps 
     --->>> Go through their differences. Which one to use and when.
@@ -93,7 +97,7 @@ IIFE
 call, apply, bind ---> covered in callApplyBind.js file
 Prototype Inheritance
 
-var,let,const
+
 template strings
 spread, rest, optional chaining
 JSON.stringify, JSON.parse, structureClone
