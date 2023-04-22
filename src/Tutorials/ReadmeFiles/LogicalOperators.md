@@ -8,7 +8,7 @@ If x can be converted to true, returns x; else, returns y.
 1 || 2;
 true || true; 
 false || true; 
-true || false; 
+true || false;
 false || 3 === 4; 
 "Cat" || "Dog"; 
 false || "Cat"; 
@@ -16,6 +16,7 @@ false || "Cat";
 [] || "dog" 
 "" || false; 
 false || "";
+'' || -0 || [1,2] || 'maan jaao' || {}
 
 2> LOGICAL AND(&&)
 x && y
@@ -33,6 +34,7 @@ false && "Cat";
 {} && "dog" 
 "" && false; 
 false && ""; 
+4 && 'kya kar rhi' && ['acha', 'padh', 'rhi'] && null && {nirali: 'namooni'}
 
 Note:
 Operator precedence
@@ -42,6 +44,7 @@ The AND operator has a higher precedence than the OR operator, meaning the && op
 true || false && false;
 true && (false || false);
 (2 === 3) || (4 < 0) && (1 === 1);
+
 
 4>
 

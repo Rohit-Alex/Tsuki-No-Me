@@ -124,7 +124,7 @@ i> Primitive Datatypes
     g> Symbol
 
 ii> Non-primitive Datatypes
-    a> Object
+    a> Object -> Array is included here as well.
     b> Functions
 
 8> Difference between null and undefined?
@@ -200,4 +200,52 @@ Block Scope: Variables declared inside of curly braces {} have block scoped. It 
 // x can NOT be used here
 
 14> Var, let and const?
+Ans: Open src/Tutorials/ReadmeFiles/VarLetConst.md
+
 15> Shadowing and Illegal Shadowing?
+Ans: Open src/Tutorials/ReadmeFiles/VariableShadowing.md
+
+16> What is typeof operator? I/O questions based on it.
+Ans: src/Tutorials/Typeof&Falsy.js
+
+17> What are falsy and truthy values?
+Ans: src/Tutorials/Typeof&Falsy.js
+
+18> Operators in JS?
+Ans:
+    open src/Tutorials/ReadmeFiles/ComparisonOperators.md
+    open src/Tutorials/ReadmeFiles/LogicalOperators.md
+    open src/Tutorials/ReadmeFiles/??Operator.md
+
+19> isNaN() and Number.isNaN()?
+Ans: Open src/Tutorials/isNaN.js
+
+20> Precedence of Operators and associativity.
+Ans: 
+    1> ()
+    2> ?.
+    3> postfix ...++
+    ...--
+    4> unary operator & prefix: ! ~ + - ++... --...
+    5> \*_ (right to left)
+    6> _ / %
+    7> + -
+    8> << >>
+    9> < > <= >=
+    10> == != === !==
+    11> |
+    12> &
+    13> ^
+    14> &&
+    15> ||
+    16> ??
+    17> =
+
+    For Associativity, most of left to right.
+    Exception: ** (exponential operator)
+     --->>>
+            the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
+            const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
+21> Coercion.
+Ans: Open src/Tutorials/Coercion.js
+

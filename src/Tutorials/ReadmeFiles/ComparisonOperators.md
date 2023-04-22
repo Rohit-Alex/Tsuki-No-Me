@@ -1,7 +1,7 @@
 COMPARISON OPERATORS
 
 -> All comparison operators return a boolean value:
-
+-> ,<,<=,>=,==, != triggers numeric conversion when comparison is between different types.
 -> A comparison result can be assigned to a variable, just like any value:
 e.g.
 let result = 5 > 4; 
@@ -12,30 +12,16 @@ To see whether a string is greater than another, JavaScript uses the so-called â
 
 In other words, strings are compared letter-by-letter.
 
-alert( 'Z' > 'A' ); // true
-alert( 'Glow' > 'Glee' ); // true
-alert( 'Bee' > 'Be' ); // true
+alert( 'Z' > 'A' );
+alert( 'Glow' > 'Glee' );
+alert( 'Bee' > 'Be' );
+alert( 'a' > 'Z' );
+
 
 Comparison of different types
-When comparing values of different types, JavaScript converts the values to numbers.
-
-For example:
-
-alert( '2' > 1 ); // true, string '2' becomes a number 2
-alert( '01' == 1 ); // true, string '01' becomes a number 1
+NOTE: When comparing values of different types, JavaScript converts the values to numbers.
 
 
-let a = 0;
-alert( Boolean(a) ); 
 
-let b = "0";
-alert( Boolean(b) );
 
-alert(a == b);
 
-NOTE: 
-null and undefined equal each other and donâ€™t equal anything else. 
-
-alert( null > 0 );  
-alert( null == 0 ); 
-alert( null >= 0 ); 

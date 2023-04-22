@@ -177,11 +177,6 @@ let c = 3 - (a = b + 1);
 alert(a); // 3
 alert(c); // 0
 
-32>
-
-> ,<,<=,>=,==, != triggers numeric conversion when comparison is between different types.
-> However, it always returs boolean value
-
 Default parameters are only applied when undefined is passed to it or nothing which is equivalent to undefined itself
 
 35>

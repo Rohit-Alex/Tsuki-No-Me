@@ -13,7 +13,7 @@ typeof null => 'object'
 
 
 truthy/falsy
-Operators (>, <, <=, >=, ||, &&, ==, === !, comma, ??, =, isNaN(), Number.isNaN())
+Operators (>, <, <=, >=, ||, &&, ==, === !, comma, ??, =, isNaN(a), Number.isNaN(a))
     --->>> Exponential operator
             the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
             const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
