@@ -112,45 +112,33 @@ typeof 4+5 => 'number5
 25>
 Logger middleware in Redux
 const logger = store => next => action => {
-console.group(action.type)
-console.info('dispatching', action)
-console.log('next state', store.getState())
-console.groupEnd()
-return next(action)
+    console.group(action.type)
+    console.info('dispatching', action)
+    console.log('next state', store.getState())
+    console.groupEnd()
+    return next(action)
 }
 
 26>
 const crashReporter = store => next => action => {
-try {
-return next(action)
-} catch (err) {
-console.error('Caught an exception!', err)
-Raven.captureException(err, {
-extra: {
-action,
-state: store.getState()
-}
-})
-throw err
-}
+    try {
+        return next(action)
+    } catch (err) {
+        console.error('Caught an exception!', err)
+        throw err
+    }
 }
 
 27>
-const thunkMiddleware =
-({ dispatch, getState }) =>
-next =>
-action => {
-// If the "action" is actually a function instead...
-if (typeof action === 'function') {
-// then call the function and pass `dispatch` and `getState` as arguments
-return action(dispatch, getState)
-}
-
+const thunkMiddleware = ({ dispatch, getState }) => next => action => {
+    // If the "action" is actually a function instead...
+    if (typeof action === 'function') {
+    // then call the function and pass `dispatch` and `getState` as arguments
+    return action(dispatch, getState)
+    }
     // Otherwise, it's a normal action - send it onwards
     return next(action)
-
 }
-
 // always return next(action) in middleware function
 
 28>
