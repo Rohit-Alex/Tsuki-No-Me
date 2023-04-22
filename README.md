@@ -34,7 +34,77 @@ Server-side refers to the code that is executed on the server (web server, appli
 
 JavaScript can be used for both client-side and server-side programming. On the client-side, JavaScript is used to create interactive web pages, validate form data, and provide visual effects. On the server-side, JavaScript is used in Node.js to build server applications, interact with databases, and handle incoming HTTP requests.
 
-4> What are different Datatypes?
+4> What happens behind the hood when a webpage made using html, css and JS is opened?
+Ans:
+Here's a general overview of the process:
+
+HTML parsing: The web browser parses the HTML code to create a Document Object Model (DOM) tree, which represents the structure of the webpage. The DOM tree contains all the elements on the webpage, such as headings, paragraphs, images, and links.
+
+CSS parsing: The web browser also parses the CSS code to create a Cascading Style Sheets (CSS) Object Model (CSSOM) tree, which represents the styles and layout of the webpage. The CSSOM tree contains information about the size, position, and appearance of each element on the webpage.
+
+Rendering: The web browser combines the DOM tree and the CSSOM tree to create a render tree, which is used to display the webpage on the screen. The render tree contains all the elements and styles needed to paint the webpage.
+
+JavaScript execution: If the webpage includes JavaScript code, the web browser executes it. JavaScript can modify the DOM and CSSOM trees, add interactivity to the webpage, and perform other actions.
+
+Layout and painting: Due to user activity, some layout or value might update which is repainted.
+
+Loading external resources: The webpage may also include external resources such as images, videos, and scripts. The web browser loads these resources as needed.
+
+5> What is DOM?
+Ans:
+Tree-like structure, with nodes representing elements, attributes, and text. The DOM provides a way for programs to interact with the web page, allowing them to read, modify, and delete content and styles.
+
+6> Explain async and defer in JS?
+Ans:
+
+THE PROBLEM -->>
+When a web page is loaded, the browser needs to download and execute all the JavaScript files included in the page. By default, the browser will download and execute the JavaScript files synchronously, which means it will wait for each script to finish downloading and executing before moving on to the next one. This can slow down the page load time, especially if there are multiple scripts or if the scripts are large.
+
+We can add script tag at two places.
+    i> Inside <head> tag: 
+        If script tag is added here then HTML parsing is blocked till the scripts are downloaded and done with execution. This arises 2 problems:
+        a> Scripts can’t see DOM elements below them, so they can’t add handlers etc.
+        b> If there’s a bulky script at the top of the page, it “blocks the page”. Users can’t see the page content till it downloads and runs:
+    
+    
+    ii> Placing at the bottom of page. Last of <body> tag
+    To avoid the above issue we can place the script tag at the bottom of the page. By this HTML parsing is not blocked and UI is rendered to the screen.
+    But this gives us 1 problem.
+        a> The browser notices the script (and can start downloading it) only after it downloaded the full HTML document. For long HTML documents, that may be a noticeable delay.
+
+THE SOLUTION (async/defer)
+
+i> DEFER:
+        a> Here the scipt tag is downloaded parallely while the browser continues to parse the HTML and build DOM. The script is kept ready (downloaded) and     executed only when the entire HTML is parsed and DOM is built completely.
+        b> Scripts with defer never block the page.
+        c> Scripts with defer always execute when the DOM is ready (but before DOMContentLoaded event).
+        d> Maitains order of execution of scripts in the order it were written.
+            let's suppose there are 2 scripts tags small(size 5kb) and big(15kb). But big.js is written before small.js
+
+            <script defer src="https://javascript.info/article/script-async-defer/long.js"></script>
+            <script defer src="https://javascript.info/article/script-async-defer/small.js"></script>
+
+            So even though small.js loads first, it still waits and runs after long.js downloads and executes.
+ii> ASYNC:
+        a> Here also script is downloaded parallely and doesn't block html parsing.
+
+        Important difference between async and defer.
+            a.i> It doesn't wait for html parsing to be completed. HTML parsing and async script downloading takes place parallely.
+                Once the script has finished downloading, it will be executed immediately, even if the rest of the page is not yet fully loaded. 
+
+            a.ii> DOMContentLoaded and async scripts don’t wait for each other:
+            a.iii> For multiple scripts, the script which got downloaded first will be executed first and won't check for the order in which that were written.
+                let's suppose there are 2 scripts tags small(size 5kb) and big(15kb). But big.js is written before small.js
+
+                <script async src="https://javascript.info/article/script-async-defer/long.js"></script>
+                <script async src="https://javascript.info/article/script-async-defer/small.js"></script>
+
+                As small.js loads first so it gets executed first as well.
+
+
+NOTE: We can "async" when the scripts are totally independent of each other and doesn't require the full DOM tree in it's execution.
+
+7> What are different Datatypes?
 Ans> 
 i> Primitive Datatypes
     a> Number
@@ -57,7 +127,7 @@ ii> Non-primitive Datatypes
     a> Object
     b> Functions
 
-5> Difference between null and undefined?
+8> Difference between null and undefined?
 Ans: 
 "null" indicates that the variable or property has no value. In other words, null is a value that has been explicitly assigned to a variable or property to indicate that it does not have a meaningful value.
 
@@ -68,17 +138,17 @@ let y = null; // y is explicitly assigned the null value
 console.log(x); // Output: undefined
 console.log(y); // Output: null
 
-6> Why is typeof operator?
+9> Why is typeof operator?
 Ans:
 The typeof operator returns a string indicating the type of the operand's value.
 
-7> Why do we get typeof null as object?
+10> Why do we get typeof null as object?
 Ans: It's basically a bug in JS.
 In the first implementation of JavaScript, JavaScript values were represented as a type tag and a value. The type tag for objects was 0. null was represented as the NULL pointer (0x00 in most platforms). Consequently, null had 0 as type tag, hence the typeof return value "object"
                 OR
 Both null and Object are represented in similar bit pattern as that of object reference. Hence, we get object for null as well.
 
-8> What are thruthy and falsy values?
+11> What are thruthy and falsy values?
 Ans:
     All values are truthy except 
     i> false
@@ -90,11 +160,11 @@ Ans:
     vii> undefined
     viii> NaN.
 
-9> What does instanceof operator do?
+12> What does instanceof operator do?
 The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value.
 object instanceof constructor.
 
-10> Scopes in JS.
+13> Scopes in JS.
 Global scope: Variables declared outside of all functions.
 These are accessible throughout the entire program, including within functions and other blocks of code.
 
@@ -129,5 +199,5 @@ Block Scope: Variables declared inside of curly braces {} have block scoped. It 
 }
 // x can NOT be used here
 
-11> Var, let and const?
-12> Shadowing and Illegal Shadowing?
+14> Var, let and const?
+15> Shadowing and Illegal Shadowing?

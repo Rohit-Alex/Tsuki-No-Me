@@ -88,7 +88,7 @@ String methods
 sort method on array and strings
 
 functions/constructor functions/arrow functions/generator/currying
-
+Optional Chaining (?.) operator
 order of precedence -> not necessary
 
 Hoisting ---> covered in Function&Hoisting.js file
