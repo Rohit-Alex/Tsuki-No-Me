@@ -1,5 +1,6 @@
 /*
     ******RULES******
+    i> Global context - this refers to window object.
     i> new keyword binding - the new keyword changes the meaning of this to be the object that is being created.
     ii> implicit binding - "this" refers to the object that is calling it. It is implied, without doing anything it's just how the language works.
     iii> explicit binding - using the "bind" keyword to change the meaning of "this".

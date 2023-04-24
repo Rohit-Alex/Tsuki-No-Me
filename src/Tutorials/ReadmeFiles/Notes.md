@@ -1,12 +1,3 @@
-1>
-JavaScript is a lightweight scripting language.
---->scripting language because it uses the browser to do the dirty work.
-Whatever instruction we give, JavaScript tells the browser to go do it.
-It is weakly typed dynamic language.
---->Dynamic language because no variable is binded to a particular datatype.
-It is used to provide functionality to the webpage.
-mostly used as client side programming language
-Intepreted language but modern browser search engine uses JIT compilation which makes it ultra fast
 
 2> Best Practices
 If a function accepts more than 2 arguments then it's better to send an object rather than other values.
@@ -14,11 +5,6 @@ If a function accepts more than 2 arguments then it's better to send an object r
 3> conditionally add props and object property
 To add props conditionally => {...(condition && {disable: true})}
 To add keys conditionally in object => {...obj, ...(condition && {key: 1})}
-
-4>
-Instance Of
-The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value.
-object instanceof constructor
 
 5>
 Eventloop -> responsible for executing js code, collecting and processing events and executing queued sub-tasks
@@ -85,29 +71,10 @@ Object.is(-0, 0); // -> false
 Object.is(NaN, 0 / 0); // -> true
 NaN === 0 / 0; // -> false
 
-23>
-Precedence operators:
-1> ()
-2> ?.
-3> postfix ...++
-...--
-4> unary operator & prefix: ! ~ + - ++... --...
-5> \*_ (right to left)
-6> _ / %
-7> + -
-8> << >>
-9> < > <= >=
-10> == != === !==
-11> |
-12> &
-13> ^
-14> &&
-15> ||
-16> ??
-17> =
+
 
 24>
-typeof 4+5 => 'number5
+
 
 25>
 Logger middleware in Redux
