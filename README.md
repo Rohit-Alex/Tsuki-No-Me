@@ -249,3 +249,12 @@ Ans:
 21> Coercion.
 Ans: Open src/Tutorials/Coercion.js
 
+22> How would compare a non-primitive datatypes?
+23> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE?
+24> string methods.
+25> Array and object methods.
+26> Map and set.
+27> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+
+Revision and I/O Question
+
