@@ -251,6 +251,8 @@ Ans: Open src/Tutorials/Coercion.js
 
 22> How would compare a non-primitive datatypes?
 23> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE?
+Ans: Open src\Tutorials\Functions.js
+    Open src\Tutorials\ArrowFunctions.js
 24> string methods.
 25> Array and object methods.
 26> Map and set.
