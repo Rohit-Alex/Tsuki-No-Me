@@ -128,7 +128,7 @@ class Ogre extends Character {
 }
 const legolas = new Elf("Legolas", "high", "bow");
 const gruul = new Ogre("Gruul", "club", "gray");
-legolas.attack(); // attack with bow
+legolas.attack(); // attack with high
 gruul.enrage(); // double attack power
 gruul.attack(); // attack with club
 legolas instanceof Elf; //true

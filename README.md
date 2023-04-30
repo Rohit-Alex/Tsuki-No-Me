@@ -215,7 +215,7 @@ Ans: src/Tutorials/Typeof&Falsy.js
 Ans:
     open src/Tutorials/ReadmeFiles/ComparisonOperators.md
     open src/Tutorials/ReadmeFiles/LogicalOperators.md
-    open src/Tutorials/ReadmeFiles/??Operator.md
+    open src/Tutorials/ReadmeFiles/NullishOperator.md
 
 19> isNaN() and Number.isNaN()?
 Ans: Open src/Tutorials/isNaN.js
@@ -255,8 +255,19 @@ Ans: Open src\Tutorials\Functions.js
     Open src\Tutorials\ArrowFunctions.js
 24> string methods.
 25> Array and object methods.
-26> Map and set.
-27> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+26> Dot vs Bracket Notation in JS.
+27> Map and set.
+28> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+29> Oops in JS?
+Ans> i> Classes used for making scalable objects
+    ii> Making use of 
+        a> Encapsulation
+        b> Abstraction
+        c> Inheritance
+        d> Polymorphism
+    Open src\Tutorials\OopsConcept.js
 
-Revision and I/O Question
+Revision and I/O Question (Phase 1 complete)
 
+28> Hoisting?
+Ans: 
