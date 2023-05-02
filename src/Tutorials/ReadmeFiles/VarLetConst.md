@@ -15,7 +15,7 @@ console.log(square) // Reference error
 ii> Can skip initialization while declaring it. It's optional.
 e.g. var a;
     console.log(a) // undefined
-
+    
 iii> It can be reassigned as well.
 e.g. var a = 5;
      a = 10;
