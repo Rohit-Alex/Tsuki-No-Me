@@ -1,4 +1,5 @@
 # Interview Prepartion and Cheat Sheet
+<------------------------- PHASE 1 ------------------------->
 
 1> What is JavaScript?
 Ans: 
@@ -22,7 +23,7 @@ Interpreted Language:
 
 Compiled Language:
     i> Source code -> Machine code -> Executable code
-    ii> Executes the entire line in one go.
+    ii> Executes the entire code in one go.
     iii> compiled code is optimized for execution and can be executed more quickly than interpreted code.Hence, better performance.
 
 3> Difference between Client side and server side?
@@ -250,14 +251,20 @@ Ans:
 Ans: Open src/Tutorials/Coercion.js
 
 22> How would compare a non-primitive datatypes?
+
 23> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE?
 Ans: Open src\Tutorials\Functions.js
     Open src\Tutorials\ArrowFunctions.js
+
 24> string methods.
 25> Array and object methods.
 26> Dot vs Bracket Notation in JS.
+
 27> Map and set.
+Ans: Open src\Tutorials\ReadmeFiles\MapSetObject.md
+
 28> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+
 29> Oops in JS?
 Ans> i> Classes used for making scalable objects
     ii> Making use of 
@@ -266,6 +273,7 @@ Ans> i> Classes used for making scalable objects
         c> Inheritance
         d> Polymorphism
     Open src\Tutorials\OopsConcept.js
+
 30> Constructor property of Object?
 Ans.  Returns a reference to the constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
 
@@ -285,7 +293,10 @@ const n = 3;
 n.constructor === Number; // true
 
 31> How would you check if the given argument is an Array?
-Revision and I/O Question (Phase 1 complete)
+Revision and I/O Question
+Some DSA question based on Arrays, Objects & Strings.
 
+<------------------------- PHASE 2 ------------------------->
 28> Hoisting?
 Ans: 
+   process whereby the interpreter moves the declaration of functions & variables to the top of their scope, prior to execution of the code.

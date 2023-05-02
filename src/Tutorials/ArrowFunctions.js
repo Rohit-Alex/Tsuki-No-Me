@@ -7,14 +7,12 @@
     * 6> Arrow functions have a lexical scoping, which means that they use the value of variables from the enclosing scope where they are defined, 
         not where they are executed.
 */
-
 function normalFun (name) {
     return console.log(`Hello ${name}`)
 }
 
-const arrowFun1 = (name) => {
-    return console.log(`Hello ${name}`);
-}
+const arrowFun1 = name =>  console.log(`Hello ${name}`);
+
 
 normalFun('nammoni')
 arrowFun1('namooni')
@@ -25,6 +23,7 @@ arrowFun1('namooni')
 
 // Pt. 6 example
 const a = 10;
+
 const printA = () => {
   console.log(a);
 };
