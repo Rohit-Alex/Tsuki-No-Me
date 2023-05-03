@@ -203,6 +203,18 @@ Block Scope: Variables declared inside of curly braces {} have block scoped. It 
 14> Var, let and const?
 Ans: Open src/Tutorials/ReadmeFiles/VarLetConst.md
 
+    Can we modify a variable declared using const?
+    Ans:
+        when we declare a const variable that holds an object, such as an array, it means that the variable cannot be reassigned to a different object. It does not mean that the object itself is immutable.
+
+        In the case of const arr = [2,5,6], the const keyword ensures that arr cannot be reassigned to a different array or a different value. However, we can still modify the contents of the array itself, such as by adding new elements to it or changing existing elements.
+
+        When we call arr.push(9), we are modifying the contents of the existing array rather than reassigning arr to a new array. Therefore, the operation is allowed and does not violate the const constraint.
+
+        Simple bhasa mein = kar ke nhi value change kar sakte par method use kar ke kar sakte.
+        High level mein bole toh Every object is referred by their reference and when we declare a variable of non-primitive datatype, it's reference can't be changed. However, we can change the value stored at that reference.
+
+
 15> Shadowing and Illegal Shadowing?
 Ans: Open src/Tutorials/ReadmeFiles/VariableShadowing.md
 
@@ -258,14 +270,21 @@ Ans: Open src\Tutorials\Functions.js
 
 24> string methods.
 25> Array and object methods.
+    -> Different way to create object.
+    -> Freeze vs Seal
+    -> Tell her about the es6 shorthand
+    -> syntax
+    Give some scenarios and ask which data type would she choose.
 26> Dot vs Bracket Notation in JS.
-
 27> Map and set.
 Ans: Open src\Tutorials\ReadmeFiles\MapSetObject.md
 
 28> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
-
-29> Oops in JS?
+29> ES6 concepts. (Spread, destructuring, rest).
+Ans: Open src\Tutorials\ES6.js
+29> Shallow copy and deep copy.
+Ans: src\Tutorials\shallow&DeepCopy.js
+30> Oops in JS?
 Ans> i> Classes used for making scalable objects
     ii> Making use of 
         a> Encapsulation
@@ -274,7 +293,7 @@ Ans> i> Classes used for making scalable objects
         d> Polymorphism
     Open src\Tutorials\OopsConcept.js
 
-30> Constructor property of Object?
+31> Constructor property of Object?
 Ans.  Returns a reference to the constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
 
 const o1 = {};
@@ -292,7 +311,10 @@ a2.constructor === Array; // true
 const n = 3;
 n.constructor === Number; // true
 
-31> How would you check if the given argument is an Array?
+32> How would you check if the given argument is an Array?
+How can convert any variable into boolean? (!!)
+break and continue
+switch statement: https://javascript.info/switch
 Revision and I/O Question
 Some DSA question based on Arrays, Objects & Strings.
 

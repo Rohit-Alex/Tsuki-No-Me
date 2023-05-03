@@ -7,8 +7,12 @@ console.log(second);
 console.log(third);
 console.log(rest)
 
-// spread operator works for shallow copy
+const numbersCopy = numbers;
+numbersCopy.push(60)
 console.log(numbers);
+console.log(numbersCopy)
+
+// spread operator works for shallow copy
 const copyOfNumbers = [...numbers];
 console.log(copyOfNumbers);
 copyOfNumbers[0] = 100;
