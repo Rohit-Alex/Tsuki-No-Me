@@ -269,22 +269,46 @@ Ans: Open src\Tutorials\Functions.js
     Open src\Tutorials\ArrowFunctions.js
 
 24> string methods.
-25> Array and object methods.
+Ans: 
+    -->> slice, substring, substr(deprecated but still should know), includes, at, trim, padStart, padEnd, split, join, match, matchAll
+    slice => can take -ve, work as i think
+    substring => almost same as slice
+    doesn't take -ve values, when given treated as 0
+    if endIndex is less than startIndex then swaps it.
+    console.log('mozilla'.substring(4, 7)); // 'lla'
+    console.log('mozilla'.substring(7, 4)); // 'lla'
+    substr => takes a starting point and goes till the length of output string becomes equal to 2nd argument.
+    however, it's deprecated now.      
+
+    Note: When NaN is provided as index, then it's treated as 0 for every above method.
+
+25> object methods.
     -> Different way to create object.
     -> Freeze vs Seal
+    -> If Object.freeze does shallow freeze then how can we make it deep freeze?
     -> Tell her about the es6 shorthand
     -> syntax
-    Give some scenarios and ask which data type would she choose.
-26> Dot vs Bracket Notation in JS.
-27> Map and set.
+Ans: 
+    Open src\Tutorials\Object.js
+
+26> delete operator -> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
+Ans: Returns true is object property is deleted else false. 
+    syntax: delete object.property
+            delete object[property]
+
+27> sort method on array and strings
+Note:    Give some scenarios and ask which data type would she choose.
+
+28> Dot vs Bracket Notation in JS.
+29> Map and set.
 Ans: Open src\Tutorials\ReadmeFiles\MapSetObject.md
 
-28> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
-29> ES6 concepts. (Spread, destructuring, rest).
+30> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+31> ES6 concepts. (Spread, destructuring, rest).
 Ans: Open src\Tutorials\ES6.js
-29> Shallow copy and deep copy.
+32> Shallow copy and deep copy.
 Ans: src\Tutorials\shallow&DeepCopy.js
-30> Oops in JS?
+33> Oops in JS?
 Ans> i> Classes used for making scalable objects
     ii> Making use of 
         a> Encapsulation
@@ -293,7 +317,7 @@ Ans> i> Classes used for making scalable objects
         d> Polymorphism
     Open src\Tutorials\OopsConcept.js
 
-31> Constructor property of Object?
+34> Constructor property of Object?
 Ans.  Returns a reference to the constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
 
 const o1 = {};
@@ -311,7 +335,7 @@ a2.constructor === Array; // true
 const n = 3;
 n.constructor === Number; // true
 
-32> How would you check if the given argument is an Array?
+35> How would you check if the given argument is an Array?
 How can convert any variable into boolean? (!!)
 break and continue
 switch statement: https://javascript.info/switch
@@ -321,4 +345,4 @@ Some DSA question based on Arrays, Objects & Strings.
 <------------------------- PHASE 2 ------------------------->
 28> Hoisting?
 Ans: 
-   process whereby the interpreter moves the declaration of functions & variables to the top of their scope, prior to execution of the code.
+   Open src\Tutorials\Function&Hoisting.js

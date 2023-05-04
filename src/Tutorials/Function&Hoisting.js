@@ -1,5 +1,85 @@
-1> console.log(...[1, 2, 3])
+/*
+   process whereby the interpreter moves the declaration of functions & variables to the top of their scope, prior to execution of the code.
 
+   It makes use of the memory allocation phase of global execution context. Variables and functions are allocated in memory even before the execution begins. Hence, due to this variables and functions are accessible even before they are declared.
+
+   Note: only declaration is hoisted and not initialization. Mtlb value store nhi hota memory of during first phase.
+   sirf variable ka naam store hota.
+
+   Only var, and normal functions means (function declartion) are hoisted.
+   var is assigned a value "undefined" and functions entire code is assigned in memory during allocation phase of global execution context.
+
+   Let and const are also hoisted but they are allocated memory under script as they are block scoped. Hence are not accessible till they are executed i.e initialized a value. This zone is called "temporal dead zone". The gap b/w a variable is assigned a memory till its gets executed and assigned a value is called "temporal dead zone".
+
+   Function expression, arrow functions are treated as normal variables are treated.
+   classes are not hoisted.
+*/
+
+0.1>
+console.log(frndo);
+var frndo;
+frndo = 'nirali';
+
+0.2>
+console.log(frndo);
+var frndo = 'nirali';
+
+0.3>
+console.log(welcome)
+welcome()
+function welcome() {
+    console.log('Hello world')
+}
+
+0.4> 
+console.log(frndo)
+let frndo = 'nirali'; 
+
+0.5> 
+console.log(frndo)
+const frndo = 'nirali';
+
+0.6>
+console.log(welcome)
+welcome()
+var welcome = function () {
+    console.log('Hello world')
+}
+
+0.7>
+console.log(welcome)
+welcome()
+let welcome = function () {
+    console.log('Hello world')
+}
+
+0.8>
+console.log(welcome)
+welcome()
+const welcome = function () {
+    console.log('Hello world')
+}
+
+0.8>
+console.log(welcome)
+welcome()
+var welcome = () => {
+    console.log('Hello world')
+}
+
+0.9>
+console.log(welcome)
+welcome()
+let welcome = () => {
+    console.log('Hello world')
+}
+
+1.0>
+console.log(welcome)
+welcome()
+const welcome = () => {
+    console.log('Hello world')
+}
 //Hoisting Questions...
 
 2>
