@@ -5,12 +5,11 @@
           i> For first element position would be first
           ii> For second element position would be 2 and so on but for last it would be last
     e.g. 
-    const myPriorityList = ['family', 'friends', 'anime', 'music', 'career', 'baaki ladkiya', 'mg']
+    const myPriorityList = ['family', 'friends', 'anime', 'music', 'career']
     O/P:
       family: Present at first of my priority
       friends: present at 2 of my priority
       .. 
-      mg: present at last of my priority
 
       const favHollywoodMovies = [
         {
