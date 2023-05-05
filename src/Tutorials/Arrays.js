@@ -1,16 +1,16 @@
 /*
-    Given an array of elements, you need to print the elements such that:
-        {element}: present at {position} of my priority
-        Note: 
-          i> For first element position would be first
-          ii> For second element position would be 2 and so on but for last it would be last
+  
     e.g. 
-    const myPriorityList = ['family', 'friends', 'anime', 'music', 'career']
+    const myPriorityList = ['family', 'mg', friends', 'career', 'music', 'anime']
     O/P:
       family: Present at first of my priority
-      friends: present at 2 of my priority
-      .. 
-
+      mg: Present at 2 of my priority
+      friends: Present at 3 of my priority
+      career: Present at 4 of my priority
+      music: present at 5 of my priority
+      anime: present at last of my priority
+      
+      2>
       const favHollywoodMovies = [
         {
           name: 'Infinity war',
@@ -47,7 +47,7 @@ const arr2 = [15, 5, 9, 7, 4, 11, 18] // filter odd number => then filter prime 
 allNumbersArePositive; // for every method
 hasEvenNumber // some method
 
-//marryOption
+
 //areAllFemales
 const member = [
   {

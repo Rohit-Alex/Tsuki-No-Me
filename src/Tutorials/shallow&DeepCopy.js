@@ -1,16 +1,25 @@
 import _ from 'lodash'
 const numbers = [10, 20, 30, 40, 50];
+const detailsObj = {
+    fname: 'Nirali',
+    lname: 'Bhalodiya',
+    address: {
+        city: 'Vadodara'
+    }
+}
 
-const [first, second, third, ...rest] = numbers;
-console.log(first);
-console.log(second);
-console.log(third);
-console.log(rest)
 
+// Task: -> Make a copy of numbers and try to add 60 at last
 const numbersCopy = numbers;
 numbersCopy.push(60)
 console.log(numbers);
 console.log(numbersCopy)
+
+// Task: -> Make a copy of detailsObj and try to add a property name "age" with value 25
+const detailsObjCopy = detailsObj
+detailsObjCopy.age = 25
+console.log(detailsObjCopy)
+console.log(detailsObj)
 
 // spread operator works for shallow copy
 const copyOfNumbers = [...numbers];
@@ -18,6 +27,11 @@ console.log(copyOfNumbers);
 copyOfNumbers[0] = 100;
 console.log(copyOfNumbers);
 console.log(numbers);
+
+const detailsObjCopy2 = { ...detailsObj }
+detailsObjCopy2.age = 25
+console.log(detailsObjCopy2)
+console.log(detailsObj)
 
 // spread operator does not work in deep copy
 const people = [{ name: "John" }, { name: "Jane" }];

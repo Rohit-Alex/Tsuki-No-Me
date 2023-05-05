@@ -291,6 +291,39 @@ Ans:
 Ans: 
     Open src\Tutorials\Object.js
 
+Array methods:
+    -> push() => add at last. Returns the length of new array.
+    -> pop() => removes the last element. Returns the removed element i.e. last element.
+    -> shift() => removes first element. Returns the removed element i.e. first element.
+    -> unshift() => add at beginning of the array. Returns the length of new array.
+       To avoid confusion b/w shift and unshift: shift means "sharak/side ho/hatna" so removes first element. 
+    -> at(index) -> returs the element at given index. Can take -ve value as well
+    -> concat() -> add element or any array to the operational array
+    -> flat() -> creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+    -> slice() -> same as string method
+    -> splice() -> can add, delete or modify the array. Returns the removed elements in the form of array. 
+                -> only method which modifies the original array.
+
+    -> indexOf(element) -> returns 1st index of element. If not found returns -1
+    -> lastIndexOf() ->  returns 1st index of element from last. If not found returns -1
+    -> includes(searchVal) -> returns true if searchVal found in array else false.
+
+    Note: These 3 above methods can't be applied to array of objects or array of arrays i.e.(array of non-primitive types)
+
+    -> map() -> returns new array of same length which each element getting the values from return value of function.
+    -> filter() -> returns new array of with only that elements for which the function returned true.
+    -> every() -> returns true if all the elements returned true from the function or if all the elements satisfied the condition
+    -> some() -> returns true if any element returned true from the function.
+    -> find() -> returns the found element else undefined
+    -> findIndex() -> returns the 1st index of found element else -1
+
+    These above methods can be applied in all kind of arrays.
+
+    -> reduce() -> 
+
+    Refer this for more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+    Open src\Tutorials\Arrays.js (for i/p o/p)
 26> delete operator -> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 Ans: Returns true is object property is deleted else false. 
     syntax: delete object.property
@@ -304,7 +337,7 @@ Note:    Give some scenarios and ask which data type would she choose.
 Ans: Open src\Tutorials\ReadmeFiles\MapSetObject.md
 
 30> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
-31> ES6 concepts. (Spread, destructuring, rest).
+31> ES6 concepts. (Spread, destructuring, rest, optional Chaining).
 Ans: Open src\Tutorials\ES6.js
 32> Shallow copy and deep copy.
 Ans: src\Tutorials\shallow&DeepCopy.js

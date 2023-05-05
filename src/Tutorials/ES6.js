@@ -1,5 +1,17 @@
 /*
-    Spread operator:
+    <<<<---------- Optional Chaining ----------->>>
+
+*/
+const props = {
+    status: ['Active', 'INACTIVE', 'DRAFT'],
+    title: 'Component',
+    handleClick: () => console.log("clicked")
+}
+// access title, subtitle, status, handleClose assuming everthing is optional
+
+/*
+    <<<<---------- Spread ----------->>>
+
     * This syntax allows iterable items (arrays, strings, or objects) to be expanded.
 
     * Possible syntax
@@ -29,12 +41,14 @@ arr1 = [...arr1, ...arr2];
 const obj2 = {fName: 'Nirali'}
 const obj3 = {lastName: 'Bhalodiya'}
 //Make an object which has both the keys.
-// Make it your brother's object
+// Modify it your brother's name 
 
 
 //Note: We can spread an array to object
 
 /*
+     <<<<---------- Rest Operator ----------->>>
+
     ! Resemblence with rest operator
     Used to get all the remaining parameter. Can be only used at last while destructuring or last parameter in function
 */
@@ -55,6 +69,22 @@ myFun("one", "two", "three", "four", "five", "six");
 const x = [1, 2, 3, 4, 5];
 const [y, z] = x;
 
+const [first, second, third, ...restNumber] = numbers;
+console.log(first);
+console.log(second);
+console.log(third);
+console.log(restNumber)
+
+const detailsObj = {
+    fname: 'Nirali',
+    lname: 'Bhalodiya',
+    age: 25,
+    address: {
+        city: 'Vadodara'
+    }
+}
+const { fname, ...remainingKeys } = detailsObj;
+ 
 const shaddi = { ladki: '', dahej: 3000000, keyPoint: { education: { matric: '1st', enter: '1st', BA: '2nd' }, cuteness: 'overloaded', gussa: 'Sizzling hot' }  };
 
 const error = { message: 'rohit' }
@@ -64,3 +94,4 @@ const { config:
 
 
 // Question: Given an array of object containing some properties. Now, create an array with each object containg additionKey title
+
