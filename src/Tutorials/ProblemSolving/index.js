@@ -88,6 +88,7 @@ const isEqual = (val1, val2) => {
 // Overlapping intervals
 // String reversal
 // Object traversal 
+// Count frequency of array elements
 // fibonaaci
 // factorial
 // memoization

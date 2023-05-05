@@ -1,17 +1,15 @@
 // closure
-
-for (let i = 0; i < 3; i++) {
-    setTimeout(() => {
-        console.log(i) // 0 1 2
-    }, i * 1000)
-}
-
 for (var i = 0; i < 3; i++) {
     setTimeout(() => {
         console.log(i) // 3 3 3
     }, i * 1000)
 }
 
+for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i) // 0 1 2
+    }, i * 1000)
+}
 
 for (var i = 0; i < 3; i++) {
     const print = (x) => {
@@ -22,6 +20,37 @@ for (var i = 0; i < 3; i++) {
     print(i)
 }
 
+// data hiding and encapsulation 
+
+function Counter() {
+    let count = 0
+    this.increment = function () {
+        count++
+    }
+    this.decrement = function () {
+        count--
+    }
+    this.print = function () {
+        return count
+    }
+}
+
+const counter1 = new Counter()
+console.log(counter1.increment())
+console.log(counter1.increment())
+console.log(counter1.increment())
+console.log(counter1.print())
+console.log(counter1.decrement())
+console.log(counter1.decrement())
+console.log(counter1.print())
+
+const counter2 = new Counter()
+console.log(counter2.increment())
+console.log(counter2.increment())
+console.log(counter2.print())
+console.log(counter2.decrement())
+console.log(counter2.decrement())
+console.log(counter2.print())
 
 
 // PROTOTYPE 
@@ -60,39 +89,6 @@ console.log(add(5)(6)(8))
 
 const sum = a => b => b ? sum(a+b) : a
 sum(1)(2)(3)(4)()
-
-
-// data hiding and encapsulation 
-
-function Counter() {
-    let count = 0
-    this.increment = function () {
-        count++
-    }
-    this.decrement = function () {
-        count--
-    }
-    this.print = function () {
-        return count
-    }
-}
-
-const counter1 = new Counter()
-console.log(counter1.increment())
-console.log(counter1.increment())
-console.log(counter1.increment())
-console.log(counter1.print())
-console.log(counter1.decrement())
-console.log(counter1.decrement())
-console.log(counter1.print())
-
-const counter2 = new Counter()
-console.log(counter2.increment())
-console.log(counter2.increment())
-console.log(counter2.print())
-console.log(counter2.decrement())
-console.log(counter2.decrement())
-console.log(counter2.print())
 
 
 // A minor, but noteworthy feature of includes is that it correctly handles NaN, unlike indexOf:

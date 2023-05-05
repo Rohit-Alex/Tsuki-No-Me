@@ -319,17 +319,25 @@ Array methods:
 
     These above methods can be applied in all kind of arrays.
 
-    -> reduce() -> 
+    -> reduce() -> Open src\Tutorials\Reduce.js
 
     Refer this for more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 
     Open src\Tutorials\Arrays.js (for i/p o/p)
+
 26> delete operator -> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 Ans: Returns true is object property is deleted else false. 
     syntax: delete object.property
             delete object[property]
 
-27> sort method on array and strings
+27> sort method on array and strings.
+    -> Math.random()
+    -> Math.ceil()
+    -> Math.floor()
+    -> Math.abs()
+Ans: 
+    Open src\Tutorials\sortMethod.js
+
 Note:    Give some scenarios and ask which data type would she choose.
 
 28> Dot vs Bracket Notation in JS.
@@ -376,6 +384,24 @@ Revision and I/O Question
 Some DSA question based on Arrays, Objects & Strings.
 
 <------------------------- PHASE 2 ------------------------->
-28> Hoisting?
+36> Hoisting?
 Ans: 
    Open src\Tutorials\Function&Hoisting.js
+37> Closure
+38> call, apply, bind
+39> Currying
+39> Prototype Inheritance
+40> this operator
+Ans: Open src\Tutorials\callApplyBind.js
+39> Asynchronous behaviour
+        -> Event loop
+        -> setTimeout, setInterval, callback
+        -> Promises
+            ->Promise.all
+            ->Promise.allSettled
+            ->Promise.any
+            ->Promise.race
+        -> async/await
+            -> Error handling
+
+    

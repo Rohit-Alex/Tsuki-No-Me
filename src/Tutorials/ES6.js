@@ -2,12 +2,22 @@
     <<<<---------- Optional Chaining ----------->>>
 
 */
-const props = {
-    status: ['Active', 'INACTIVE', 'DRAFT'],
-    title: 'Component',
-    handleClick: () => console.log("clicked")
+const knowMeObj = {
+    traits: ['Addictive', 'Kanjoos', 'Nak chadhi'],
+    name: 'Nirali Bhalodiya',
+    nickName: 'Namooni',
+    address: {
+        city: 'Vadodara',
+        state: 'Gujarat',
+    },
+    getHobby: () => console.log("K-drama dekh ke baaki ladko ko barbaad karna"),
+    knowTarget: () => console.log('Gift a house to Dad and be self dependent')
 }
-// access title, subtitle, status, handleClose assuming everthing is optional
+/*
+    access name, nickName, getBoyfriend, assuming everthing is optional
+    if no husband then print dilwa de koi acha wala
+    getHusband: (bf) => console.log(`${bf} is my husband`) 
+*/
 
 /*
     <<<<---------- Spread ----------->>>
@@ -24,11 +34,17 @@ const props = {
 */
 const num1 = [1,2,3]
 console.log(...num1)
+const personality = ['Attractive', 'Addictive', 'hot-headed']
+console.log(...personality)
+
+const str = 'Nirali'
+console.log(...str)
 
 const obj1 = {fruit: 'mango', vegetable: 'tomato'}
 console.log(...obj1)
 
 //Suppose we want to add 4 and 5 to num1 array such that it becomes [1,2,3,4,5]
+// or add "innocent", "childish" to personality
 num1 = [...num1, 4, 5]
 
 // Practical example. Add todo representing an object.
@@ -38,10 +54,18 @@ const arr2 = [3, 4, 5];
 
 arr1 = [...arr1, ...arr2];
 
-const obj2 = {fName: 'Nirali'}
-const obj3 = {lastName: 'Bhalodiya'}
-//Make an object which has both the keys.
-// Modify it your brother's name 
+const posTraits = ['Patience', 'persistent', 'Innocent', 'Childish']
+const negTraits = ['Kanjoos', 'hot-headed', 'pessimistic']
+
+// Now combine above 2 arrays into 1
+
+
+const stock1 = {mango: '12 kg', grapes: '10 kg'}
+// Now add apple 10 kg in stock
+
+const stock2 = {watermelon: '10 kg', pineapple: '5 kg'}
+// Now combine stock1 and stock2
+// Modify mango quantity to '15 kg'
 
 
 //Note: We can spread an array to object
@@ -69,25 +93,40 @@ myFun("one", "two", "three", "four", "five", "six");
 const x = [1, 2, 3, 4, 5];
 const [y, z] = x;
 
-const [first, second, third, ...restNumber] = numbers;
+const unfilledWishes = ['Gaali sunna', 'To see in person', 'Working together', 'Rest u know']
+const [first, second, ...restWishes] = unfilledWishes;
 console.log(first);
 console.log(second);
-console.log(third);
-console.log(restNumber)
+console.log(restWishes)
 
-const detailsObj = {
-    fname: 'Nirali',
-    lname: 'Bhalodiya',
+const bioData = {
+    name: 'Nirali Bhalodiya',
     age: 25,
+    dahejDo: 3000000,
     address: {
-        city: 'Vadodara'
-    }
+        city: 'Vadodara',
+        state: 'Gujarat',
+        landmark: ['eva mall', 'Ganshyam Nagar']
+    },
+    keyPoint: { education: { matric: '1st', enter: '1st', Diplcoma: '1st' }, cuteness: 'overloaded', gussa: 'Sizzling hot' } 
 }
-const { fname, ...remainingKeys } = detailsObj;
+const { fname, ...remainingKeys } = bioData;
  
-const shaddi = { ladki: '', dahej: 3000000, keyPoint: { education: { matric: '1st', enter: '1st', BA: '2nd' }, cuteness: 'overloaded', gussa: 'Sizzling hot' }  };
 
-const error = { message: 'rohit' }
+const error = { 
+    config: {
+        headers: {
+            Authorization: 'chal bhaag',
+            token: 'mggsflifeoioi24',
+            contentType: 'html'
+        },
+        stomach: 'Bhookh laga hai khila de',
+        leg: 'Dard kar rha, utha le'
+    },
+    complicated: 'thoda bahut',
+    relief: 'hum hai na' 
+}
+
 const { config:
 { headers: { Authorization, ...exceptAuthorization } = {}, ...exceptHeaders } = {}, ...rest
 } = error ?? {};

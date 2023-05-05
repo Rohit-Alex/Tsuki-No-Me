@@ -8,6 +8,8 @@
         surroundings and no further. However, if "this" is inside of a method's func on, it
         falls out of scope and belongs to the window object. To correct this, you can use a
         higher order func on to return an arrow func on that calls "this".
+
+        Open -> src\Tutorials\ArrowFunctions.js and refer this in arrow function section
 */
 
 

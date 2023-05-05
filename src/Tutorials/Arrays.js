@@ -115,6 +115,9 @@ const availableOptions = [
     ii> isEmployed and surname with patel. dono satisfy ho
     iii> salary more than 2500000 or surname with patel
     iv> anyone from Australia
-  
+    v> Create a new array such that each item only contains:
+        -> name, country, surname, salary
   Find and return the name and surname of candidate who is from Gujarat
+
+  
 */
