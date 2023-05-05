@@ -80,18 +80,16 @@ const isEqual = (val1, val2) => {
     return false
 }
 
-// Prime Number
-// Prime factorization
-// Duplicates 
-// Unique
-// Pair sum
-// Overlapping intervals
-// String reversal
-// Object traversal 
-// Count frequency of array elements
-// fibonaaci
-// factorial
-// memoization
+const checkTruthyValueTotally = (value) => {
+  return value && !["0", "null", "undefined"].includes(value);
+};
+const treatFalsyAsTruthy = (value) => {
+  return value || value === 0;
+};
+
+console.log(checkTruthyValueTotally(23));
+console.log(treatFalsyAsTruthy(NaN));
+
 /*
 Test case 1
 const obj1 = {name: 'rohit', age: 24, hobbies: 'Music'}
@@ -114,6 +112,7 @@ const obj1 = { a: 20, b: { x: 40, y: 60 }}
 const obj2 = { a: 20, b: { x: 40, y: 80 }}
 */
 console.log(compareObject(obj1, obj2))
+
 
 const compareArrays = (arr1, arr2) => {
     // This doesn't always work. If order doesn't matter and any value is null and in another array any value is undefined
@@ -193,16 +192,19 @@ const optimizedCompareArrays = (arr1, arr2) => {
     const arr2 = [4, 3, 2, 2, 5, 2]
 
 */
-console.log(compareArrays())
+console.log(compareArrays(arr1, arr2))
+
 // Anagrams
 // Prime Number
 // Prime factorization
 // Duplicates 
 // Unique
+// Count frequency of array elements
 // Pair sum
-// Overlapping intervals
 // String reversal
 // Object traversal 
 // fibonaaci
 // factorial
 // memoization
+// Overlapping intervals
+// Recursion question on arrays and objects

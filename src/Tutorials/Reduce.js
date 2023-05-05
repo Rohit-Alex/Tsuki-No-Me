@@ -114,12 +114,4 @@ const exceptdFiltered = arrObj.filter(
 console.log(requiredFiltered);
 console.log(exceptdFiltered);
 
-const checkTruthyValueTotally = (value) => {
-  return value && !["0", "null", "undefined"].includes(value);
-};
-const treatFalsyAsTruthy = (value) => {
-  return value || value === 0;
-};
 
-console.log(checkTruthyValueTotally(23));
-console.log(treatFalsyAsTruthy(NaN));

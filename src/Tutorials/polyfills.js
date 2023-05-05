@@ -1,6 +1,19 @@
 /*
     This files contains the polyfill for various methods
 */
+const arr1 = ['one', 'two', 'three', 'four']
+//adding prototype to the Array prototype
+Array.prototype.myFun = function () {
+    const ar = this.map(e => e.toUpperCase())
+    return ar
+}
+console.log(arr1.myFun())
+
+// adding prototype to the arr1 array only
+arr1.__proto__.myFun = function () {
+    return this.includes(3)
+}
+console.log(arr1.myFun());
 
 //Map Method
 Array.prototype.myMap = function (cb) {

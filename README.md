@@ -200,6 +200,8 @@ Block Scope: Variables declared inside of curly braces {} have block scoped. It 
 }
 // x can NOT be used here
 
+Lexical scope: 
+
 14> Var, let and const?
 Ans: Open src/Tutorials/ReadmeFiles/VarLetConst.md
 
@@ -284,6 +286,7 @@ Ans:
 
 25> object methods.
     -> Different way to create object.
+    -> construction function to create object
     -> Freeze vs Seal
     -> If Object.freeze does shallow freeze then how can we make it deep freeze?
     -> Tell her about the es6 shorthand
@@ -385,15 +388,24 @@ Some DSA question based on Arrays, Objects & Strings.
 
 <------------------------- PHASE 2 ------------------------->
 36> Hoisting?
-Ans: 
-   Open src\Tutorials\Function&Hoisting.js
+Ans: Open src\Tutorials\Function&Hoisting.js
+
 37> Closure
+Ans: Open src\Tutorials\closure.js
+
 38> call, apply, bind
+Ans: Open src\Tutorials\callApplyBind.js
+
 39> Currying
+Ans: Open src\Tutorials\currying.js
+
 39> Prototype Inheritance
+Ans: Open src\Tutorials\polyfills.js
+
 40> this operator
 Ans: Open src\Tutorials\callApplyBind.js
-39> Asynchronous behaviour
+
+41> Asynchronous behaviour
         -> Event loop
         -> setTimeout, setInterval, callback
         -> Promises

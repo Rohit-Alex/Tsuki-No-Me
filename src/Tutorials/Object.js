@@ -1,3 +1,16 @@
+/*
+  <------ Different ways to create objects ------->
+
+  i> object literals.
+      e.g. const obj = {key: 'value'}
+  
+  ii> using new Object.
+      e.g. const obj = new Object({ key: 'value' })
+  
+  iii> using construction function
+  iv> using classes
+*/
+
 const obj = {
     name: 'Nirali',
     surname: 'Bhalodiya',
@@ -62,9 +75,83 @@ const arr1 = [
 console.log(Object.fromEntries(arr1))
 
 
-// Freeze vs Seal
+/*
+  <----------- Object using constructor function ----------->
+
+  Suppose you want to want to maintain record of all your lovers by mainting name, reasonForDecline, dayLeft and methods to increase and decrease dayLeft.
+
+  Mainly used if we want make object with same properties and its repetitive
+*/
+const lover1 = {
+  name: "namoona1",
+  reasonForDecline: "Pasand nhi aur upar se annoying hai",
+  dayLeft: 30,
+  extendExpiry: function (extendBy) {
+    this.dayLeft += extendBy;
+    return `${this.dayLeft} days tak maje leti hu 😊`;
+  },
+  shortenExpiry: function (shortenBy) {
+    this.dayLeft -= shortenBy;
+    return `${this.dayLeft} days bus. Bahut ho rha iska ab 😠`;
+  },
+};
+
+const lover2 = {
+  name: "namoona2",
+  reasonForDecline: "Chota hai warna sochti",
+  dayLeft: 180,
+  extendExpiry: function (extendBy) {
+    this.dayLeft += extendBy;
+    return `${this.dayLeft} days tak maje leti hu 😊`;
+  },
+  shortenExpiry: function (shortenBy) {
+    this.dayLeft -= shortenBy;
+    return `${this.dayLeft} days mein ise bhi chor dunhi 😂`;
+  },
+};
+
+console.log(lover1.reasonForDecline)
+console.log(lover1.extendExpiry(10))
+console.log(lover1.shortenExpiry(30));
+
+console.log(lover2.reasonForDecline)
+console.log(lover2.extendExpiry(30))
+console.log(lover2.shortenExpiry(200));
+
+// Par tumhare pass lovers ka stock hai. Kitna object iss tarh banayegi. same cheez bus value alag alag.
+
+function Lovers(name, reasonForDecline) {
+  let dayLeft = 365;
+  this.name = name;
+  this.reasonForDecline = reasonForDecline;
+  this.extendExpiry = function(extendBy) {
+    dayLeft += extendBy;
+    return `${dayLeft} days tak maje leti hu 😊`;
+  }
+  this.shortenExpiry = function(shortenBy) {
+    dayLeft -= shortenBy;
+    return `${dayLeft} days mein ise bhi chor dunhi 😂`;
+  }
+}
+
+const lover3 = new Lovers('namoona1', 'Pasand nhi aur upar se annoying hai')
+const lover4 = new Lovers('namoona2', 'Chota hai warna sochti')
+
+console.log(lover3.reasonForDecline)
+console.log(lover3.extendExpiry(10))
+console.log(lover3.shortenExpiry(365));
+
+console.log(lover4.reasonForDecline)
+console.log(lover4.extendExpiry(30))
+console.log(lover4.shortenExpiry(300));
+
+// Ye scalable hai aur utna code bhi nhi likhna padega.
+
+
 
 /*
+  <-------------- Freeze vs Seal ----------->
+
     * 1st case:
     Modify existing property, addition or removal dono allowed nhi hai. Think it as of ===
     * Object.freeze is used to prevent the modification of an object’s properties and the addition/removal of new properties. 

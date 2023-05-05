@@ -97,3 +97,63 @@ e.g. ii>
 console.log(b); // 5
 
 If we use "use strict" mode then we would get error.
+
+I/O O/p
+
+var a = 100;
+{
+    var a = 10;
+    let b = 20;
+    const c = 30;
+    console.log(a);
+    console.log(b);
+    console.log(c);
+}
+console.log(a);
+console.log(b);
+console.log(c);
+
+var b = 20;
+{
+    let b = 50;
+    console.log(b)
+}
+console.log(b)
+
+let x = 20;
+{
+    var x = 30;
+    console.log(x);
+}
+console.log(x);
+
+
+let m = 24;
+function temp() {
+    var m = 30;
+    console.log(m)
+}
+console.log(m)
+
+
+function fun() {
+    var q = 24
+    console.log(q)
+}
+console.log(q)
+
+
+const p = 6;
+{
+    const p = 5;
+    {
+        const p = 10;
+        console.log(p);
+    }
+    console.log(p);
+}
+console.log(p);
+
+
+
+

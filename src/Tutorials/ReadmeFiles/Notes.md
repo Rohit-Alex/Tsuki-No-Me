@@ -153,19 +153,6 @@ id: item?.id,
 title: item?.title
 }));
 
-36>
-function curry(func) {
-return function curried(...args1) {
-if (args1.length >= func.length) {
-func.apply(this, args1)
-} else {
-return function(...args2) {
-return curried.apply(this, args1.concat(args2))
-}
-}
-}
-}
-
 37>
 Classes are not hoisted
 
