@@ -50,7 +50,6 @@ coercion
            [undefined].toString() => ''
            [] => in number is equivalent to 0
 
-How can convert any variable into boolean? (!!)
 break and continue
 switch statement: https://javascript.info/switch
 

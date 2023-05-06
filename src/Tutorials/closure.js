@@ -199,6 +199,20 @@ const addition = memoizAddition();
 console.log(addition(20)); //output: 40 calculated
 console.log(addition(20)); //output: 40 cached
 
+/*
+    <------ Advantages and disadvantages of Closure ---------->
+
+    <-- Advantage -->
+    * Encapsulation & Data privacy: creating a private scope for variables and functions that are not directly accessible from outside the function. 
+    * Currying
+    * Memoization
+    
+    <-- Disadvantages -->
+    * Function overhead
+    * Memory leaks as lexical environment elements are not garbage collected
+    * complexity increases
+*/
+
 // A minor, but noteworthy feature of includes is that it correctly handles NaN, unlike indexOf:
 (function() {
     const arr = [NaN];

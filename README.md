@@ -142,6 +142,7 @@ console.log(y); // Output: null
 9> Why is typeof operator?
 Ans:
 The typeof operator returns a string indicating the type of the operand's value.
+Open -> src\Tutorials\Typeof&Falsy.js
 
 10> Why do we get typeof null as object?
 Ans: It's basically a bug in JS.
@@ -161,6 +162,8 @@ Ans:
     vii> undefined
     viii> NaN.
 
+    Open -> src\Tutorials\Typeof&Falsy.js
+    
 12> What does instanceof operator do?
 The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value.
 object instanceof constructor.
@@ -332,6 +335,14 @@ Array methods:
 Ans: Returns true is object property is deleted else false. 
     syntax: delete object.property
             delete object[property]
+    
+    If we want to delete an element in array using this delete syntax i.e. delete arr[2]
+    Then it does remove it but leaves undefined at that place. So size still remains the same.
+
+    const arr = ["Paisa", "Paisa", "Paisa"];
+    delete arr[1]; // removes "Paisa" and returns true
+    console.log(arr[1]); // undefined 
+    console.log(arr); // ['Paisa', ,'Paisa'] 
 
 27> sort method on array and strings.
     -> Math.random()
@@ -380,6 +391,7 @@ const n = 3;
 n.constructor === Number; // true
 
 35> How would you check if the given argument is an Array?
+Also explain about semicolon.
 How can convert any variable into boolean? (!!)
 break and continue
 switch statement: https://javascript.info/switch
@@ -390,22 +402,22 @@ Some DSA question based on Arrays, Objects & Strings.
 36> Hoisting?
 Ans: Open src\Tutorials\Function&Hoisting.js
 
-37> Closure
+37> call, apply, bind
+Ans: Open src\Tutorials\callApplyBind.js
+
+38> Prototype Inheritance
+Ans: Open src\Tutorials\prototypeChain&pollyfills.js
+
+39> this operator
+Ans: Open src\Tutorials\callApplyBind.js
+
+40> Closure
 Ans: Open src\Tutorials\closure.js
 
-38> call, apply, bind
-Ans: Open src\Tutorials\callApplyBind.js
-
-39> Currying
+41> Currying
 Ans: Open src\Tutorials\currying.js
 
-39> Prototype Inheritance
-Ans: Open src\Tutorials\polyfills.js
-
-40> this operator
-Ans: Open src\Tutorials\callApplyBind.js
-
-41> Asynchronous behaviour
+42> Asynchronous behaviour
         -> Event loop
         -> setTimeout, setInterval, callback
         -> Promises

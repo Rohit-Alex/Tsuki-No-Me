@@ -6,7 +6,7 @@
 Number.isNaN("NaN"); 
 Number.isNaN(undefined);
 Number.isNaN({});
-Number.isNaN("blabla");
+Number.isNaN("Your grace");
 Number.isNaN(true);
 Number.isNaN(null);
 Number.isNaN("37");
@@ -17,7 +17,7 @@ Number.isNaN(" ");
 Number.isNaN(NaN)
 Number.isNaN(2)
 
-
+// Remember: Number.isNaN(NaN) => Only this gives true, rest all gives false
 
 
 isNaN("NaN");

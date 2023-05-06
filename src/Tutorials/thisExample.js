@@ -147,6 +147,46 @@
     // b Window {…}
 */
 
+/*
+    7.0>
+
+const obj = {
+    name: 'Nirali',
+    surname: 'Bhalodiya',
+    age: 25,
+    printName: function() {
+        console.log(`My Name: ${this.name} and age: ${this.age}`)
+    }
+}
+
+obj.printName()
+
+/*
+    todo Now print the name after 1 second
+
+    printName: function() {
+        setTimeout(function () {
+            console.log(`My Name: ${this.name} and age: ${this.age}`)
+        })
+    }
+    ! But this doesn't work. We get undefined.👆
+
+    printName: function() {
+        const that = this
+        setTimeout(function () {
+            console.log(`My Name: ${that.name} and age: ${that.age}`)
+        })
+    }
+
+    ! The above code works but it can still be simplified. 👆
+
+    printName: function() {
+
+        setTimeout(() => {
+            console.log(`My Name: ${this.name} and age: ${this.age}`)
+        })
+    }
+*/
 
 /*
 7>  const obj = {

@@ -31,19 +31,25 @@ Explicit Conversion: Number('5') => 5
 Note that == does not trigger numeric conversion when both operands are strings.
 'nirali' === 'namooni' => false (this doesn't trigger numeric conversion)
 
-Number(null)                   // 0
-Number([])				       // 0
-Number("")                     // 0
-Number("  ")                   // 0
-Number(true)                   // 1
-Number(false)                  // 0
-Number(" 12 ")                 // 12
-Number("-12.34")               // -12.34
-Number("\n")                   // 0
-Number(" 12s ")                // NaN
-Number(undefined)              // NaN
-Number(123)                    // 123
-Number({})				// NaN
+Number(null)          // 0
+Number(undefined)     // NaN
+Number(false)         // 0
+Number("")            // 0
+Number("  ")          // 0
+Number("\n")          // 0
+Number("someNum")     // NaN
+Number(true)          // 1
+Number(" 12 ")        // 12
+Number("-12.34")      // -12.34
+Number(" 12s ")       // NaN
+Number(123)           // 123
+Number({})				    // NaN => Note: Object mein kuch bhi ho "NaN" hi aayega
+Number([])				    // 0
+Number([undefined])		// 0
+Number([null])		    // 0
+Number([24])				  // 24 => String([24]) =>'24' => Number('24') => 24
+Number([24, 5])				// NaN => String([24, 5]) => '24,5' => Number('24,5') => NaN
+
 
 Exceptions: 
 1> null and undefined equal each other and don’t equal anything else. 
@@ -250,8 +256,22 @@ arr3 = arr4; // At this line both are pointing to same reference. Hence true.
 console.log(arr3 === arr4)
 
 
-typeof 4+5 
+typeof 4+5; 
 /* Explanation: typeof has higher precedence.
   (typeof 4) + 5
   => 'number5
+*/
+
+[2] + [4, 1];
+/*
+  Each gets converted to string first and gets joined
+  '2' + '4,1' 
+  '24,1'
+*/
+
+[24, 1, 1] + [998];
+/*
+  Each gets converted to string first and gets joined
+  '24,1,1' + '998' 
+  '24,1,1998'
 */

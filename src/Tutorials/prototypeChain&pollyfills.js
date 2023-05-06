@@ -1,6 +1,88 @@
 /*
-    This files contains the polyfill for various methods
+    <-------------- Prototype Inheritance ------------>
+    
+    * Each and every object has access to a special hidden propery named "[[Prototype]]" that is either reference to another object or null. This chain is called prototype chain.
+    ? e.g. When we write arr.length, then length although doesn't exist in array but we are still able to access it. Because length property exists in Array.prototype.
+
+    * When seeking a property, it is first sought/looked in the existing object and if not found then it seeks for it in the prototype chain. 
+    * This continues till it reaches the end of prototype chain i.e. null.
+    
+   
+    1> Number --> Number.prototype --> Object.prototype --> null
+    2> String --> String.prototype --> Object.prototype --> null
+    3> Boolean --> Boolean.prototype --> Object.prototype --> null
+    4> Function --> Function.prototype --> Object.prototype --> null
+    5> Contructor function / classes:
+        e.g. const person = new Person()
+        person --> Person.prototype --> Object.prototype --> null
+    6> Array -> Array.prototype -> Object.prototype -> null
+    7> Object -> Object.prototype -> null
 */
+    const niraliLife = {
+        fulltime: 'thrill'
+    };
+    const rohitLife = {
+        fullTime: 'Dukh, dard, peeda'
+    }
+
+    const protoObj = {
+        partTime: 'Annoying rohit'
+    };
+
+    console.log(niraliLife) // See the [[Prototype]] value in browser console
+    console.log(niraliLife.partTime) // undefined
+    niraliLife.__proto__ = protoObj; // Added protoObj to its Prototype
+    console.log(niraliLife) // Now, See the [[Prototype]] value in browser console
+    console.log(niraliLife.partTime) // 'Annoying rohit'
+    /* 
+        But now suppose I want to add "partTime" key to rohitLife as well.
+
+        if we write now, 👇 we get undefined as we haven't added to rohitLife Prototype
+            rohitLife.partTime 
+        
+        Toh tu bolegi ki, 👇 line likh de work kar jaayega.
+            rohitLife.__proto__ = protoObj; 
+        
+        Par suppose ab I want this "partTime" property to be available to each and every object. Sabko pareshaan karte hum.
+        So, to do this. 👇
+    */
+
+   // Replace line no. 20 with
+    Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole not to any specific object) Protype.
+   // Note the difference b/w previous [[Prototype]] property (using __proto__) and now (using Prototype)
+    console.log(niraliLife)
+    console.log(niraliLife.partTime) // 'Annoying rohit'
+    console.log(rohitLife.partTime)  // 'Annoying rohit'
+
+    /*
+        ? <---- Understanding difference b/w __proto__ and Prototype ------->
+        i> 
+            * __proto__ is generally applied when we need to add to individual array/object/function. 
+            * Prototype syntax is used to add to all types of array/object/function
+        ii> 
+            niraliLife.__proto__ = protoObj; 
+            This ☝️ line is equivalent to obj.age = 24. Relate kar paa rhi na.
+            means niraliLife is now:-> 
+
+                const niraliLife = {
+                    fulltime: 'thrill',
+                    __proto__: {
+                        partTime: 'Annoying rohit'
+                    }
+                };
+                { fulltime: 'thrill' } -> { partTime: 'Annoying rohit' } ->  Object.prototype -> null
+                        ☝️                           ☝️                             ☝️
+                    Original object              local prototype           Prototype present to each object
+            
+            
+            And now 2nd line:
+            Object.prototype.partTime = 'Annoying Rohit'
+            This ☝️ line directly adds a new property to existing Object prototype and doesn't create any local prototype.
+
+            * __proto__ can be thought of local prototype.
+            * Prototype can be thought of global prototype for its type.
+    */
+
 const arr1 = ['one', 'two', 'three', 'four']
 //adding prototype to the Array prototype
 Array.prototype.myFun = function () {

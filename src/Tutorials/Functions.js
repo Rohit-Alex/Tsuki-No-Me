@@ -15,10 +15,11 @@ function fun() {
 }
 
 function name(parameter1, parameter2) {
- console.log('Wait for them to ask you who you know' + '\n' + parameter1 + ' ' + parameter2)
+ console.log('Baat jo hai usmein' + '\n' + parameter1 + ' ' + parameter2)
 }
-
-name('Please dont make any sudden moves', 'You dont know the half of the abuse')
+const argument1 = 'baat wo ynha kanhi'
+const argument2 = 'Nhi kisi mein'
+name(argument1, argument2)
 
 /*
     * Argument name need not be of same name as parameter.
@@ -54,7 +55,7 @@ const tuSetHogi = function() {
 tuSetHogi()
 
 /*
-    Difference between Function Declartion and Function Expression
+    <------- Difference between Function Declartion and Function Expression ------>
         i> A Function Expression is created when the execution reaches it and is usable only from that moment.
         i> A Function Declaration can be called earlier than it is defined.
 
@@ -65,30 +66,36 @@ tuSetHogi()
         iii> Function expression is like creating an anonymous function and storing it in a variable.
 */
 
-// Callback functions
     /*
+        <---------- Callback functions --------->
         * A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of action.
         * Callback functions are often used in JavaScript to handle asynchronous operations or events.
-    */
-
-    /*  
-        todo: Why use Callback?
+        
+         todo: Why use Callback?
         * Some of our operations are started only after the preceding ones have completed. 
         Often when we request data from other sources, such as an external API, we don’t always know when our data will be served back. 
         In these instances we want to wait for the response, but we don’t always want our entire application grinding to a halt while our data is being fetched. 
         These situations are where callback functions come in handy.
-
     */
-   function forgetBefore(crush, week) {
+
+   function forgetBy(crush, week) {
         console.log(`To forget ${crush} and moveon within ${week} weeks`)
    }
 
-    function bhoolJaaInProgress(name) {
+   function beAsItIs(crush) {
+    console.log(`Crush for a reason: ${crush} for you.`)
+   }
+
+    function takeDecision(name, callbackFn) {
         const someCalc = Math.floor(Math.random() * 5) + 1
-        forgetBefore(name, someCalc)
+        callbackFn(name, someCalc)
     }
 
-    bhoolJaaInProgress('Nirali')
+    takeDecision('Nirali', forgetBy)
+    takeDecision('Nirali', beAsItIs)
+
+    // Note: Here takeDescision function is just calling the function passed to it.
+    //       Different functions are passed as the need may be and takeDecision just executes it
 
     // Another example
 
@@ -111,19 +118,50 @@ tuSetHogi()
     performOperation(8, multiply);
 
 /*
-        IIFE
+        <-------- IIFE --------->
+    * Immediately Invoked Function Expressions.
     * Runs as soon as it is defined without being explicitly called.
     * IIFE is often used to create a private scope for the variables and functions defined within it, thus preventing naming conflicts with other code in the global namespace.
     * Hence doesn't pollute global namespace.
 */
+
 (function () {
-  // …
+  // using function definition…
 })();
 
 (() => {
-  // …
+  //Using arrow function …
 })();
 
 (async () => {
-  // …
+  // Async functionalities can be added here…
 })();
+
+/*  
+    <--------- Arrow Functions -------->
+
+    * 1> New feature introduced in ES6
+    * 2> Provides a shorter syntax for defining functions compared to traditional function expressions.
+    * 3> If only one parameter is there then no need of paranthesis as well.
+    * 4> Can defined a function without the need of "function" keyword.
+    * 5> Can return a value without "return" keyword and curly braces. Provided function content is 1 line.
+    * 6> Arrow functions have a lexical scoping, which means that they use the value of variables from the enclosing scope where they are defined, 
+        not where they are executed.
+*/
+
+function normalFun (name) {
+    return console.log(`Hello ${name}`)
+}
+
+const arrowFun1 = name =>  console.log(`Hello ${name}`);
+
+
+normalFun('nammoni')
+arrowFun1('namooni')
+
+// Now simplify it to one line and show paranthesis removal.
+const returnNumber = () => 2
+const returnString = () => 'Missing me? 🫤'
+const returnBoolean = () => false
+const returnArray = () => ['Kya kya', 'example de rha 😠']
+const returnObj = () => ({ husnKiPari: 'Nirali' })

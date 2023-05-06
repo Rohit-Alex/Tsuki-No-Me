@@ -5,17 +5,17 @@ COMPARISON OPERATORS
 -> A comparison result can be assigned to a variable, just like any value:
 e.g.
 let result = 5 > 4; 
-alert( result ); 
+console.log(result); 
 
 String comparison
 To see whether a string is greater than another, JavaScript uses the so-called “dictionary” or “lexicographical” order.
 
 In other words, strings are compared letter-by-letter.
 
-alert( 'Z' > 'A' );
-alert( 'Glow' > 'Glee' );
-alert( 'Bee' > 'Be' );
-alert( 'a' > 'Z' );
+console.log('Z' > 'A');
+console.log('Glow' > 'Glee');
+console.log('Bee' > 'Be');
+console.log('a' > 'Z');
 
 
 Comparison of different types

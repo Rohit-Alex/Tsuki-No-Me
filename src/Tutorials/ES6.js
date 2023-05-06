@@ -99,6 +99,8 @@ console.log(first);
 console.log(second);
 console.log(restWishes)
 
+// Swapt two numbers using destructring
+
 const bioData = {
     name: 'Nirali Bhalodiya',
     age: 25,
