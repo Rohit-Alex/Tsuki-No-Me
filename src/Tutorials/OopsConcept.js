@@ -207,3 +207,14 @@ console.log(nriGroom.getStayPeriod())
     * Humlog ko khaane se matlab hai baaki ka process se matlab nhi ki kaise wo mouth se hoke windpipe of escape kar ke stomatch mein jaake phir kaise digest ho
 
 */
+
+
+// private declarations
+class Rectangle {
+    #height = 0;
+    #width;
+    constructor(height, width) {
+        this.#height = height;
+        this.#width = width;
+    }
+}

@@ -11,6 +11,21 @@
   iv> using classes
 */
 
+// Syntax showing the values can be of anything (any datatypes)
+const dummyObj = {
+  number: 2,
+  string: 'Hey there!',
+  boolean: true,
+  array: [2, 4, 1, 'nirali'],
+  myName() {
+    console.log("Nirali here.")
+  },
+  obj: {
+    nestedKey: 1
+  }
+}
+
+
 const obj = {
     name: 'Nirali',
     surname: 'Bhalodiya',
@@ -32,7 +47,7 @@ console.log(obj[expensiveCal]);
 console.log(obj.surname)
 console.log(obj[fun()])
 
-
+// Traversal using for in
 for (const key in obj) {
     console.log(`Key is ${key} and value is ${obj[key]}`)
 }
@@ -41,6 +56,10 @@ console.log(Object.keys(obj))
 console.log(Object.values(obj))
 console.log(Object.entries(obj))
 
+// Traversal using for each. However, forEach can only be applied with arrays
+Object.keys(obj).forEach(key => {
+  console.log(`Key is ${key} and value is ${obj[key]}`)
+})
 
 const bird = {
   size: 'small',

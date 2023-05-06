@@ -70,6 +70,7 @@ tuSetHogi()
         <---------- Callback functions --------->
         * A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of action.
         * Callback functions are often used in JavaScript to handle asynchronous operations or events.
+        * e.g onLoad, onClick, onChange events and setTimeouts, setInterval
         
          todo: Why use Callback?
         * Some of our operations are started only after the preceding ones have completed. 
