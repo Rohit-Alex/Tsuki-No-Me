@@ -206,7 +206,7 @@ Block Scope: Variables declared inside of curly braces {} have block scoped. It 
 Lexical scope: 
 
 14> Var, let and const?
-Ans: [ctrl + click to open](src/Tutorials/ReadmeFiles/VarLetConst.md)
+Ans: [click to open](src/Tutorials/ReadmeFiles/VarLetConst.md)
 
     Can we modify a variable declared using const?
     Ans:
@@ -221,21 +221,21 @@ Ans: [ctrl + click to open](src/Tutorials/ReadmeFiles/VarLetConst.md)
 
 
 15> Shadowing and Illegal Shadowing?
-Ans: [ctrl + click to open](src/Tutorials/ReadmeFiles/VariableShadowing.md)
+Ans: [click to open](src/Tutorials/ReadmeFiles/VariableShadowing.md)
 
 16> What is typeof operator? I/O questions based on it.
-Ans: [ctrl + click to open](src/Tutorials/Typeof&Falsy.js)
+Ans: [click to open](src/Tutorials/Typeof&Falsy.js)
 
 17> What are falsy and truthy values?
-Ans: [ctrl + click to open](src/Tutorials/Typeof&Falsy.js)
+Ans: [click to open](src/Tutorials/Typeof&Falsy.js)
 
 18> Operators in JS?
-Ans:[ctrl + click to open](src/Tutorials/ReadmeFiles/LogicalOperators.md)
-    [ctrl + click to open](src/Tutorials/ReadmeFiles/ComparisonOperators.md)
-    [ctrl + click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
+Ans:[click to open](src/Tutorials/ReadmeFiles/LogicalOperators.md)
+    [click to open](src/Tutorials/ReadmeFiles/ComparisonOperators.md)
+    [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
 
 19> isNaN() and Number.isNaN()?
-Ans: [ctrl + click to open](src/Tutorials/isNaN.js)
+Ans: [click to open](src/Tutorials/isNaN.js)
 
 20> Precedence of Operators and associativity.
 Ans: 
@@ -264,12 +264,12 @@ Ans:
             the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
             const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
 21> Coercion.
-Ans: [ctrl + click to open](src/Tutorials/Coercion.js)
+Ans: [click to open](src/Tutorials/Coercion.js)
 
 22> How would compare a non-primitive datatypes?
 
 23> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE?
-Ans: [ctrl + click to open](src/Tutorials/Functions.js)
+Ans: [click to open](src/Tutorials/Functions.js)
     
 
 24> string methods.
@@ -294,7 +294,7 @@ Ans:
     -> Tell her about the es6 shorthand
     -> syntax
 
-Ans: [ctrl + click to open](src/Tutorials/Object.js)
+Ans: [click to open](src/Tutorials/Object.js)
 
 Array methods:
     -> push() => add at last. Returns the length of new array. Modifies original array.
@@ -330,12 +330,12 @@ Array methods:
     reverse()              -> toReversed()
     sort()                 -> toSorted()
 
-[ctrl + click to open](src/Tutorials/Arrays.js)
+[click to open](src/Tutorials/Arrays.js)
 
     These above methods can be applied in all kind of arrays.
 
     -> reduce() 
-[ctrl + click to open](src/Tutorials/Reduce.js)
+[click to open](src/Tutorials/Reduce.js)
 
     Refer this for more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 
@@ -364,15 +364,15 @@ Note:    Give some scenarios and ask which data type would she choose.
 
 28> Dot vs Bracket Notation in JS.
 29> Map and set.
-Ans: [ctrl + click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
+Ans: [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
 30> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
 
 31> ES6 concepts. (Spread, destructuring, rest, optional Chaining).
-Ans: [ctrl + click to open](src/Tutorials/ES6.js)
+Ans: [click to open](src/Tutorials/ES6.js)
 
 32> Shallow copy and deep copy.
-Ans: [ctrl + click to open](src/Tutorials/shallow&DeepCopy.js)
+Ans: [click to open](src/Tutorials/shallow&DeepCopy.js)
 
 33> Oops in JS?
 Ans> i> Classes used for making scalable objects
@@ -381,7 +381,7 @@ Ans> i> Classes used for making scalable objects
         b> Abstraction
         c> Inheritance
         d> Polymorphism
-    [ctrl + click to open](src/Tutorials/OopsConcept.js)
+    [click to open](src/Tutorials/OopsConcept.js)
 
 34> Constructor property of Object?
 Ans.  Returns a reference to the constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
@@ -410,37 +410,37 @@ switch statement: https://javascript.info/switch
 
 <------------------------- PHASE 2 ------------------------->
 36> Hoisting?
-Ans: [ctrl + click to open](src/Tutorials/Hoisting.js)
+Ans: [click to open](src/Tutorials/Hoisting.js)
 
 37> call, apply, bind
-Ans: [ctrl + click to open](src\Tutorials\callApplyBind.js)
+Ans: [click to open](src\Tutorials\callApplyBind.js)
 
 38> Prototype Inheritance
-Ans: [ctrl + click to open](src\Tutorials\prototypeChain&pollyfills.js)
+Ans: [click to open](src\Tutorials\prototypeChain&pollyfills.js)
 
 39> this operator
-Ans: [ctrl + click to open](src\Tutorials\thisExample.js)
+Ans: [click to open](src\Tutorials\thisExample.js)
 
 40> Closure
-Ans: [ctrl + click to open](src/Tutorials/closure.js)
+Ans: [click to open](src/Tutorials/closure.js)
 
 41> Currying
-Ans: [ctrl + click to open](src\Tutorials\currying.js)
+Ans: [click to open](src\Tutorials\currying.js)
 
 42> Asynchronous behaviour
-        -> Event loop: [ctrl + click to open](src/Tutorials/eventLoop.js)
-        -> Async behaviour and why we need Promises: [ctrl + click to open](src/Tutorials/Asynchronous.js)
-        -> Promises varinats:[ctrl + click to open](src/Tutorials/PromiseVariant.js)
+        -> Event loop: [click to open](src/Tutorials/eventLoop.js)
+        -> Async behaviour and why we need Promises: [click to open](src/Tutorials/Asynchronous.js)
+        -> Promises varinats:[click to open](src/Tutorials/PromiseVariant.js)
             ->Promise.all
             ->Promise.allSettled
             ->Promise.any
             ->Promise.race
-        -> async/await & error handling: [ctrl + click to open](src/Tutorials/asyncAwait.js)
+        -> async/await & error handling: [click to open](src/Tutorials/asyncAwait.js)
             
 <------------------------- PHASE 3 ------------------------->
 
 Revision and I/O Question
-Some DSA question based on Arrays, Objects & Strings. : [ctrl + click to open](src/Tutorials/dsaQuestions.js)
+Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/dsaQuestions.js)
 
 <------------------------- Phase 4 ------------------------->
 # HTML, CSS & Casual JS questions
