@@ -39,6 +39,7 @@ if (girlDecision) {
 
 // Solved using setTimeout: 1st method
 const getMarriageApproval = () => {
+
     // Getting your response
      setTimeout(() => {
         const ladkiKaResponse = 'yes'
@@ -47,11 +48,12 @@ const getMarriageApproval = () => {
             property: 400000,
         }
         console.log("Got response from girl:", ladkiKaResponse, bioData)
+
         // Getting Your parent response
         setTimeout(() => {
-           
             const familyDecision = 'yes'
             console.log('Family approval:', familyDecision)
+
             // Ladka background and property check
             setTimeout(() => {    
                 const { property } = bioData
@@ -60,9 +62,9 @@ const getMarriageApproval = () => {
                 } else if (property <= 500000) {
                     console.log("Property score: Isse acha mil jaayega")
                 } else {
-                    console.log("Property score: Baarat leke aao abhi.")
+                    console.log("Property thodi dekha jaata. Aap bharat laao.")
                 }
-            }, 5000)
+            }, 3000)
 
         }, 2000)
 
@@ -88,7 +90,7 @@ const getFamiliesPermission1 = (girlResp, bioData,  cb) => {
     setTimeout(() => {
         const familyRes = 'yes'
         if (girlResp === 'yes' && familyRes === 'yes') {
-            cb('yes', bioData)
+            cb('yes', {...bioData, initialApproval: 'yes' } )
         }
     }, 2000)
 }
@@ -96,28 +98,31 @@ const analyzePropertyAndBackground = (bioData, cb) => {
     setTimeout(() => {    
         const { property } = bioData
         if (property <= 100000) {
-            cb("Property score: Kuch na hai iske pass!")
+            cb({ ...bioData, finalRemarks: "Property: kuch na hai iske pass!" })
             return 
         } else if (property <= 500000) {
-            cb("Property score: Isse acha mil jaayega")
+            cb({ ...bioData, finalRemarks: "Property: Isse acha mil jaayega" })
             return
         } else {
-            cb("Property score: Baarat leke aao phir.")
+            cb({ ...bioData, finalRemarks: "Property thodi dekha jaata. Aap bharat laao." })
             return
         }
-    }, 5000)
+    }, 3000)
 }
 
 const getMarriageApproval1 = () => {
+
     // Getting your response
     getGirlDesicion1((ladkiKaResponse, bioData) => {
         console.log("Got response from girl:", ladkiKaResponse, bioData)
+
         // getting familyDecision
-        getFamiliesPermission1(ladkiKaResponse, bioData, (overallRes, bioData) => {
-            console.log("Family and girl response now: ",overallRes )
+        getFamiliesPermission1(ladkiKaResponse, bioData, (overallRes, updatedBioData) => {
+            console.log("Family and girl response now: ",overallRes, updatedBioData )
+
             // background and property check
-            analyzePropertyAndBackground(bioData, (remarks) => {
-                console.log(remarks)
+            analyzePropertyAndBackground(bioData, (finalizedBioData) => {
+                console.log(finalizedBioData.finalRemarks)
             })
         })
     })
@@ -398,7 +403,7 @@ const getFamiliesPermission2 = (girlResp, bioData) => {
         setTimeout(() => {
             const familyRes = 'yes'
             if (girlResp === 'yes' && familyRes === 'yes') {
-                resolve(bioData)
+                resolve({ ...bioData, initialApproval: 'yes' })
             } else {
                 reject('Papa nhi maan rhe..')
             }
@@ -411,11 +416,11 @@ const analyzePropertyAndBackground2 = (bioData) => {
         setTimeout(() => {    
             const { property } = bioData
             if (property <= 100000) {
-                reject("Property score: Kuch na hai iske pass!")
+                reject({ ...bioData, finalRemarks: "Property: kuch na hai iske pass!" })
             } else if (property <= 500000) {
-                resolve("Property score: Isse acha mil jaayega")
+                resolve({ ...bioData, finalRemarks: "Property: Isse acha mil jaayega" })
             } else {
-                resolve("Property score: Baarat leke aao abhi.")
+                resolve({ ...bioData, finalRemarks: "Property thodi dekha jaata. Aap bharat laao." })
             }
         }, 5000)
     })
@@ -430,13 +435,13 @@ const getMarriageApproval2 = () => {
             // getting family response
             return getFamiliesPermission2('yes', bioData)
         })
-        .then(biodata => {
+        .then(updatedBioData => {
             console.log("Family and girl response now: yes")
             // Background and property check
-            return analyzePropertyAndBackground2(biodata)
+            return analyzePropertyAndBackground2(updatedBioData)
         })
-        .then(finalRemarks => {
-            console.log("Final remark: ", finalRemarks)
+        .then(finalizedBioData => {
+            console.log("Final remark: ", finalizedBioData.finalRemarks)
             console.log("Sab maan gye 😊")
         })
         .catch(issue => {
@@ -447,3 +452,5 @@ const getMarriageApproval2 = () => {
         })
 }
 getMarriageApproval2()
+
+// After learning async/await try to simplify above using that.(src/Tutorials/asyncAwait.js)

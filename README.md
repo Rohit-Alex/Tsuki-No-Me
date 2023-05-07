@@ -297,18 +297,17 @@ Ans:
 Ans: [ctrl + click to open](src/Tutorials/Object.js)
 
 Array methods:
-    -> push() => add at last. Returns the length of new array.
-    -> pop() => removes the last element. Returns the removed element i.e. last element.
-    -> shift() => removes first element. Returns the removed element i.e. first element.
-    -> unshift() => add at beginning of the array. Returns the length of new array.
+    -> push() => add at last. Returns the length of new array. Modifies original array.
+    -> pop() => removes the last element. Returns the removed element i.e. last element. Modifies original array.
+    -> shift() => removes first element. Returns the removed element i.e. first element. Modifies original array.
+    -> unshift() => add at beginning of the array. Returns the length of new array. Modifies original array.
        To avoid confusion b/w shift and unshift: shift means "sharak/side ho/hatna" so removes first element. 
     -> at(index) -> returs the element at given index. Can take -ve value as well
     -> concat() -> add element or any array to the operational array
     -> flat() -> creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
     -> slice() -> same as string method
-    -> splice() -> can add, delete or modify the array. Returns the removed elements in the form of array. 
-                -> only method which modifies the original array.
-
+    -> reverse() -> reverses the current array and returns the reference of original arr. Modifies original array.
+    -> splice() -> can add, delete or modify the array. Returns the removed elements in the form of array. Modifies original array.
     -> indexOf(element) -> returns 1st index of element. If not found returns -1
     -> lastIndexOf() ->  returns 1st index of element from last. If not found returns -1
     -> includes(searchVal) -> returns true if searchVal found in array else false.
@@ -321,6 +320,15 @@ Array methods:
     -> some() -> returns true if any element returned true from the function.
     -> find() -> returns the found element else undefined
     -> findIndex() -> returns the 1st index of found element else -1
+
+    # Desctructive methods -> alternative non-destructive methods
+    push()                 -> [...arr, newValue]
+    pop()                  -> slice(0, arr.length - 1) or toSpliced(arr.length - 1, 1)
+    shift()                -> slice(1) or toSpliced(0, 1)
+    unshift()              -> [newValue, ...arr]
+    splice()               -> toSpliced()
+    reverse()              -> toReversed()
+    sort()                 -> toSorted()
 
 [ctrl + click to open](src/Tutorials/Arrays.js)
 
@@ -398,8 +406,7 @@ Also explain about semicolon.
 How can convert any variable into boolean? (!!)
 break and continue
 switch statement: https://javascript.info/switch
-Revision and I/O Question
-Some DSA question based on Arrays, Objects & Strings.
+
 
 <------------------------- PHASE 2 ------------------------->
 36> Hoisting?
@@ -423,12 +430,17 @@ Ans: [ctrl + click to open](src\Tutorials\currying.js)
 42> Asynchronous behaviour
         -> Event loop: [ctrl + click to open](src/Tutorials/eventLoop.js)
         -> Async behaviour and why we need Promises: [ctrl + click to open](src/Tutorials/Asynchronous.js)
-        -> Promises
+        -> Promises varinats:[ctrl + click to open](src/Tutorials/PromiseVariant.js)
             ->Promise.all
             ->Promise.allSettled
             ->Promise.any
             ->Promise.race
-        -> async/await
-            -> Error handling
+        -> async/await & error handling: [ctrl + click to open](src/Tutorials/asyncAwait.js)
+            
+<------------------------- PHASE 3 ------------------------->
 
-    
+Revision and I/O Question
+Some DSA question based on Arrays, Objects & Strings. : [ctrl + click to open](src/Tutorials/dsaQuestions.js)
+
+<------------------------- Phase 4 ------------------------->
+# HTML, CSS & Casual JS questions
