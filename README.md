@@ -142,7 +142,7 @@ console.log(y); // Output: null
 9> Why is typeof operator?
 Ans:
 The typeof operator returns a string indicating the type of the operand's value.
-Open -> src\Tutorials\Typeof&Falsy.js
+Open -> [click to open](src/Tutorials/Typeof&Falsy.js)
 
 10> Why do we get typeof null as object?
 Ans: It's basically a bug in JS.
@@ -162,7 +162,7 @@ Ans:
     vii> undefined
     viii> NaN.
 
-    Open -> src\Tutorials\Typeof&Falsy.js
+[click to open](src/Tutorials/Typeof&Falsy.js)
     
 12> What does instanceof operator do?
 The instanceof operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a boolean value.
