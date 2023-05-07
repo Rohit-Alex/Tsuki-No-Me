@@ -421,8 +421,8 @@ Ans: [ctrl + click to open](src/Tutorials/closure.js)
 Ans: [ctrl + click to open](src\Tutorials\currying.js)
 
 42> Asynchronous behaviour
-        -> Event loop
-        -> setTimeout, setInterval, callback
+        -> Event loop: [ctrl + click to open](src/Tutorials/eventLoop.js)
+        -> Async behaviour and why we need Promises: [ctrl + click to open](src/Tutorials/Asynchronous.js)
         -> Promises
             ->Promise.all
             ->Promise.allSettled
