@@ -22,6 +22,7 @@ synthetic events
 
 why state is required, why not simply variables
 state/props
+children props
 why don't we change state directly/ why do we first create copy of non-primitive state before updating
 
 controlled vs un-controlled

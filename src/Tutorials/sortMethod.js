@@ -6,14 +6,12 @@ const strArr = ['caterpilar', 'ape', 'zebra', 'cat', 'Albatross', 'donkey']
 strArr.sort()
 console.log(strArr)
 
-const numArr = [ 5, 1, 1998, 24, 1999];
+const numArr = [ 2, 10, 1998, 24, 1999];
 numArr.sort();
 console.log(numArr);
 
 function compare(a, b) {
     /* must return a number 
-
-      
         * if returned  > 0 => b comes first  
             a > b => a - b => Greater than 0 => b comes first
 
@@ -25,6 +23,11 @@ function compare(a, b) {
     */
     return a - b
 }
+
+/*
+    * Ascending order => return a - b
+    * Descending order => return b - a
+*/
 
 numArr.sort(compare);
 numArr.sort((a, b) => a - b);

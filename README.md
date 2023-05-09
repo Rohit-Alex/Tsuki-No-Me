@@ -302,24 +302,35 @@ Array methods:
     -> shift() => removes first element. Returns the removed element i.e. first element. Modifies original array.
     -> unshift() => add at beginning of the array. Returns the length of new array. Modifies original array.
        To avoid confusion b/w shift and unshift: shift means "sharak/side ho/hatna" so removes first element. 
+    -> splice() -> can add, delete or modify the array. Returns the removed elements in the form of array. Modifies original array.
+    -> sort() -> sort the given array in specific order. Modifies the original array.
+    -> reverse() -> reverses the current array and returns the reference of original arr. Modifies original array.
+
     -> at(index) -> returs the element at given index. Can take -ve value as well
     -> concat() -> add element or any array to the operational array
     -> flat() -> creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
     -> slice() -> same as string method
-    -> reverse() -> reverses the current array and returns the reference of original arr. Modifies original array.
-    -> splice() -> can add, delete or modify the array. Returns the removed elements in the form of array. Modifies original array.
     -> indexOf(element) -> returns 1st index of element. If not found returns -1
     -> lastIndexOf() ->  returns 1st index of element from last. If not found returns -1
     -> includes(searchVal) -> returns true if searchVal found in array else false.
 
-    Note: These 3 above methods can't be applied to array of objects or array of arrays i.e.(array of non-primitive types)
+    Note: These 4 above methods can't be applied to array of objects or array of arrays i.e.(array of non-primitive types)
 
-    -> map() -> returns new array of same length which each element getting the values from return value of function.
-    -> filter() -> returns new array of with only that elements for which the function returned true.
-    -> every() -> returns true if all the elements returned true from the function or if all the elements satisfied the condition
-    -> some() -> returns true if any element returned true from the function.
-    -> find() -> returns the found element else undefined
-    -> findIndex() -> returns the 1st index of found element else -1
+    # If want array as returned value:
+    map() -> with all elements, same length of array with slight modification in each array.
+    filter() -> returns new array with only that elements for which the function returned true.
+
+    # If want any element
+    find() -> finds first element in the array
+    findLast() -> finds first element from last in the array
+
+    # If want the index of an element
+    findIndex() -> returns the 1st index of found element else -1 
+    findLastIndexOf() -> returns the 1st index from last of found element else -1
+
+    # If you just want to know (true/false) whether some or every element satisfy a particular condition.
+    every() -> returns true if all the elements returned true from the function or if all the elements satisfied the condition
+    some() -> returns true if any element returned true from the function. Koi bhi element hai jo satisfy kare condition
 
     # Desctructive methods -> alternative non-destructive methods
     push()                 -> [...arr, newValue]
@@ -444,3 +455,23 @@ Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tuto
 
 <------------------------- Phase 4 ------------------------->
 # HTML, CSS & Casual JS questions
+
+1> Doctype in HTML?
+2> Inline vs Block with examples
+3> table properties
+4> semantics tags
+5> entities
+
+6> Box sizing
+7> Box model
+8> block, inline, inline-block display property
+9> position property
+10> Different ways to hide an element
+11> flex
+12> grid
+13> psuedo selectors
+
+14> DOM methods (querySelector, getElementsByClassName, getElementById)
+15> Event delegation
+16> Event bubbling & event capturing
+17> DOMContentLoaded and onLoad

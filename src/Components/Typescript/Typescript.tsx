@@ -7,6 +7,25 @@ interface IUser {
   age: number;
   gender: string;
 }
+interface IStatementNo {
+  id?: string;
+  number?: string;
+}
+
+type IUpdatedStatementNoList = IStatementNo & {
+  isDisable?: boolean;
+};
+
+type IAddedListDetails = IStatementNo & {
+  note?: string;
+  referenceId?: string;
+};
+
+// The same thing can be done using extends as well but would need interface for that. Extends works with intefaces only.
+interface IAddedListDetails2 extends IStatementNo {
+  note?: string;
+  referenceId?: string;
+}
 
 interface IAppProps {
   comments?: Comment[];
@@ -17,14 +36,86 @@ interface IAppProps {
 }
 
 declare type ISettlement = string | string[] | number
-enum IStatus {
-  online = "ONLINE",
-  offline = "OFFLINE"
+
+// <---------- GENERICS ---------->
+
+//  e.g. 1
+interface IGenericResponse <T extends { success: boolean }>{
+  statusCode: number,
+  message: string,
+  loading: boolean,
+  data: T
 }
 
-enum IStatus1 {
-  "SUCCESS", "MANDATORY FIELDS MISSING", "FAILED"
+// after extending it means that the apiResponse must be having a key named success of boolean type.
+
+interface IApiResponse {
+  animation: string,
+  massacre: string[],
+  plot: string,
+  success: boolean
 }
+
+const apiResponse = {
+  statusCode: 200,
+  message: 'Succefully fetched',
+  loading: false,
+  data: { animation: 'Demon slayer', massacre: ['AOT', 'Death Note'], plot: 'Naruto', success: true }
+}
+
+const finalResponse: IGenericResponse<IApiResponse> = apiResponse
+finalResponse.statusCode
+finalResponse.data.massacre
+finalResponse.data.success
+finalResponse.message
+
+//  e.g. 2
+function simpleState<T>(initialState: T): [() => T, (v: T) => void] {
+  let val: T = initialState;
+  return [
+    () => val, 
+    (v: T) => {
+      val =  v
+    }
+  ]
+}
+
+const [st1getter, st1setter] = simpleState(20)
+console.log(st1getter)
+st1setter(69)
+console.log(st1getter)
+
+const [st2getter, st2setter] = simpleState<string | null>(null)
+console.log(st2getter)
+st2setter('Hello world')
+console.log(st2getter)
+
+// <---------- ENUMS ------------->
+const ONLINE = 'online'
+const OFFLINE = 'offline'
+
+// We can wrap this 2 constants into 1 using enums. Advisable to use const prior to using enums for better efficiency
+
+const enum networkStatus {
+  ONLINE = 'online',
+  OFFLINE = 'offline'
+}
+
+// However, enums are not optimized so its better to use as const
+
+const favAnimeByCategoryOptmized = {
+  BEST_ANIMATION: 'Demon Slayer',
+  STORY: 'Naruto',
+  MASSACRE: 'AOT'
+} as const
+
+// This is equivalent to enums declared above but more optimized only difference "as const"
+
+const currentMood = {
+  fav: favAnimeByCategoryOptmized.BEST_ANIMATION,
+  myStatus: networkStatus.OFFLINE
+}
+
 interface dummyObject {
   num1: number;
   string1: string;
@@ -33,7 +124,6 @@ interface dummyObject {
   boolean1: boolean;
   multipleType: number | undefined
   settlement: ISettlement
-  status: IStatus
 }
 
 const messageObject: {[key: string]: {[key: string]: string}} = {
@@ -87,6 +177,9 @@ const initialValueForInputValue = () => {
 }
 
 let isMounted = true;
+
+
+
 
 const Typescript: React.FC<IAppProps> = ({comments}: IAppProps) => {
   const [userDetails, setUserDetails] = useState<Partial<IUser>>({})

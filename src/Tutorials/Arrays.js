@@ -44,8 +44,8 @@
 // map, filter,find, findIndex, findLast, findLastIndex, indexOf, at, slice, splice, concat, includes, split, join, flat, push, pop, shift, unshift, sort
 const arr = [3, 5, 1, 2, 8, 9, 4] // normal map => just double it => then double even position elements and triple odd position elements
 const arr2 = [15, 5, 9, 7, 4, 11, 18] // filter odd number => then filter prime number
-allNumbersArePositive; // for every method
-hasEvenNumber // some method
+// allNumbersArePositive; // for every method
+// hasEvenNumber // some method
 
 
 //areAllFemales
@@ -70,6 +70,8 @@ const member = [
   },
 ];
 
+// Tell me ki saari ladki hi hai na, koi transgender toh nhi
+// Tell me ki koi bhi ladki single hai ki nhi. Haan ya na, dekh ke bata
 const availableOptions = [
   {
     name: 'abc',
@@ -109,6 +111,7 @@ const availableOptions = [
   }
 ]
 
+// Array: 
 /*
   Filter out options on the basis of 
     i> isEmployed
@@ -121,3 +124,4 @@ const availableOptions = [
 
   
 */
+
