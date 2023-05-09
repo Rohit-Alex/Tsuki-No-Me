@@ -88,6 +88,39 @@ makeupItems.sort((a, b) => {
     return b.quantity - a.quantity || a.type.length - b.type.length
 })
 
+const plansData = [
+    {
+        plan_id: 30,
+        plan_type: 'REGULAR',
+        plan_slogan: 'Jab tak aap ho tab tak mein',
+    },
+    {
+        plan_id: 31,
+        plan_type: 'SAVERS',
+        plan_slogan: 'Sasta aur lamba',
+    },
+    {
+        plan_id: 32,
+        plan_type: 'LIFETIME',
+        plan_slogan: 'Zindagi ke saath bhi, zindagi ke baad bhi',
+    },
+    {
+        plan_id: 33,
+        plan_type: 'EXCLUSIVE',
+        plan_slogan: 'Sirf aapke liye',
+    },
+    {
+        plan_id: 32,
+        plan_type: 'PREMIUM',
+        plan_slogan: 'Feel royal',
+    }
+]
+
+// Sort such that order is EXCLUSIVE > PREMIUM > LIFETIME > REGULAR > SAVERS
+plansData.sort((a, b) => {
+    const order = ['EXCLUSIVE', 'PREMIUM', 'LIFETIME', 'REGULAR', 'SAVERS'];
+    return order.indexOf(a.plan_type) - order.indexOf(b.plan_type);
+});
 /*
     <<<<<------------ Random Fn ----------->>>>
 

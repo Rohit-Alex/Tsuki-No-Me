@@ -311,7 +311,7 @@ Array methods:
     -> flat() -> creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
     -> slice() -> same as string method
     -> indexOf(element) -> returns 1st index of element. If not found returns -1
-    -> lastIndexOf() ->  returns 1st index of element from last. If not found returns -1
+    -> lastIndex() ->  returns 1st index of element from last. If not found returns -1
     -> includes(searchVal) -> returns true if searchVal found in array else false.
 
     Note: These 4 above methods can't be applied to array of objects or array of arrays i.e.(array of non-primitive types)
@@ -324,14 +324,23 @@ Array methods:
     find() -> finds first element in the array
     findLast() -> finds first element from last in the array
 
+    Note:  If want something like findAll then can use filter().
+
     # If want the index of an element
     findIndex() -> returns the 1st index of found element else -1 
-    findLastIndexOf() -> returns the 1st index from last of found element else -1
+    findLastIndex() -> returns the 1st index from last of found element else -1
 
     # If you just want to know (true/false) whether some or every element satisfy a particular condition.
     every() -> returns true if all the elements returned true from the function or if all the elements satisfied the condition
     some() -> returns true if any element returned true from the function. Koi bhi element hai jo satisfy kare condition
 
+    # Methods that can't be applied to array of objects.
+    includes() => equivalent method in array of object => some()
+    indexOf() => equivalent method in array of object => findIndex()
+    lastIndexOf() => equivalent method in array of object => findLastIndex()
+    
+NOTE: reverse() => ❌ no equivalent method for this in array of object
+    
     # Desctructive methods -> alternative non-destructive methods
     push()                 -> [...arr, newValue]
     pop()                  -> slice(0, arr.length - 1) or toSpliced(arr.length - 1, 1)

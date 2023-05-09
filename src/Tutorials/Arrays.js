@@ -97,7 +97,7 @@ const availableOptions = [
       country: 'India'
     }
   },
-   {
+  {
     name: 'xyz',
     occupation: 'nalla',
     isEmployed: false,
@@ -117,11 +117,23 @@ const availableOptions = [
     i> isEmployed
     ii> isEmployed and surname with patel. dono satisfy ho
     iii> salary more than 2500000 or surname with patel
+    iv> only those whose surname is either patel or bhalodiya
     iv> anyone from Australia
     v> Create a new array such that each item only contains:
         -> name, country, surname, salary
-  Find and return the name and surname of candidate who is from Gujarat
-
+  Find and return the name of candidate who is from Gujarat
+  Check if any NRI is present or not
   
 */
 
+const ans1 = availableOptions.filter(options => options.isEmployed)
+const ans2 = availableOptions.filter(options => options.isEmployed && options.surname === 'patel')
+const ans3 = availableOptions.filter(options => options.salary > 2500000 || options.surname === 'patel')
+const ans4 = availableOptions.filter(options => options.salary > 2500000 || options.surname === 'patel')
+const ans5 = availableOptions.filter(options => {
+  // return options.surname === 'patel' || options.surname === 'bhalodiya'
+  return ['patel', 'bhalodiya'].includes(options.surname) // one liner
+})
+const ans6 = availableOptions.map(options => ({ name: options.name, country: options.location.country, surname: options.surname, salary: options.salary}))
+const ans7 = availableOptions.find(option => option.location.state === 'Gujarat').name
+const ans8 = availableOptions.some(option => option.isNri)
