@@ -12,7 +12,8 @@
           -> currentValue starts from 1st element
           -> currentIndex starts from 1
           -> traversal takes place for array.length - 1 times
-*/        
+*/ 
+(accumulator, currElement, index, arr)       
 const array1 = [10, 20, 30, 40];
 
 // 0 + 1 + 2 + 3 + 4
@@ -21,7 +22,7 @@ const initialValue = 0;
 function reducerFn (accumulator, currentValue, currentIndex, traversalArr) {
   return accumulator + currentValue
 }
-const sumWithInitial = array1.reduce(reducerFn,initialValue);
+const sumWithInitial = array1.reduce(reducerFn);
 
 /*
   1st iteration: 
@@ -63,7 +64,7 @@ const peopleObj = [
   },
   {
     name: "MG",
-    color: "25",
+    age: "25",
   },
   {
     name: "Rohit",
@@ -71,12 +72,26 @@ const peopleObj = [
   },
 ];
 
+/*
+  const op = {
+    25: [ {
+      name: "Nirali",
+    age: 25,
+    }, 
+      {
+    name: "MG",
+    color: "25",
+  },
+  ], 24: [ { name: 'rohit' ,age: 24}], 17: [{ name: 'prateek', age: 17 }]
+  }
+*/
+
 const op1 = peopleObj.reduce((acc, curr) => {
-  acc[curr.color] = [...(acc[curr.color] || []), curr];
+  acc[curr.color] = [...(acc[curr.color] ?? []), curr];
   return acc;
 }, {});
 
-
+// ['"Do lafzon ki hai', 'First love","Chupana bhi nhi aata", "Dil ke chain" ]
 const songs = [
   {
     favSongs: ["Do lafzon ki hai", "First love"],
@@ -88,11 +103,9 @@ const songs = [
     favSongs: ["Another love", "Let her go"],
   },
 ];
-
 const allSongs = songs.reduce((accumulator, currentValue) => [...accumulator, ...currentValue.favSongs], ["Until i found you"]);
 console.log(allSongs);
 
-// }
 
 
 const arrObj = [
