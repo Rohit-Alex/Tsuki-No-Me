@@ -20,9 +20,10 @@
              try opening the same url in new tab, reloading the existing tab and opening in new window.
     
     <<<<------------------- METHODS ----------------------->>>>
-    * setItem(key, value) - set key/value pair
-    * getItem(key) - get the value stored for that key
-    * removeItem(key) - remove a particular key
+
+    * setItem(key, value) - set key/value pair.
+    * getItem(key) - get the value stored for that key.
+    * removeItem(key) - remove a particular key.
     * clear() – delete everything.
      
     ? NOTE: Please note that both key and value must be strings.
@@ -30,6 +31,16 @@
     ?       If we want to store arrays and objects as value then since by default it gets converted to strings so we would use JSON.stringify() to store and JSON.parse() to access
 */
 
+/*
+  ? Local storage vs Cookies
+
+* Data capacity: LocalStorage can store more data (up to 5-10MB) than cookies (up to 4KB).
+
+* Expiration: Cookies have an expiration date and can be set to expire after a certain time, while LocalStorage does not have an expiration date and will remain in the browser until it is manually cleared or the user clears their browser data.
+
+* Accessibility: LocalStorage data can only be accessed by the domain that stored it, while cookies can be accessed by both the domain that stored them and other domains that the user visits.
+            *  e.g. If the domain uses some iframe to open any other website then there also cookies are accessible but local storage is not.
+*/
 
 
 /*

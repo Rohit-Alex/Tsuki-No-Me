@@ -87,6 +87,7 @@ ii>
     myMap.forEach((value, key) => {
         console.log(key + " = " + value)
     })
+    
     for (let [key, value] of myMap) {
         console.log(key + " = " + value);
     }

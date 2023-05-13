@@ -3,7 +3,7 @@
 
 */
 const knowMeObj = {
-    traits: ['Addictive', 'Kanjoos', 'Nak chadhi'],
+    traits: ['Addictive', 'Kanjoos', 'Nak chadhi', 'childish'],
     name: 'Nirali Bhalodiya',
     nickName: 'Namooni',
     address: {
@@ -34,7 +34,7 @@ const knowMeObj = {
 */
 const num1 = [1,2,3]
 console.log(...num1)
-const personality = ['Attractive', 'Addictive', 'hot-headed']
+const personality = ['Beautiful', 'Addictive', 'hot-headed']
 console.log(...personality)
 
 const str = 'Nirali'

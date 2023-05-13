@@ -387,13 +387,13 @@ Note:    Give some scenarios and ask which data type would she choose.
 29> Map and set.
 Ans: [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
-30> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, structureClone.
+30> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies
 Ans: -> [click to open](src/Tutorials/StorageAndJSON.js)
 
 31> ES6 concepts. (Spread, destructuring, rest, optional Chaining).
 Ans: [click to open](src/Tutorials/ES6.js)
 
-32> Shallow copy and deep copy.
+32> Shallow copy and deep copy. structureClone
 Ans: [click to open](src/Tutorials/shallow&DeepCopy.js)
 
 33> Oops in JS?
