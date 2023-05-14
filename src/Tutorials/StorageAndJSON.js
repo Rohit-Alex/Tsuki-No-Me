@@ -29,6 +29,9 @@
     ? NOTE: Please note that both key and value must be strings.
     ?       If they were any other type, like a number, or an object, they would get converted to a string automatically:
     ?       If we want to store arrays and objects as value then since by default it gets converted to strings so we would use JSON.stringify() to store and JSON.parse() to access
+    ?       If key is not found then we get null.
+    ?       Always parse the data while accessing the key in storage whose value is array/objects/boolean. e.g. JSON.parse(localStorage.getItem(SOME_KEY))
+    ?       No need to parse when the stored value is string. This will throw error
 */
 
 /*
@@ -41,6 +44,7 @@
 * Accessibility: LocalStorage data can only be accessed by the domain that stored it, while cookies can be accessed by both the domain that stored them and other domains that the user visits.
             *  e.g. If the domain uses some iframe to open any other website then there also cookies are accessible but local storage is not.
 */
+
 
 
 /*
@@ -58,6 +62,25 @@
         * arrOfKeysToGet -> Optional argument that signifies which all keys to get in the result
         * spacesToIndent -> For formatting the spaces. 
 */
+
+JSON.stringify(2) // "2"
+JSON.stringify(true) // "true"
+JSON.stringify(null) // "null"
+JSON.stringify(undefined) // undefined NOTE: stringify doesn't work in undefined. Returns undefined
+JSON.stringify(['paisa', 'paisa', 'paisa']) // '["paisa","paisa","paisa"]'
+const objExp = { 
+  goal: 'Get rich', 
+  interest: ['Get', 'rich'], 
+  plan: {
+    planA: 'Get rich',
+    planB: "Marry Nirali's fantisied rich person"
+  },  
+  carPrice: 6*1e7 
+}
+JSON.stringify(objExp) // '{"goal":"Get rich","interest":["Get","rich"],"plan":{"planA":"Get rich","planB":"Marry Nirali's fantisied rich person"},"carPrice":60000000}'
+
+
+// Using addition arguments of JSON.stringify
 let room = {
   number: 23
 };
@@ -68,6 +91,28 @@ let meetup = {
   place: room
 };
 
-room.occupiedBy = meetup; // room references meetup
+console.log(JSON.stringify(meetup, ['title', 'participants', 'place', 'name', 'number'], 2));
 
-alert( JSON.stringify(meetup, ['title', 'participants', 'place', 'name', 'number']) );
+// PARSING
+
+JSON.parse(null) // null
+JSON.parse(undefined) // invalid JSON
+JSON.parse('false') // false
+JSON.parse('true') // true
+JSON.parse('MG') // invalid JSON
+JSON.parse('[24, 1, "DOB"]'); // [24, 1, 'DOB']
+JSON.parse('{"name": "Nirali", "age": 25}') // { name: 'Nirali', age: 25}
+
+// STORING & ACCESSING from Application storage
+
+sessionStorage.setItem('numberKey', 24)
+sessionStorage.setItem('stringKey', 'Nirali')
+sessionStorage.setItem('booleanKey', false)
+sessionStorage.setItem('arrayKey', ['no', 9, 'know'])
+sessionStorage.setItem('objectKey', {key: 'some value'})
+
+sessionStorage.getItem('numberKey')
+sessionStorage.getItem('stringKey')
+JSON.parse(sessionStorage.getItem('booleanKey'))
+JSON.parse(sessionStorage.getItem('arrayKey'))
+JSON.parse(sessionStorage.getItem('objectKey'))
