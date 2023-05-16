@@ -1,7 +1,7 @@
 import { ImHome } from 'react-icons/im';
 import { DownCircleOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Hotjar from '../../../Assests/icons/hotjar.svg'
+// import Hotjar from '../../../Assests/icons/hotjar.svg'
 import { message } from 'antd';
 
 export const sidebarMenus = [
@@ -14,7 +14,6 @@ export const sidebarMenus = [
     {
         title: 'Trending',
         id: 'trending',
-        icon: <FontAwesomeIcon icon={Hotjar} />,
         clickHandler: () => console.log("trending")
     },
     {

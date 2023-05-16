@@ -1,11 +1,11 @@
-import { Input, Select } from "antd"
+import { Input } from "antd"
 import { useCallback, useState } from "react";
 import debounce from 'lodash/debounce';
 import DatePickers from "../CustomDatepicker";
 import { sub } from "date-fns";
-import { columnList } from "../../Constant";
 import SelectWrapper from "./Select";
 import AllInOne from "./AllInOne";
+import RangePicker from "./__tests__/RangePicker";
 
 const Miscellaneous = () => {
     const [searchValue, setSearchValue] = useState('')
@@ -16,7 +16,6 @@ const Miscellaneous = () => {
         debounce((nextVal) => console.log('inside debounce after 400', nextVal), 400),
         []
     );
-
     const handleSearch = (e) => {
         const nextValue = e.target.value
         console.log('nextVal', nextValue, debouncedSave)
@@ -53,6 +52,7 @@ const Miscellaneous = () => {
                 />
             )}
             <SelectWrapper />
+            <RangePicker />
             <div>
                 <AllInOne />
             </div>

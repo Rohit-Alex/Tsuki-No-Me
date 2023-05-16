@@ -8,7 +8,7 @@ const axiosConfig = axios.create({
 const tokenInjection = (config: AxiosRequestConfig): AxiosRequestConfig => {
     const token = localStorage.getItem('token')
     if (!token) return config
-    config.headers.token = token
+    config.headers!.token = token
     return config
 }
 
