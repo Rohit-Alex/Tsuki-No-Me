@@ -8,17 +8,20 @@ import * as Constant from "../../../Constant";
 import {
   ApiLocations,
   getTokenFromMemCache,
+  handleAuthentication,
   sayHello,
   TokenExtractor,
 } from "../../../Utilies/utils";
 // import jwt from 'jsonwebtoken'
 import { addMonths, format } from "date-fns";
+import { checkIsAuthenticated } from "TestFunctionUtils";
 jest.mock("node-cache");
 jest.useFakeTimers();
-// jest.mock("../../../Utilies/utils", () => ({
-//     __esModule: true,
-//     ...jest.requireActual("../../../Utilies/utils"),
-// }));
+jest.mock("../../../Utilies/utils", () => ({
+    __esModule: true,
+    ...jest.requireActual("../../../Utilies/utils"),
+    handleAuthentication: jest.fn()
+}));
 
 jest.mock(
   "node-cache",
@@ -151,3 +154,18 @@ describe("Testing constant functions", () => {
     expect(res).toBe("Hi, rohit");
   });
 });
+
+describe('Throw Error test cases', () => {
+  it('Should handle 200 status', () => {
+    handleAuthentication.mockReturnValue('Authenticated!')
+    const res = checkIsAuthenticated(200)
+    expect(res).toBe('Authenticated!')
+  })
+
+  it('Should handle 401 status', () => {
+    handleAuthentication.mockImplementation(() => { 
+      throw new Error('Unauthorize') 
+    })
+    expect(() => checkIsAuthenticated(401)).toThrowError('Unauthorize')
+  })
+})

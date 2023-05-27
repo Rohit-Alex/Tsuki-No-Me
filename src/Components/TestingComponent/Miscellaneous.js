@@ -5,7 +5,7 @@ import DatePickers from "../CustomDatepicker";
 import { sub } from "date-fns";
 import SelectWrapper from "./Select";
 import AllInOne from "./AllInOne";
-import RangePicker from "./__tests__/RangePicker";
+import RangePicker from "./RangePicker";
 
 const Miscellaneous = () => {
     const [searchValue, setSearchValue] = useState('')

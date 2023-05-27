@@ -1,4 +1,4 @@
-import { EntityService } from "Utilies/utils"
+import { EntityService, handleAuthentication } from "Utilies/utils"
 
 export async function testFn() {
     const entityService = new EntityService()
@@ -12,3 +12,7 @@ export async function testFn() {
 }
 
 
+export const checkIsAuthenticated = (status) => {
+    const res = handleAuthentication(status)
+    return res;
+}

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import RangePicker from "./RangePicker";
-import { addDays, format, isEqual, startOfMonth } from "date-fns";
+import RangePicker from "../RangePicker";
+import { addDays, format, startOfMonth } from "date-fns";
 
 describe('Rangepickers', () => {
   it('Testing onchange', () => {
@@ -16,8 +16,7 @@ describe('Rangepickers', () => {
 
     // Simulate user interaction by changing the input values
      const startDateFormatted = format(startOfMonth(new Date()), "yyyy-MM-dd");
-    const endDateFormatted = format(addDays(new Date(), 5), "yyyy-MM-dd");
-
+    const endDateFormatted = format(addDays(new Date(), 3), "yyyy-MM-dd");
     fireEvent.change(startDateInput, { target: { value: startDateFormatted } });
     fireEvent.change(endDateInput, { target: { value: endDateFormatted } });
     fireEvent.click(document.querySelector('.ant-picker-cell-selected'));

@@ -37,9 +37,10 @@ const axiosConfig = axios.create({
 })
 
 const serializeError = (error: AxiosError): IError => {
-    const err = {} 
+    const err = {} as IError
     const { response } = error;
     if (!response) throw error;
+    return err
 
 }
 
@@ -58,7 +59,7 @@ const handleSuccessResponse = (response: AxiosResponse) => {
 const handleErrorResponse = (error: AxiosError) => {
     if (error?.response?.status === 401) {
         // if at any time we get unauthorize then logout the user
-        import('store').then(module => module.default.dispatch({type: 'auth/logout' }))
+        // import('store').then(module => module.default.dispatch({type: 'auth/logout' }))
     }
     throw serializeError(error)
 
@@ -96,11 +97,11 @@ const POST_API_2 = (url: string, params?: Partial<IGetParams>, cancelToken?: Can
 
 
 // USAGE
-export const AddCouponAPI = async (payload: IAddUpdateCouponPayload): Promise<string> =>
+export const AddCouponAPI = async (payload: any): Promise<string> =>
 	POST_API_2(`/crm/addCoupon`, payload);
 
     export const CouponListApi = async (
 	refreshList?: boolean,
-	filters?: ICouponListFilter,
+	filters?: any,
 	cancelToken?: CancelToken,
 ): Promise<ICouponList[]> => GET_API_1<ICouponList[]>(`/crm/listCoupon`, { ...filters }, cancelToken);

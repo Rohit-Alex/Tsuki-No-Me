@@ -300,6 +300,11 @@ export class EntityService {
   }
 }
 
+export const handleAuthentication = (status) => {
+    if (status === 401) throw new Error('Unauthorize')
+    return 'Authorized'
+}
+
 export const getURLParameter = (qrString, paramName) => {
 	const qr = qrString.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
 	const regex = new RegExp(`[\\?&]${paramName}=([^&#]*)`);
@@ -307,3 +312,4 @@ export const getURLParameter = (qrString, paramName) => {
 
 	return results && results.length > 0 ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
 };
+
