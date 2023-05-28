@@ -10,10 +10,9 @@ import ReduxComponent from './Components/ReduxComponent/reduxComponent';
 import Project from './Components/Project/project';
 import Typescript from './Components/Typescript/Typescript';
 import ApiCalling from './Components/ApiCallingInReact/ApiCalling';
-import RuleGeneral from './Components/RuleGeneral';
 import FormParent from './Components/FormParent';
 import StyledComponent from 'Components/styledComponent';
-
+ import { Slide, ToastContainer } from 'react-toastify';
 import packageData from '../package.json'
 import { GIT_BRANCH } from 'git-info';
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
@@ -69,6 +68,20 @@ function App() {
             <Route path='/styled-comp' element={<StyledComponent />} />
             <Route path='*' element={<h4>Page not found</h4>}/>
           </Routes>
+          <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              limit={2}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              transition={Slide} // possible values => Bounce, Zoom, Flip
+              draggable
+              pauseOnHover
+              theme="light"
+          />
       </div>
   );
 }

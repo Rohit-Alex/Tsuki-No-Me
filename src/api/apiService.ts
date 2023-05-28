@@ -1,28 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
-
-interface IError {
-    name: string;
-    message: string;
-    code: string;
-    stack: string;
-    data?: unknown
-}
-
-interface IApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T
-}
-
-interface IHttpWithApiRes<T> {
-    status: number;
-    statusText: string;
-    data: IApiResponse<T>
-}
-
-interface IGetParams {
-    [field: string]: string | number | boolean
-}
+import { IApiResponse, IError, IGetParams, IHttpWithApiRes } from "./types";
 
 export interface ICouponList {
 	id?: string;
@@ -53,7 +30,7 @@ const tokenInjection = (config: AxiosRequestConfig): AxiosRequestConfig => {
 }
 
 const handleSuccessResponse = (response: AxiosResponse) => {
-
+    return response
 }
 
 const handleErrorResponse = (error: AxiosError) => {
@@ -66,7 +43,8 @@ const handleErrorResponse = (error: AxiosError) => {
 }
 
 axiosConfig.interceptors.request.use(tokenInjection)
-axiosConfig.interceptors.response.use(handleSuccessResponse, handleErrorResponse)
+axiosConfig.interceptors.response.use(handleSuccessResponse, handleErrorResponse) // First argument here if for each success response
+
 
 const getExtractor1 = <T>(response: AxiosResponse<IApiResponse<T>>) => {
     const { status, data, statusText } = response;
@@ -79,7 +57,7 @@ const getExtractor2 =  <T>(response: AxiosResponse<IApiResponse<T>>): IHttpWithA
     const { status, data, statusText } = response;
     if (status !== 200) throw new Error(statusText)
     if (!data || !data.success) throw new Error(data.message)
-    return response
+    return { httpStatus: status, httpStatusText: statusText, data }
 }
 
 const postExtractor = <T>(response: AxiosResponse<IApiResponse<T>>) => {
@@ -90,18 +68,8 @@ const postExtractor = <T>(response: AxiosResponse<IApiResponse<T>>) => {
 }
 
 
-const GET_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
-const GET_API_2 =  <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<IHttpWithApiRes<T>> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor2)
-const POST_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.post<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
-const POST_API_2 = (url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<string> => axiosConfig.post<IApiResponse<string>>(url, { params, cancelToken}).then(postExtractor)
+export const GET_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
+export const GET_API_2 =  <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<IHttpWithApiRes<T>> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor2)
 
-
-// USAGE
-export const AddCouponAPI = async (payload: any): Promise<string> =>
-	POST_API_2(`/crm/addCoupon`, payload);
-
-    export const CouponListApi = async (
-	refreshList?: boolean,
-	filters?: any,
-	cancelToken?: CancelToken,
-): Promise<ICouponList[]> => GET_API_1<ICouponList[]>(`/crm/listCoupon`, { ...filters }, cancelToken);
+export const POST_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.post<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
+export const POST_API_2 = (url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<string> => axiosConfig.post<IApiResponse<string>>(url, { params, cancelToken}).then(postExtractor)

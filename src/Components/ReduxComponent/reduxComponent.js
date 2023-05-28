@@ -1,13 +1,25 @@
 import { Button } from "antd"
-import axios from "axios"
 import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { apiCalled, getApiData } from "../../Redux/Actions/GetApiData"
+
 import InputToDo from "./ToDos/EnterToDo"
 import ShowTodos from "./ToDos/ShowTodos"
+import { triggerApplicationApi, useApplication } from "slices/ApplicationSlice"
+import { useDispatch } from "react-redux"
 
 const ReduxComponent = () => {
     const [, forceFulRender] = useState(false)
+    const dispatch = useDispatch();
+    const applicationData = useApplication();
+
+    const apiCalls = async () => {
+        await dispatch(triggerApplicationApi())
+        console.log({ applicationData})
+    }
+
+    useEffect(() => {
+        apiCalls()
+    }, [])
+
     return (
         <div>
             Redux Component

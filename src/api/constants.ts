@@ -1,16 +1,9 @@
-const COMMON_HEADERS = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json'
-}
-
-const DEFAULT_INTERCEPTOR_CONFIG = {
-    defaultLoader: true,
-    defaultError: true,
-    handleRetry: false,
-    useMetaData: false,
-    hasFormData: false,
-    fullResponse: false
-}
+export const GENERALIZED_RESPONSE = (defaultData = {}, defaultErr = '') => ({
+    loading: false,
+    fetched: false,
+    data: defaultData,
+    error: defaultErr
+})
 
 const ENVIRONMENT = 'prod'
 
