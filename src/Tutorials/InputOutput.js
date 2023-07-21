@@ -156,3 +156,157 @@ const ans = 4 ** 3 ** 2
 console.log(ans)
 
 // 23
+Q.
+const obj = { a: 'one', b: 'two', a: 'three' };
+console.log(obj);
+
+Q.
+let a = 3;
+let b = new Number(3);
+let c = 3;
+
+console.log(a == b);
+console.log(a === b);
+console.log(b === c);
+
+Q.
+function checkAge(data) {
+  if (data === { age: 18 }) {
+    console.log('You are an adult!');
+  } else if (data == { age: 18 }) {
+    console.log('You are still an adult.');
+  } else {
+    console.log(`Hmm.. You don't have an age I guess`);
+  }
+}
+
+checkAge({ age: 18 });
+
+Q.
+const obj = { 1: 'a', 2: 'b', 3: 'c' };
+const set = new Set([1, 2, 3, 4, 5]);
+
+obj.hasOwnProperty('1');
+obj.hasOwnProperty(1);
+set.has('1');
+set.has(1);
+
+Q.
+const a = {};
+const b = { key: 'b' };
+const c = { key: 'c' };
+
+a[b] = 123;
+a[c] = 456;
+
+console.log(a[b])
+
+Q.
+const numbers = [1, 2, 3];
+numbers[10] = 11;
+console.log(numbers);
+
+Q.
+let person = { name: 'Ayush' };
+const members = [person];
+person = null;
+
+console.log(members);
+
+Q.
+const person = {
+  name: 'Ayush Verma',
+  .25e2: 25
+};
+
+console.log(person[25]);
+console.log(person[.25e2]);
+console.log(person['.25e2']);
+
+Q.
+const arr = ['my', 'name', 'is', 'mg']
+console.log(arr.pop())
+console.log(arr.push('Nirali'))
+console.log(arr.unshift('Hi', 'there'))
+console.log(arr.shift())
+
+Q.
+function getAge(...args) {
+  console.log(typeof args);
+}
+
+getAge(21);
+
+Q.
+var num = 8;
+var num = 10;
+
+console.log(num);
+
+Q.
+function sayHi() {
+  return (() => 0)();
+}
+
+console.log(typeof sayHi());
+
+Q.
+let lang = 'javascript';
+(function(){
+   let lang = 'java';
+})();
+
+console.log(lang); (1)
+
+(function(){
+   var lang2 = 'java';
+})();
+
+console.log(lang2); (2)
+
+Q.
+(function(){
+  var a = b = 3;
+})();
+
+console.log("a defined? " + (typeof a !== 'undefined'));
+console.log("b defined? " + (typeof b !== 'undefined'));
+
+Q.
+console.log("0 || 1 = "+(0 || 1));
+console.log("1 || 2 = "+(1 || 2));
+console.log("0 && 1 = "+(0 && 1));
+console.log("1 && 2 = "+(1 && 2));
+
+Q.
+!!null;
+!!'';
+!!1;
+[]+2+[4,7]
+[24] + [1]
++[5] + 5
+[1, 2, 3] + [1, 3, 4]
+console.log(false == '0')
+console.log(false === '0')
+
+Q.
+var a = 10;
+var b = a;
+b = 20;
+
+console.log(a);
+console.log(b);
+
+var a = 'Nirali';
+var b = a;
+b = 'Bhalodiya';
+
+console.log(a);
+console.log(b);
+
+Q.
+console.log('1' - - '1')
+console.log('1' + - '1'
+
+Q.
+[...'Namooni'];
