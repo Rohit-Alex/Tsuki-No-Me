@@ -33,6 +33,11 @@ numArr.sort(compare);
 numArr.sort((a, b) => a - b);
 console.log(numArr);
 
+const num = [-1,0,1,2,-1,-4,-2,-3,3,0,4]
+
+console.log(num.sort())
+console.log(num.sort((a, b) => a - b))
+
 /* 
     First -> 24 (no matter what)
     Second -> 1 (no matter what)

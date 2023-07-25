@@ -153,4 +153,3 @@ const useTransactionSearch = ({ initialData = {} }) => {
 const [TransactionSearchProvider, useTransactionSearchContext] = createUseContext(useTransactionSearch)
 
 export { TransactionSearchProvider, useTransactionSearchContext }
-
