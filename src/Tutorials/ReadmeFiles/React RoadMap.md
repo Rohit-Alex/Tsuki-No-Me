@@ -50,3 +50,26 @@ shadow DOM
 React fibre
 code splitting
 webworker/service worker
+
+
+React Machine coding question:
+
+	1> counter app
+	2> Counter app such that user can increase or decrease by any given amount
+	   Now make the Counter a child component
+	   Now make 2 Counter child component with their independent counter ((Counters that updates independently)
+	   Now make 2 Counter child component with dependent counter (Counters that update together)
+	Now make a Counter component which will maintain the count of counter on increase and decrease button
+	3> Now same thing using parent and child
+		make a counter component where user maintains the count
+		make an search bar which maintains the search value
+		make a display component, which shows the latest count and search value together.
+	
+	4> Store user firstName and lastName using object as state variable
+	5> Checkbox selection for male and female
+	6> todo list
+	7> useEffect with api calls and search functionality
+	8> Digital clock
+	9> Counter
+	10> Reverse counter
+	11> 
