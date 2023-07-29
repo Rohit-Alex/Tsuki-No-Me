@@ -166,13 +166,7 @@ be optimized. In the end, the JavaScript engine takes the bytecode the interpret
 outputs and mixes in the optimized code the compiler outputs and then gives that to the
 computer. This is called "Just in Time" or JIT Compiler.
 
-40> history.push absolute & relatving routing.
-e.g. initial route: https://www.bharatpe.com/transactions/status
-i> Relative routing: history.push('my-charges') or history.push('./my-charges') => https://www.bharatpe.com/transactions/status/my-charges
-
-ii> Absolute routing: history.push('/my-charges') => https://www.bharatpe.com/my-charges
-
-41>
+40>
 To Learn ---->>>
 1> Prodution build
 2> Reselect/Re-reselect for redux store memoization
@@ -182,3 +176,37 @@ To Learn ---->>>
 6> shadowDOM
 7> context vs Reducer vs Thunk vs Saga
 8> Why can't we use redux state instead of local state
+
+41> Conditional Props and Object property
+    const data = {
+        one: 1
+    }
+    const path = ''
+    console.log({...data, ...(path && {path})})
+
+    <MyComponent title="Header" {...(subtitle && { subtitle: getRightContent() })} />
+
+42> React Router v6
+
+    history.push absolute & relatving routing.
+    e.g. initial route: https://www.bharatpe.com/transactions/status
+
+    i> Relative routing: history.push('my-charges') or history.push('./my-charges') => https://www.bharatpe.com/transactions/status/my-charges
+    ii> Absolute routing: history.push('/my-charges') => https://www.bharatpe.com/my-charges
+
+    <Route path='dashboard/:id/:number' element={<DashboardDetails />} />
+
+    navigate(-1)                                                                        // history.goBack() or history.pop()
+    navigate('/about, {replace: true})                                                  // history.replace('/about)
+    navigate(`/dashboard/${2}/${9304410487}`)                                           // passing params
+    navigate(`/dashboard/${2}/${9304410487}?nickname=alex&trademark=neverBackDown`)     // passing params and queryParams
+    navigate(`/dashboard/${2}/${9304410487}?nickname=alex`, { state: { name: 'Rohit', age: 24 }, })   // passing state, params and queryParams
+
+    const { id = 7984, number = 7984065620 } = useParams()
+     const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop as string),
+    }) as any;
+    const { nickname, trademark } = queryParams; // using this query params get method, we won't be able to give default value while destructuring 
+    
+    const { state } = location as ILocation
+    const { name = 'Default name', age = 'Default age' } = state || {}
