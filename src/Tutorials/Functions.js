@@ -166,3 +166,23 @@ const returnString = () => 'Missing me? 🫤'
 const returnBoolean = () => false
 const returnArray = () => ['Kya kya', 'example de rha 😠']
 const returnObj = () => ({ husnKiPari: 'Nirali' })
+
+/*
+    Length of a function
+
+    i> The number of parameters present in a function.
+    ii> Default parameters aren't considered.
+    iii> All parameters from the first default parameters aren't considered
+
+    In Brief, function.length is the number of parameters before the first one with a default value.
+
+    Examples:
+*/
+const func1 = (name) => {}
+const func2 = (name = 'eshaan') => {}
+const func3 = (name, age = 20) => {}
+const func4 = (name, age = 20, gender) => {}
+console.log(func1.length) // 1
+console.log(func2.length) // 0
+console.log(func3.length) // 1
+console.log(func4.length) // 1
