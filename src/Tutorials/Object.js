@@ -84,6 +84,7 @@ const mouse = {
 
 // Check if any key exists in object. If age property exists or not
 console.log(obj.hasOwnProperty('age'))
+console.log(Reflect.has(obj, 'age'))
 
 const arr1 = [
   ["name", "Nirali"],

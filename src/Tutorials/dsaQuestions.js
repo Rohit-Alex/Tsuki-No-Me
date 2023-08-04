@@ -197,6 +197,8 @@ console.log(compareArrays(arr1, arr2))
 // Anagrams
 // Prime Number
 // Prime factorization
+// HCF
+// LCM
 // Duplicates 
 // Unique
 // Count frequency of array elements

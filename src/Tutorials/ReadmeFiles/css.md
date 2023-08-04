@@ -59,3 +59,26 @@ POSITION:
         i> acts like position: relative until an element is scrolled beyond a specific offset, in which case it turns into position: fixed, causing the element to "stick" to its position instead of being scrolled out of view.
         ii> It only acts as sticky as long as it is inside the parent container.
 
+<-----OVERLAY--------->
+
+<div class="image-container">
+    <img src="path/to/your-image.jpg" alt="Your Image">
+    <div class="overlay"></div>
+</div>
+
+.image-container {
+  position: relative;
+  width: 300px; /* Set the desired width for the container */
+  height: 200px; /* Set the desired height for the container */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value to change the opacity of the overlay */
+}
+
+<-----OVERLAY--------->

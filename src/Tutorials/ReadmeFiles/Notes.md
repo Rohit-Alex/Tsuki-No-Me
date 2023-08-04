@@ -210,3 +210,23 @@ To Learn ---->>>
     
     const { state } = location as ILocation
     const { name = 'Default name', age = 'Default age' } = state || {}
+
+    43> Data Strucuture (Turn Array into Object)
+
+    const CUSTOMIZE_IMAGE_DATA_OBJ = {
+        '/cutomizeQr/sampleBg1.jpg': { path: '/cutomizeQr/sampleBg1.jpg', themeColor: '#FCF4F5' },
+        '/cutomizeQr/sampleBg2.jpg': { path: '/cutomizeQr/sampleBg2.jpg', themeColor: '#F4F9FF' },
+        '/cutomizeQr/sampleBg3.jpg': { path: '/cutomizeQr/sampleBg3.jpg', themeColor: '#FFFCF2' },
+        '/cutomizeQr/sampleBg4.jpg': { path: '/cutomizeQr/sampleBg4.jpg', themeColor: '#F1F9F3' },
+        '/cutomizeQr/sampleBg5.jpg': { path: '/cutomizeQr/sampleBg5.jpg', themeColor: '#EEEEEE' },
+    };
+
+    const CUSTOMIZE_IMAGE_DATA_OBJ_ARR = [
+        { path: '/cutomizeQr/sampleBg1.jpg', themeColor: '#FCF4F5' },
+        { path: '/cutomizeQr/sampleBg2.jpg', themeColor: '#F4F9FF' },
+        { path: '/cutomizeQr/sampleBg3.jpg', themeColor: '#FFFCF2' },
+        { path: '/cutomizeQr/sampleBg4.jpg', themeColor: '#F1F9F3' },
+        { path: '/cutomizeQr/sampleBg5.jpg', themeColor: '#EEEEEE' },
+    ];
+
+    Object.values(CUSTOMIZE_IMAGE_DATA_OBJ) is same as CUSTOMIZE_IMAGE_DATA_OBJ_ARR
