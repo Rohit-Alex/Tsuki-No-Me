@@ -82,9 +82,29 @@ const mouse = {
     Array of array where each individual item represent key(1st value) and value(2nd value)
 */
 
-// Check if any key exists in object. If age property exists or not
-console.log(obj.hasOwnProperty('age'))
-console.log(Reflect.has(obj, 'age'))
+/*
+  <------- Check if a particulat key/property exists in an object? ----------->
+  Available options: "in" / hasOwnProperty / Reflect.has
+
+  Difference b/w "in" operator, hasOwnProperty and Reflect.has
+
+  i> 'age' in obj => checks for specified property existance in an object or its prototype chain. It returns a boolean value (true or false) indicating whether the property is found.
+  ii> hasOwnProperty checks for the presence of a property in an object and its prototype chain, i.e. properties defined directly and those inherited from its prototype chain.
+      However, if the property is found directly on the object (not inherited), hasOwnProperty returns true; otherwise, it returns false.
+  iii> Reflect.has only checks for the property in the object itself, ignoring the prototype chain. It returns a boolean value. It provides a more strict and limited check, focusing solely on the object's own properties.
+*/
+const checkKeyInObj = {
+  namooni: 'Your Grace',
+};
+console.log('namooni' in checkKeyInObj) // true
+console.log(Reflect.has(checkKeyInObj, 'namooni')) // true
+console.log(checkKeyInObj.hasOwnProperty('namooni')) // true
+
+console.log('toString' in checkKeyInObj) // true As toString is an inbuilt method present in Object
+console.log(Reflect.has(checkKeyInObj, 'toString')) // false
+console.log(checkKeyInObj.hasOwnProperty('toString')) // false
+
+
 
 const arr1 = [
   ["name", "Nirali"],
