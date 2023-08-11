@@ -91,8 +91,9 @@ const mouse = {
   i> 'age' in obj => checks for specified property existance in an object or its prototype chain. It returns a boolean value (true or false) indicating whether the property is found.
   ii> hasOwnProperty checks for the presence of a property in an object and its prototype chain, i.e. properties defined directly and those inherited from its prototype chain.
       However, if the property is found directly on the object (not inherited), hasOwnProperty returns true; otherwise, it returns false.
-  iii> Reflect.has only checks for the property in the object itself, ignoring the prototype chain. It returns a boolean value. It provides a more strict and limited check, focusing solely on the object's own properties.
+  iii> Reflect.has only checks for the property in the object itself and also the prototype chain. Similar to "in" keyword. It's a static method
 */
+
 const checkKeyInObj = {
   namooni: 'Your Grace',
 };
@@ -102,7 +103,7 @@ console.log(checkKeyInObj.hasOwnProperty('namooni')) // true
 
 console.log('toString' in checkKeyInObj) // true As toString is an inbuilt method present in Object
 console.log(Reflect.has(checkKeyInObj, 'toString')) // false
-console.log(checkKeyInObj.hasOwnProperty('toString')) // false
+console.log(checkKeyInObj.hasOwnProperty('toString')) // true
 
 
 
