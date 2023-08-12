@@ -449,6 +449,21 @@ n.constructor === Number; // true
 ####  37> How would you check if the given argument is an Array?
 
 *Also explain about semicolon.*
+>Normally not putting ; after a line works. However if we have anything starting with square bracket e.g [....], (...)
+in the new line without ending the previous line with semicolon ; then it's not taken as new line
+```
+alert("Hi");
+[1,2].forEach(alert);  
+ ```
+ >This works fine and we get alert of Hi, 1, 2
+
+However,
+```
+alert("Hi")
+[1,2].forEach(alert)
+```
+>This doesn't work and we get alert of Hi, then error.
+It's similar to alert("Hi")[1,2].forEach(alert)
 
 *How can convert any variable into boolean? (!!)*
 
