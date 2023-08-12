@@ -40,13 +40,6 @@ isNaN(" ");
 
 
 
-
-
-
-
-
-
-
 /*
     ?? isNaN() coerces its parameter to a number
     ?? Number.isNaN() doesn't attempt to convert the parameter to a number, so non-numbers always return false

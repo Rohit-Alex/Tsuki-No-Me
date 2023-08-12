@@ -1,8 +1,9 @@
 Variables declared with var, let and const are quite similar when declared outside a block.
 
-Var:
-i>Variables declared with var have functional scope. But global scope when it is declared outside the function.
-
+1. ###### var:
+- variables declared with var have **functional** scope. 
+- but global scope when it is declared outside the function.
+```
 var number = 50
 function print() {
   var square = number * number
@@ -11,78 +12,87 @@ function print() {
 console.log(number) // 50
 print() // 2500
 console.log(square) // Reference error
-
-ii> Can skip initialization while declaring it. It's optional.
-e.g. var a;
+```
+- can skip initialization while declaring it. It's optional.
+```
+var a;
     console.log(a) // undefined
-    
-iii> It can be reassigned as well.
-e.g. var a = 5;
-     a = 10;
-     console.log(a) // 10
-
-iv> It can be re-declared and re-assigned as well.
-e.g. var a = 5;
-    console.log(a) // 5
-     var a = 10;
-     console.log(a) // 10
-    
-v> Variables declared with var are hoisted to the top of their global or local scope, which makes them accessible before the line they are declared.
-
-e.g.
+``` 
+- It can be reassigned as well.
+```
+var a = 5;
+a = 10;
+console.log(a) // 10
+```
+- It can be re-declared and re-assigned as well.
+```
+var a = 5;
+console.log(a) // 5
+var a = 10;
+console.log(a) // 10
+```    
+- variables declared with var are hoisted to the top of their global or local scope, which makes them accessible before the line they are declared.
+```
 console.log(number) // undefined
 var number = 50
 console.log(number) // 50
-
-Let
-i> It has blocked scoped.
+```
+2. #### Let
+- It has blocked scoped.
+```
     {
         let a = 5;
     }
     console.log(a) // can't be accessed outside. Reference error.
-
-ii> Can skip initialization while declaring it. It's optional.
+```
+- can skip initialization while declaring it. It's optional.
+ ```
     let a;
     a = 5;
-
-iii> Can be re-assigned within the scope.
+```
+- Can be re-assigned within the scope.
+```
     let a = 5;
     a = 10;
-
-iv> can't be re-declared within the same scope.
+```
+- can't be re-declared within the same scope.
+```
     let a = 5;
     let a = 10; // Syntax error.
+```
+- Hoisted but without a default initialization. So, we get error. Variable not defined.
 
-v> Hoisted but without a default initialization. So, we get error. Variable not defined.
-
-Const
-
-i> Has block scoped.
+3. #### const
+- Has block scoped.
+```
     {
         const a = 5;
     }
     console.log(a) // can't be accessed outside. Reference error.
-
-ii> Must initialize a value while declaring.
+```
+- Must initialize a value while declaring.
+```
     const a; // Syntax error. Must initialize as well
     const a = 5; //correct
-
-iii> Can't reassign a value. It's constant and can't modify it's value.
+```
+- Can't reassign a value. It's constant and can't modify it's value.
+```
     const a = 5;
     a = 10; // Syntax error. Can't modify a const value
-
-iv> Can't re-declare within a same scope.
+```
+- Can't re-declare within a same scope.
+ ```
     const a = 5;
     const a = 10; // Syntax error. Can't re-declare
+```
+- Hoisted but without a default initialization. So, we get error. Variable not defined.
 
-v> Hoisted but without a default initialization. So, we get error. Variable not defined.
-
-NOTE:
+#### NOTE:
 
 Global variable: If we don't use declare a variable with var, let or const. It goes to global scope.
 However, in strict mode, it throws an error.
 
-e.g. i>
+```
 function test() {
     a = 5;
 }
@@ -90,16 +100,17 @@ console.log(a); // Error: a is not defined.
 test()
 console.log(a); // 5
 
-e.g. ii>
+
 {
   b = 5;
 }
 console.log(b); // 5
-
+```
 If we use "use strict" mode then we would get error.
 
-I/O O/p
 
+```
+1.
 var a = 100;
 {
     var a = 10;
@@ -113,6 +124,7 @@ console.log(a);
 console.log(b);
 console.log(c);
 
+2.
 var b = 20;
 {
     let b = 50;
@@ -120,6 +132,7 @@ var b = 20;
 }
 console.log(b)
 
+3.
 let x = 20;
 {
     var x = 30;
@@ -127,7 +140,7 @@ let x = 20;
 }
 console.log(x);
 
-
+4.
 let m = 24;
 function temp() {
     var m = 30;
@@ -135,14 +148,14 @@ function temp() {
 }
 console.log(m)
 
-
+5.
 function fun() {
     var q = 24
     console.log(q)
 }
 console.log(q)
 
-
+6.
 const p = 6;
 {
     const p = 5;
@@ -153,7 +166,5 @@ const p = 6;
     console.log(p);
 }
 console.log(p);
-
-
-
+```
 

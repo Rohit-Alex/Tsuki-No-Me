@@ -1,0 +1,27 @@
+$font-variants: Light, Regular, Medium, SemiBold, Bold;
+$font-weights: 300, 400, 500, 600, 700;
+
+$font-sizes: 11, 13, 15, 17, 19, 21, 24, 28, 32;
+$line-heights: 16, 18, 20, 22, 24, 26, 32, 36, 40;
+
+$font-types: 5;
+$font-size-types: 9;
+
+$font-size-px: px;
+$font-weight-chars: '00';
+
+@mixin generate-font-size() {
+  @for $font-type from 1 through $font-types {
+    @for $font-size-type from 1 through $font-size-types {
+      .#{nth($font-variants, $font-type)}#{$font-size-type}00 {
+        font-family: nth($font-variants, $font-type);
+        font-size: nth($font-sizes, $font-size-type) + $font-size-px;
+        font-weight: nth($font-weights, $font-type);
+        line-height: nth($line-heights, $font-size-type) + $font-size-px;
+        vertical-align: baseline;
+      }
+    }
+  }
+}
+
+@include generate-font-size();

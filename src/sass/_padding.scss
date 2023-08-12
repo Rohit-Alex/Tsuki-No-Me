@@ -1,0 +1,86 @@
+$padding-blocks: 18;
+$base: 0.25;
+
+@mixin generate-viewport-padding($viewport) {
+  @for $i from 0 through $padding-blocks {
+    $padding-value: $base * $i;
+
+    .#{$viewport}-p#{$i} {
+      padding: $padding-value + rem;
+    }
+
+    .#{$viewport}-pt#{$i} {
+      padding-top: $padding-value + rem;
+    }
+
+    .#{$viewport}-pr#{$i} {
+      padding-right: $padding-value + rem;
+    }
+
+    .#{$viewport}-pb#{$i} {
+      padding-bottom: $padding-value + rem;
+    }
+
+    .#{$viewport}-pl#{$i} {
+      padding-#{$left}: $padding-value + rem;
+    }
+
+    .#{$viewport}-px#{$i} {
+      padding-#{$left}: $padding-value + rem;
+      padding-#{$right}: $padding-value + rem;
+    }
+
+    .#{$viewport}-py#{$i} {
+      padding-bottom: $padding-value + rem;
+      padding-top: $padding-value + rem;
+    }
+  }
+}
+@mixin generate-padding() {
+  @for $i from 0 through $padding-blocks {
+    $padding-value: $base * $i;
+
+    .p#{$i} {
+      padding: $padding-value + rem;
+    }
+
+    .pt#{$i} {
+      padding-top: $padding-value + rem;
+    }
+
+    .pr#{$i} {
+      padding-right: $padding-value + rem;
+    }
+
+    .pb#{$i} {
+      padding-bottom: $padding-value + rem;
+    }
+
+    .pl#{$i} {
+      padding-#{$left}: $padding-value + rem;
+    }
+
+    .px#{$i} {
+      padding-#{$left}: $padding-value + rem;
+      padding-#{$right}: $padding-value + rem;
+    }
+
+    .py#{$i} {
+      padding-bottom: $padding-value + rem;
+      padding-top: $padding-value + rem;
+    }
+  }
+}
+@include generate-padding();
+
+@include mobile {
+  @include generate-viewport-padding(sm);
+}
+
+@include tablet {
+  @include generate-viewport-padding(md);
+}
+
+@include desktop {
+  @include generate-viewport-padding(lg);
+}
