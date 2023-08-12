@@ -264,11 +264,11 @@ Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
  
     1> ()
     2> ?.
-    3> postfix ...++
-    ...--
-    4> unary operator & prefix: ! ~ + - ++... --...
-    5> \*_ (right to left)
-    6> _ / %
+    3> postfix (a++, a--)
+    4> unary operator & prefix: ! ~ + - ++a --a
+    5> typeof, delete, await 
+    5> ** (right to left)
+    6> * / %
     7> + -
     8> << >>
     9> < > <= >=
