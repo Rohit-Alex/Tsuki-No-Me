@@ -207,7 +207,7 @@ numbers[10] = 11;
 console.log(numbers);
 
 Q.
-let person = { name: 'Ayush' };
+let person = { name: 'Choro Hatao!' };
 const members = [person];
 person = null;
 
@@ -215,7 +215,7 @@ console.log(members);
 
 Q.
 const person = {
-  name: 'Ayush Verma',
+  name: 'Kya_karna_hai_naam_jaan_ke',
   .25e2: 25
 };
 

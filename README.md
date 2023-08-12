@@ -408,7 +408,7 @@ Then it does remove it but leaves undefined at that place. So size still remains
 
 *Note:    Give some scenarios and ask which data type would she choose.*
 
-#### 30> Dot vs Bracket Notation in JS.
+#### 30> Dot vs Bracket Notation in JS. [Explained here (search for dot and bracket in file)](src/Tutorials/Object.js)
 
 #### 31> Map and set. [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
@@ -499,7 +499,9 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 ## <------------------------- PHASE 3 ------------------------->
 
 Revision and I/O Question
-Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/dsaQuestions.js)
+Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/interviewCodingQues.js)
+Some clubbed questions. : [click to open](src/Tutorials/InputOutput.js)
+More Input Output Questions (150 Important questions) : [click to open](https://github.com/lydiahallie/javascript-questions)
 
 ## <------------------------- Phase 4 ------------------------->
 ### HTML, CSS & Casual JS questions
