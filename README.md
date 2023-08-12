@@ -1,5 +1,5 @@
 # Interview Prepartion and Cheat Sheet
-<------------------------- PHASE 1 ------------------------->
+## <------------------------- PHASE 1 ------------------------->
 
 #### 1> What is JavaScript?
 > - It is **<u>weakly typed dynamic language</u>**. As no variable is bound to any datatype and it might change over the next successive execution.
@@ -447,65 +447,61 @@ n.constructor === Number; // true
 ```
 
 ####  37> How would you check if the given argument is an Array?
+
 *Also explain about semicolon.*
+
 *How can convert any variable into boolean? (!!)*
-break and continue
-switch statement: https://javascript.info/switch
+
+*break and continue*
+
+*switch statement* https://javascript.info/switch
 
 
-<------------------------- PHASE 2 ------------------------->
-36> Hoisting?
-Ans: [click to open](src/Tutorials/Hoisting.js)
+## <------------------------- PHASE 2 ------------------------->
+#### 38> Hoisting? [click to open](src/Tutorials/Hoisting.js)
 
-37> call, apply, bind
-Ans: [click to open](src\Tutorials\callApplyBind.js)
+#### 39> call, apply, bind [click to open](src\Tutorials\callApplyBind.js)
 
-38> Prototype Inheritance
-Ans: [click to open](src\Tutorials\prototypeChain&pollyfills.js)
+#### 40> Prototype Inheritance. [click to open](src\Tutorials\prototypeChain&pollyfills.js)
 
-39> this operator
-Ans: [click to open](src\Tutorials\thisExample.js)
+#### 41> this operator [click to open](src\Tutorials\thisExample.js)
 
-40> Closure
-Ans: [click to open](src/Tutorials/closure.js)
+#### 42> Closure [click to open](src/Tutorials/closure.js)
 
-41> Currying
-Ans: [click to open](src\Tutorials\currying.js)
+#### 43> Currying [click to open](src\Tutorials\currying.js)
 
-42> Asynchronous behaviour
-        -> Event loop: [click to open](src/Tutorials/eventLoop.js)
-        -> Async behaviour and why we need Promises: [click to open](src/Tutorials/Asynchronous.js)
-        -> Promises varinats:[click to open](src/Tutorials/PromiseVariant.js)
-            ->Promise.all
-            ->Promise.allSettled
-            ->Promise.any
-            ->Promise.race
-        -> async/await & error handling: [click to open](src/Tutorials/asyncAwait.js)
+#### 44> Asynchronous behaviour
+- Event loop: [click to open](src/Tutorials/eventLoop.js)
+- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.js)
+    - Promises variants: [click to open](src/Tutorials/PromiseVariant.js)
+        - Promise.all
+        - Promise.allSettled
+        - Promise.any
+        - Promise.race
+      - async/await & error handling: [click to open](src/Tutorials/asyncAwait.js)
             
-<------------------------- PHASE 3 ------------------------->
+## <------------------------- PHASE 3 ------------------------->
 
 Revision and I/O Question
 Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/dsaQuestions.js)
 
-<------------------------- Phase 4 ------------------------->
-# HTML, CSS & Casual JS questions
+## <------------------------- Phase 4 ------------------------->
+### HTML, CSS & Casual JS questions
 
-1> Doctype in HTML?
-2> Inline vs Block with examples
-3> table properties
-4> semantics tags
-5> entities
-
-6> Box sizing
-7> Box model
-8> block, inline, inline-block display property
-9> position property
-10> Different ways to hide an element
-11> flex
-12> grid
-13> psuedo selectors
-
-14> DOM methods (querySelector, getElementsByClassName, getElementById)
-15> Event delegation
-16> Event bubbling & event capturing
-17> DOMContentLoaded and onLoad
+#### 1> Doctype in HTML?
+#### 2> Inline vs Block with examples
+#### 3> table properties
+#### 4> semantics tags
+#### 5> entities
+#### 6> Box sizing
+#### 7> Box model
+#### 8> block, inline, inline-block display property
+#### 9> position property
+#### 10> Different ways to hide an element
+#### 11> flex
+#### 12> grid
+#### 13> psuedo selectors
+#### 14> DOM methods (querySelector, getElementsByClassName, getElementById)
+#### 15> Event delegation
+#### 16> Event bubbling & event capturing
+#### 17> DOMContentLoaded and onLoad
