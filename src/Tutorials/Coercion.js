@@ -6,12 +6,13 @@ Explicit Type Coversion: Forcefully conversion of one type into another. We can 
 
 Implicit Type Coversion: The coversion takes on it's own automatically without user's knowledge.
 
+One operator that does not trigger implicit type coercion is ===, which is called the strict equality operator. 
+The loose equality operator == on the other hand does both comparison and type coercion if needed.
+
 String Conversion
-
-2 => String(2) => '2'
-  => 2.toString() => '2'
-
-One operator that does not trigger implicit type coercion is ===, which is called the strict equality operator. The loose equality operator == on the other hand does both comparison and type coercion if needed.
+  Explicit conversion
+  2 => String(2) => '2'
+  2.toString() => '2'
 
 * const num = 1 + 1 + 'lakh bhej' => '2 lakh bhej'
 
@@ -19,15 +20,17 @@ STRING CONVERSIONS:
 Implicit coercion is triggered by the binary + operator, when any operand is a string:
 
 
+
 Numeric conversion:
 Explicit Conversion: Number('5') => 5
-1> Triggered by comparison operators (>, <, <=,>=)
+1> Triggered by comparison operators (>, <, <=,>=) when comparing 2 different types
 2> bitwise operators ( | & ^ ~)
 3> arithmetic operators (- + * / % ). Note, that binary+ does not trigger numeric conversion, when any operand is a string.
 4> unary + operator
     +'5' => 5
-    +'Namooni' => NaN 
-5> loose equality operator == (incl. !=).
+    +'ILoveYou' => NaN 
+5> loose equality operator ==, !=
+
 Note that == does not trigger numeric conversion when both operands are strings.
 'nirali' === 'namooni' => false (this doesn't trigger numeric conversion)
 
@@ -67,6 +70,12 @@ NaN === NaN false
 
 */
 
+3 + 3               // 6
+"3" + "3"           // 33
+"3" + +"3"          // "3" + 3 (as +"3" triggers numeric conversion) => 33
+3 + +"3"            // 3 + 3 (as +"3" triggers numeric conversion) => 6
+3 + 3 - 3           // 6 - 3 => 3
+"3" + "3" - "3"     // 33 - "3" => 33 - 3 ( - triggers numeric conversion so "3" becomes 3) => 30
 
 true + false
 /* Explaination
@@ -178,6 +187,7 @@ null == 0;
     null == 0
    Note: No type conversion or number conversion.
    Remember, I told you "null and undefined equal each other and nothing else. Like hushband wife."
+   so, false
 */  
 
 null >= 0; 
@@ -201,10 +211,8 @@ NaN === NaN; //false (NaN is not even equal to itself)
 
 0 || "0" && {};  
 /* Explanation
-  ==>  (0 || "0") && {}
-  ==> (false || true) && true  // internally
-  ==> "0" && {}
-  ==> true && true             // internally
+  ==>  0 || ("0" && {})
+  ==> "0" || {}
   ==> {}
 */
 
@@ -220,6 +228,7 @@ NaN === NaN; //false (NaN is not even equal to itself)
 /*
 Explaination: first {} is not considered as an object literal, but rather as a block declaration statement, so it’s ignored.
 ==> +[]+{}+[1]
+==> +''+{}+[1]
 ==> 0 + {} + [1]
 ==> 0 + '[object Object]' + [1]
 ==> '0[object Object]' + [1]
@@ -230,7 +239,7 @@ Explaination: first {} is not considered as an object literal, but rather as a b
 !+[]+[]+![];
 /* Explanation: according to operator precedence. 
   ==> (!+[]) + [] + (![])
-  ==> !0 + [] + false
+  ==> !0 + [] + !''
   ==> true + [] + false
   ==> true + '' + false
   ==> 'truefalse'
@@ -273,5 +282,5 @@ typeof 4+5;
 /*
   Each gets converted to string first and gets joined
   '24,1,1' + '998' 
-  '24,1,1998'
+  '24,1,1998' // (Aapka D.O.B 😁)
 */
