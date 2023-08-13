@@ -5,17 +5,16 @@
 
    Hositiing is a process whereby the interpreter moves the declaration of functions & variables to the top of their scope, prior to execution of the code.
    
-   Even before code is executed, memory is allocated to variables and functions.
-
    It makes use of the memory allocation phase of execution context. Variables and functions are allocated in memory even before the execution begins. Hence, due to this variables and functions are accessible even before they are declared.
 
    Note: only declaration is hoisted and not initialization. Mtlb value store nhi hota memory of during first phase.
    sirf variable ka naam store hota.
 
    Only var, and normal functions means (function declartion) are hoisted.
-   var is assigned a value "undefined" and functions entire code is assigned in memory during allocation phase of global execution context.
+   var is assigned a value "undefined" and In functions, entire code is assigned in memory during allocation phase of global execution context.
 
-   Let and const are also hoisted but they are allocated memory under script as they are block scoped. Hence are not accessible till they are executed i.e initialized a value. This zone is called "temporal dead zone". The gap b/w a variable is assigned a memory till its gets executed and assigned a value is called "temporal dead zone".
+   Let and const are also hoisted but they are allocated memory under script as they are block scoped. Hence are not accessible till they are executed i.e initialized a value. 
+   This zone is called "temporal dead zone". The gap b/w a variable is allocated a memory and till its gets executed and a value is assigned to it is called "temporal dead zone".
 
    Function expression, arrow functions are treated as normal variables are treated.
    classes are not hoisted.
@@ -36,6 +35,7 @@
 console.log(frndo);
 var frndo;
 frndo = 'nirali';
+console.log(frndo);
 
 // 2
 console.log(frndo1);

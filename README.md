@@ -476,11 +476,11 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 ## <------------------------- PHASE 2 ------------------------->
 #### 38> Hoisting? [click to open](src/Tutorials/Hoisting.js)
 
-#### 39> call, apply, bind [click to open](src\Tutorials\callApplyBind.js)
+#### 39> call, apply, bind [click to open](src/Tutorials/callApplyBind.js)
 
-#### 40> Prototype Inheritance. [click to open](src\Tutorials\prototypeChain&pollyfills.js)
+#### 40> Prototype Inheritance. [click to open](src/Tutorials/prototypeChain&pollyfills.js)
 
-#### 41> this operator [click to open](src\Tutorials\thisExample.js)
+#### 41> this operator [click to open](src/Tutorials/thisExample.js)
 
 #### 42> Closure [click to open](src/Tutorials/closure.js)
 
