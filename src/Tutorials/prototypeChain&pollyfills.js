@@ -43,12 +43,12 @@
         Toh tu bolegi ki, 👇 line likh de work kar jaayega.
             rohitLife.__proto__ = protoObj; 
         
-        Par suppose ab I want this "partTime" property to be available to each and every object. Sabko pareshaan karte hum.
+        Par suppose ab I want this "partTime" property to be available to each and every object. Sabkoi pareshaan karta.
         So, to do this. 👇
     */
 
-   // Replace line no. 20 with
-    Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole not to any specific object) Protype.
+   // Replace line no. 28 to 30 with
+    Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole, not to any specific object) Protype.
    // Note the difference b/w previous [[Prototype]] property (using __proto__) and now (using Prototype)
     console.log(niraliLife)
     console.log(niraliLife.partTime) // 'Annoying rohit'
@@ -96,6 +96,12 @@ arr1.__proto__.myFun = function () {
     return this.includes(3)
 }
 console.log(arr1.myFun());
+
+/* 
+    <------------- Pollyfills for various Method and adding it in their respective prototype ------------>
+
+    NOTE: Agar kuch samajh mein nhi aaye toh, last mein mera comment padhna. Pehle try kar samajhne ka.
+*/
 
 //Map Method
 Array.prototype.myMap = function (cb) {
@@ -168,7 +174,7 @@ Function.prototype.myBind = function(context, ...args) {
 }
 
 /*
-    *  ******Promises******
+    *  ******Promises****** (Jab promises padh legi toh iska pollyfills dekhna. Theek hai na..)
     ! Fullfils -> resolved
     ? settled -> resolved or rejected. only needs to be fulfilled
     * Prmomise.resolve(prms) used so that if we pass static values/non-promise values then also the code works for us. As, Promise.resolve() returns a promise
@@ -263,3 +269,8 @@ Promise.prototype.myAny = function (promiseArr) {
     });
 };
 
+/*
+    Sun, agar kuch na samajh aaye toh tension mat le. 
+    Ye playlist ka saara video dekh jaa. Chota chota hai.
+    https://youtu.be/nC2vSSdRLKk
+*/
