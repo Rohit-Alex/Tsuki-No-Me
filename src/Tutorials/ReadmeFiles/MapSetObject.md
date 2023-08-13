@@ -35,70 +35,72 @@ Note:
 
 Both allow us to store collection of data in key-value pair. However, there are some important differences:
 
--
+1. Datatypes used as keys.
     - Object can have only "string" or "symbols" as the keys.
     - Maps can have key of any data type. Unlike objects, keys are not converted to strings.
 ```
     e.g.
+        const user1 = { name: "MG" };
         const user2 = { name: "Nirali" };
         const obj = {}; 
         obj[user1] = 234; 
         obj[user2] = 123;
         console.log(obj[user1]);
 
-        const user1 = { name: "MG" };
         const myMap = new Map();
         myMap.set(user1, 123);
         console.log( myMap.get(user1) );
 ```
 > Note:
 
-_Interview question._ Think of the scenario where you might find this useful. i.e. using object as key
+_Interview question._ Think of the scenario where you might find this useful. i.e. using object as key in Map
 
 
-1. It follows certain rules for order.
-    - Numbers are ordered first, and they are ordered within themselves from smallest to largest as long as they are >=0
-    - Strings come second, and they are ordered within themselves by insertion order
-    - Symbols come last, and they are ordered within themselves by insertion order
+2. Displaying keys
+    - Object follows certain rules for order.
+        - Numbers are ordered first, and they are ordered within themselves from smallest to largest as long as they are >=0
+        - Strings come second, and they are ordered within themselves by insertion order
+        - Symbols come last, and they are ordered within themselves by insertion order
 
-    _Note:_ JS will see if your string can be converted to a number - if it can, then it will order it with the numbers and not the strings.
+        _Note:_ JS will see if your string can be converted to a number - if it can, then it will order it with the numbers and not the strings.
 
-    Reference link: https://dev.to/frehner/the-order-of-js-object-keys-458d
-2. The iteration goes in the same order as the values were inserted. Map preserves this order, unlike a regular Object.
-```
-    e.g.
-    const obj = {
-        2: true, 
-        1: true,
-        '00': true,
-        'b': true,
-        'a': true,
-        '3': true,
-        '0': true,
-        '-2': false
-    }
-    console.log(Object.keys(obj))
-    for (const key in obj) {
-        console.log(key)
-    }
+        Reference link: https://dev.to/frehner/the-order-of-js-object-keys-458d
 
-    myMap.set('dairyMilk', '1 packet');
-    myMap.set('peda', '500g')
-    myMap.set('lotteChocoPie', '2 packet')
+    - The iteration goes in the same order as the values were inserted. Map preserves this order, unlike a regular Object.
+    ```
+        e.g.
+        const obj = {
+            2: true, 
+            1: true,
+            '00': true,
+            'b': true,
+            'a': true,
+            '3': true,
+            '0': true,
+            '-2': false
+        }
+        console.log(Object.keys(obj))
+        for (const key in obj) {
+            console.log(key)
+        }
 
-    myMap.forEach((value, key) => {
-        console.log(key + " = " + value)
-    })
-    
-    for (let [key, value] of myMap) {
-        console.log(key + " = " + value);
-    }
-```
+        myMap.set('dairyMilk', '1 packet');
+        myMap.set('peda', '500g')
+        myMap.set('lotteChocoPie', '2 packet')
+
+        myMap.forEach((value, key) => {
+            console.log(key + " = " + value)
+        })
+        
+        for (let [key, value] of myMap) {
+            console.log(key + " = " + value);
+        }
+    ```
 3. Getting size
     - To get the size of object we need to count the keys using Object.keys()
     -  We can easily get the size of map by using its size property
 
 4. Efficiency
-    - Not that efficient when there is frequent addition and removal of property.
-    - Efficient in scenarios where we need frequent addition and deletion of key-value pair or property.
+    - Objects are not that efficient when there is frequent addition and removal of property.
+    - Maps are Efficient in scenarios where we need frequent addition and deletion of key-value pair or property.
 

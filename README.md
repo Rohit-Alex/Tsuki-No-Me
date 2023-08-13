@@ -155,7 +155,7 @@ NOTE: We can "async" when the scripts are totally independent of each other and 
 #### 9> Why is typeof operator?
 
 The typeof operator returns a string indicating the type of the operand's value.
-[click to open](src/Tutorials/Typeof&Falsy.js)
+[click to open](src/Tutorials/Typeof&Falsy.js){:target="_blank"}
 
 #### 10> Why do we get typeof null as object?
 - It's basically a bug in JS.
@@ -245,20 +245,20 @@ we are modifying the contents of the existing array rather than reassigning arr 
         Every object is referred by their reference and when we declare a variable of non-primitive datatype, it's reference can't be changed. However, we can change the value stored at that reference.
 
 
-#### 16> Shadowing and Illegal Shadowing? [click to open](src/Tutorials/ReadmeFiles/VariableShadowing.md)
+#### 16> Shadowing and Illegal Shadowing? [click to open](src/Tutorials/ReadmeFiles/VariableShadowing.md){:target="_blank"}
 
-#### 17> What is typeof operator? I/O questions based on it.[click to open](src/Tutorials/Typeof&Falsy.js)
+#### 17> What is typeof operator? I/O questions based on it.[click to open](src/Tutorials/Typeof&Falsy.js){:target="_blank"}
 
-#### 18> What are falsy and truthy values? [click to open](src/Tutorials/Typeof&Falsy.js)
+#### 18> What are falsy and truthy values? [click to open](src/Tutorials/Typeof&Falsy.js){:target="_blank"}
 
 #### 19> Operators in JS?
-Logical Operators [click to open](src/Tutorials/ReadmeFiles/LogicalOperators.md)
+Logical Operators [click to open](src/Tutorials/ReadmeFiles/LogicalOperators.md){:target="_blank"}
 
-Comparison Operators [click to open](src/Tutorials/ReadmeFiles/ComparisonOperators.md)
+Comparison Operators [click to open](src/Tutorials/ReadmeFiles/ComparisonOperators.md){:target="_blank"}
 
-Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
+Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md){:target="_blank"}
 
-#### 20> isNaN() and Number.isNaN()? [click to open](src/Tutorials/isNaN.js)
+#### 20> isNaN() and Number.isNaN()? [click to open](src/Tutorials/isNaN.js){:target="_blank"}
 
 #### 21> Precedence of Operators and associativity.
  
@@ -286,11 +286,11 @@ Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
     
             the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
             const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
-#### 22> Coercion. [click to open](src/Tutorials/Coercion.js)
+#### 22> Coercion. [click to open](src/Tutorials/Coercion.js){:target="_blank"}
 
 #### 23>How would you compare a non-primitive datatypes?
 
-#### 24> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE? [click to open](src/Tutorials/Functions.js)
+#### 24> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE? [click to open](src/Tutorials/Functions.js){:target="_blank"}
     
 
 #### 25> string methods.
@@ -314,7 +314,7 @@ slice, substring, substr(deprecated, hence optional to know), includes, at, trim
     -> If Object.freeze does shallow freeze then how can we make it deep freeze?
     -> Tell her about the es6 shorthand
     -> syntax
-[click to open](src/Tutorials/Object.js)
+[click to open](src/Tutorials/Object.js){:target="_blank"}
 
 #### 27> Array methods:
 ```sh
@@ -376,9 +376,9 @@ NOTE: reverse() => ❌ no equivalent method for this in array of object
     reverse()              -> toReversed()
     sort()                 -> toSorted()
 
-Dedicated file for arrays with above methods: [click to open](src/Tutorials/Arrays.js)
+Dedicated file for arrays with above methods: [click to open](src/Tutorials/Arrays.js){:target="_blank"}
 
-Array.reduce() [click to open](src/Tutorials/Reduce.js)
+Array.reduce() [click to open](src/Tutorials/Reduce.js){:target="_blank"}
 
 Refer this for more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 
@@ -410,13 +410,13 @@ Then it does remove it but leaves undefined at that place. So size still remains
 
 #### 30> Dot vs Bracket Notation in JS. [Explained here (search for dot and bracket in file)](src/Tutorials/Object.js)
 
-#### 31> Map and set. [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
+#### 31> Map and set. [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md){:target="_blank"}
 
-#### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/StorageAndJSON.js)
+#### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/StorageAndJSON.js){:target="_blank"}
 
-#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.js)
+#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.js){:target="_blank"}
 
-#### 34> Shallow copy and deep copy. structureClone [click to open](src/Tutorials/shallow&DeepCopy.js)
+#### 34> Shallow copy and deep copy. structureClone [click to open](src/Tutorials/shallow&DeepCopy.js){:target="_blank"}
 
 ####  35> Oops in JS?
     i> Classes used for making scalable objects
@@ -426,7 +426,7 @@ Then it does remove it but leaves undefined at that place. So size still remains
         c> Inheritance
         d> Polymorphism
         
-[click to open](src/Tutorials/OopsConcept.js)
+[click to open](src/Tutorials/OopsConcept.js){:target="_blank"}
 
 #### 36> Constructor property of Object?
 Returns a reference to the constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
@@ -474,34 +474,34 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 
 
 ## <------------------------- PHASE 2 ------------------------->
-#### 38> Hoisting? [click to open](src/Tutorials/Hoisting.js)
+#### 38> Hoisting? [click to open](src/Tutorials/Hoisting.js){:target="_blank"}
 
-#### 39> call, apply, bind [click to open](src\Tutorials\callApplyBind.js)
+#### 39> call, apply, bind [click to open](src\Tutorials\callApplyBind.js){:target="_blank"}
 
-#### 40> Prototype Inheritance. [click to open](src\Tutorials\prototypeChain&pollyfills.js)
+#### 40> Prototype Inheritance. [click to open](src\Tutorials\prototypeChain&pollyfills.js){:target="_blank"}
 
-#### 41> this operator [click to open](src\Tutorials\thisExample.js)
+#### 41> this operator [click to open](src\Tutorials\thisExample.js){:target="_blank"}
 
-#### 42> Closure [click to open](src/Tutorials/closure.js)
+#### 42> Closure [click to open](src/Tutorials/closure.js){:target="_blank"}
 
-#### 43> Currying [click to open](src\Tutorials\currying.js)
+#### 43> Currying [click to open](src\Tutorials\currying.js){:target="_blank"}
 
 #### 44> Asynchronous behaviour
-- Event loop: [click to open](src/Tutorials/eventLoop.js)
-- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.js)
-    - Promises variants: [click to open](src/Tutorials/PromiseVariant.js)
+- Event loop: [click to open](src/Tutorials/eventLoop.js){:target="_blank"}
+- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.js){:target="_blank"}
+    - Promises variants: [click to open](src/Tutorials/PromiseVariant.js){:target="_blank"}
         - Promise.all
         - Promise.allSettled
         - Promise.any
         - Promise.race
-      - async/await & error handling: [click to open](src/Tutorials/asyncAwait.js)
+      - async/await & error handling: [click to open](src/Tutorials/asyncAwait.js){:target="_blank"}
             
 ## <------------------------- PHASE 3 ------------------------->
 
 Revision and I/O Question
-Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/interviewCodingQues.js)
-Some clubbed questions. : [click to open](src/Tutorials/InputOutput.js)
-More Input Output Questions (150 Important questions) : [click to open](https://github.com/lydiahallie/javascript-questions)
+Some DSA question based on Arrays, Objects & Strings. : [click to open](src/Tutorials/interviewCodingQues.js){:target="_blank"}
+Some clubbed questions. : [click to open](src/Tutorials/InputOutput.js){:target="_blank"}
+More Input Output Questions (150 Important questions) : [click to open](https://github.com/lydiahallie/javascript-questions){:target="_blank"}
 
 ## <------------------------- Phase 4 ------------------------->
 ### HTML, CSS & Casual JS questions
