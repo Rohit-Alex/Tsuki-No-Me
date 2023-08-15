@@ -412,6 +412,8 @@ Then it does remove it but leaves undefined at that place. So size still remains
 
 #### 31> Map and set. [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
+#### Components of a URL & URL methods [click to open](src/Tutorials/url.md)
+
 #### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/StorageAndJSON.js)
 
 #### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.js)

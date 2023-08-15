@@ -313,3 +313,7 @@ export const getURLParameter = (qrString, paramName) => {
 	return results && results.length > 0 ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
 };
 
+const numberFormatter = (value, options) => {
+	const defaultOptions = { style: 'currency', currency: 'INR' };
+	return new Intl.NumberFormat('en-IN', { ...defaultOptions, ...options }).format(value);
+};

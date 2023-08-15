@@ -141,6 +141,7 @@ timezone(Time zone 'Australia/Sydney'/'America/Los_Angeles')
 timeZoneName => 'short'/'long'
 
 INTL NumberFormat
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
 options->
 style => currency/unit
 currency => 'EUR'/'JPY'/'INR'
@@ -149,3 +150,4 @@ unitDisplay => 'long'/'short'
 maximumSignificantDigits
 maximumFractionDigits => numeric
 minimumFractionDigits => numeric
+useGrouping: false,
