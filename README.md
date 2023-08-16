@@ -416,7 +416,7 @@ Then it does remove it but leaves undefined at that place. So size still remains
 
 #### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/StorageAndJSON.md)
 
-#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.js)
+#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.md)
 
 #### 34> Shallow copy and deep copy. structureClone [click to open](src/Tutorials/shallow&DeepCopy.js)
 

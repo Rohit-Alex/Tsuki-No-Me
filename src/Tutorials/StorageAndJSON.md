@@ -2,18 +2,20 @@
 
 ##### SESSION STORAGE: 
 - The value is stored for that tab only and mapped with the url (url origin). 
-- Opening same url in another tab or closing and reopening tab or opening in new tab looses data.
 - Reloading/Hard Reloading the same tab within the same window makes the data persists.
-- A page session lasts as long as the tab or the browser is open, and survives over page reloads and restores.
-- Opening a page in a new tab or window creates a new session and data is removed.
-- Opening multiple tabs/windows with the same URL creates sessionStorage for each tab/window and removes data.
+- Opening the same page or page url in a new tab or a new window or closing and reopening the tab, looses data.
 - Duplicating a tab copies the tab's sessionStorage into the new tab.
+- A page session lasts as long as the tab or the browser is open, and survives over page reloads and restores.
+- Opening multiple tabs/windows with the same URL creates sessionStorage for each tab/window and removes data.
 - Closing a tab/window ends the session and clears objects in sessionStorage.
 
 ##### LOCAL STORAGE:
-- Once set the data is mapped to the url(url origin) and accessible even a full browser restart, no matter whether it's the same tab or window. No expiry time.
+- Once set, the data is mapped to the url(url origin) and accessible even a full browser restart, no matter whether it's the same tab or window. No expiry time.
+- Reload / Hard Reload still makes the data persists.
+- Even if you open the page in a new tab, or new window (of same browser), closing and re-open the same page, the data still persists.
 - e.g. In a particular website or remote url store local storage and session storage both and try opening the same url in new tab, reloading/hard reloading the existing tab and opening in new window.
     
+###### If you open the page in a private window(incognito mode) or different browser, data won't persist.
 ##### <<<<------------------- METHODS ----------------------->>>>
 
     * setItem(key, value) - set key/value pair.
