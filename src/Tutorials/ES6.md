@@ -77,9 +77,10 @@ console.log(...personality)
 
 const str = 'Nirali'
 console.log(...str)
+console.log([...str])
 
 const obj1 = {fruit: 'mango', vegetable: 'tomato'}
-console.log(...obj1)
+console.log(...obj1) // Would throw error
 
 Suppose we want to add 4 and 5 to num1 array such that it becomes [1,2,3,4,5]
 or add "innocent", "childish" to personality
