@@ -482,7 +482,7 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 
 #### 40> Prototype Inheritance. [click to open](src/Tutorials/prototypeChain&pollyfills.js)
 
-#### 41> this operator [click to open](src/Tutorials/thisExample.js)
+#### 41> this operator [click to open](src/Tutorials/thisExample.md)
 
 #### 42> Closure [click to open](src/Tutorials/closure.js)
 

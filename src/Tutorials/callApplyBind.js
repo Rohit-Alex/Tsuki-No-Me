@@ -1,5 +1,5 @@
 /*
-    These methods are used for function burrowing i.e. allows us to change the context of the invoking function.
+    These methods are used for function borrowing i.e. allows us to change the context of the invoking function.
     In short, We can change the reference of "this" value inside the function.
     The function is called with "this" being referred to the first argument being passed to it.
 

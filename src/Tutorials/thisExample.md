@@ -1,47 +1,44 @@
-/*
-    ******RULES******
-    i> Global context - this refers to window object.
-    i> new keyword binding - the new keyword changes the meaning of this to be the object that is being created.
-    ii> implicit binding - "this" refers to the object that is calling it. It is implied, without doing anything it's just how the language works.
-    iii> explicit binding - using the "bind" keyword to change the meaning of "this".
-    iV> arrow func ons as methods - "this" is lexically scoped, refers to it's current
+
+####    ******RULES******
+1. Global context - this refers to window object.
+2.  new keyword binding - the new keyword changes the meaning of this to be the object that is being created.
+3. implicit binding - "this" refers to the object that is calling it. It is implied, without doing anything it's just how the language works.
+4. explicit binding - using the "bind" keyword to change the meaning of "this".
+5. arrow functions as methods - "this" is lexically scoped, refers to it's current
         surroundings and no further. However, if "this" is inside of a method's func on, it
         falls out of scope and belongs to the window object. To correct this, you can use a
         higher order func on to return an arrow func on that calls "this".
 
-        Open -> src\Tutorials\ArrowFunctions.js and refer this in arrow function section
-*/
+##### I/O -> O/P Questions
 
-
-/*
-1>  this; // Window {...}
+1.  
+```
+    this; // Window {...}
     window; // Window {...}
     this === window; // true
     function a() {
         console.log(this);
     }
-    a();
-    // Window {...}
-*/
+    a(); // Window {...}
+```
 
-
-/*
-2>  const obj = {
+2. 
+```
+    const obj = {
         property: `I'm a property of obj.`,
         method: function () {
             // this refers to the object obj
             console.log(this.property);
         }
     };
-    obj.method();
-    // I'm a property of obj.
+    obj.method(); // I'm a property of obj.
 
     Note. this refers to whatever is on the left of the .(dot) when calling a method
-*/
+```
 
-
-/*
-3> function whichName() {
+3.
+```
+    function whichName() {
         console.log(this.name);
     }
     var name = "window";
@@ -57,11 +54,11 @@
     whichName(); // window
     obj1.whichName(); // Obj 1
     obj2.whichName(); // Obj 2
-*/
+```
 
-
-/*
-4>  const a = function () {
+4.
+```
+    const a = function () {
         console.log("a", this);
         const b = function () {
             console.log("b", this);
@@ -78,19 +75,21 @@
     // a Window {…}
     // b Window {…}
     // c {hi: ƒ}
-*/
+```
 
-
-/*
-5>  function Person(name, age) {
+5.
+```
+    function Person(name, age) {
         this.name = name;
         this.age = age;
         console.log(this);
     }
     const person1 = new Person("person1", 55);
     // this = Person { name: 'person1', age: 55 }
-    //implicit binding
+```
 
+6. Implicit binding
+```
     const person = {
         name: "person",
         age: 20,
@@ -100,8 +99,10 @@
     };
     person.hi();
     // this = person { name: 'person', age: 20, hi(){...} }
+```
 
-    //explicit binding
+7.  Explicit binding
+```
     let name = "Brittney";
     const person3 = {
         name: "person3",
@@ -112,9 +113,10 @@
     };
     person3.hi();
     // hi Brittney
-    
-    // this = window {...}
-    // arrow functions inside objects
+```    
+
+8. Arrow functions inside objects
+```
     const person4 = {
         name: "person4",
         age: 40,
@@ -128,11 +130,11 @@
     person4.hi();
     // this = person4 { name: 'person4', age: 40, hi() {...} }
     // if either function is changed around, it doesn't work
-*/
+```
 
-
-/*
-6>  const obj = {
+9. 
+```    
+    const obj = {
         name: "Billy",
         sing() {
             console.log("a", this);
@@ -145,11 +147,10 @@
     obj.sing();
     // a {name: "Billy", sing: ƒ}
     // b Window {…}
-*/
+```
 
-/*
-    7.0>
-
+10. 
+```
 const obj = {
     name: 'Nirali',
     surname: 'Bhalodiya',
@@ -160,16 +161,16 @@ const obj = {
 }
 
 obj.printName()
+```
 
-/*
-    todo Now print the name after 1 second
+#####  Todo:  Now print the name after 1 second
 
     printName: function() {
         setTimeout(function () {
             console.log(`My Name: ${this.name} and age: ${this.age}`)
         })
     }
-    ! But this doesn't work. We get undefined.👆
+But this doesn't work. We get undefined.👆
 
     printName: function() {
         const that = this
@@ -178,7 +179,7 @@ obj.printName()
         })
     }
 
-    ! The above code works but it can still be simplified. 👆
+The above code works but it can still be simplified. 👆
 
     printName: function() {
 
@@ -186,10 +187,10 @@ obj.printName()
             console.log(`My Name: ${this.name} and age: ${this.age}`)
         })
     }
-*/
 
-/*
-7>  const obj = {
+11.
+```
+    const obj = {
         name: "Billy",
         sing() {
             console.log("a", this);
@@ -202,11 +203,11 @@ obj.printName()
     obj.sing();
     // a {name: "Billy", sing: ƒ}
     // b {name: "Billy", sing: ƒ}
-*/
+```
 
-
-/*
-8>  var b = {
+12.
+```
+    var b = {
         name: "jay",
         say() {
             console.log(this);
@@ -236,4 +237,4 @@ obj.printName()
     // returned the arrow function
     d.say()(); // d {name: 'jay', say()...}
     // arrow function does not rebind this and inherits this from parent
-*/
+```
