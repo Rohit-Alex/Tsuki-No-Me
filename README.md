@@ -376,6 +376,34 @@ NOTE: reverse() => ❌ no equivalent method for this in array of object
     reverse()              -> toReversed()
     sort()                 -> toSorted()
 
+
+```
+(function() {
+    const arr = [NaN];
+    console.log(arr.indexOf(NaN)); // -1 (wrong, should be 0)
+    console.log(arr.includes(NaN));// true (correct)
+})();
+
+(function () {
+    let arr = [1, 2];
+    console.log(arr.concat([3, 4])); // 1,2,3,4
+    console.log(arr.concat([3, 4], [5, 6])); // 1,2,3,4,5,6
+    console.log(arr.concat([3, 4], 5, 6)); // 1,2,3,4,5,6
+    console.log(arr.push(3, 4, 5, 6)); // 1,2,3,4,5,6
+
+    arr = ["I", "go", "home"];
+    delete arr[1]; // remove "go"
+    console.log(arr[1]); // undefined
+    // now arr = ["I",  , "home"];
+    console.log(arr.length); // 3
+})()
+
+// different case letters have different codes
+console.log("Z".codePointAt(0)); // 90
+console.log("z".codePointAt(0)); // 122
+console.log("z".codePointAt(0).toString(16)); 
+```
+
 Dedicated file for arrays with above methods: [click to open](src/Tutorials/Arrays.js)
 
 Array.reduce() [click to open](src/Tutorials/Reduce.js)
@@ -484,9 +512,9 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 
 #### 41> this operator [click to open](src/Tutorials/thisExample.md)
 
-#### 42> Closure [click to open](src/Tutorials/closure.js)
+#### 42> Closure [click to open](src/Tutorials/closure.md)
 
-#### 43> Currying [click to open](src\Tutorials\currying.js)
+#### 43> Currying [click to open](src/Tutorials/currying.md)
 
 #### 44> Asynchronous behaviour
 - Event loop: [click to open](src/Tutorials/eventLoop.js)
