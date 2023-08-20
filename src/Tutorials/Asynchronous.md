@@ -483,4 +483,4 @@ const getMarriageApproval2 = () => {
 }
 getMarriageApproval2()
 ```
-After learning async/await try to simplify above using that.[click to open Async/Await](src/Tutorials/asyncAwait.js)
+After learning async/await try to simplify above using that.[click to open Async/Await](./asyncAwait.js)
