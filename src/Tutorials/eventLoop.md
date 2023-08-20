@@ -127,14 +127,14 @@ Answer:
     var square2 = square(n);
     var square4 = square(4);
 ```
-![Example 3 part 1](src/Assests/execution_context.png)
+![Example 3 part 1](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context.png)
 
-![Example 3 part 2](src/Assests/execution_context1.png)
+![Example 3 part 2](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context1.png)
 
-![Example 3 part 3](src/Assests/execution_context2.png)
+![Example 3 part 3](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context2.png)
 
-![Example 3 part 4](src/Assests/execution_contex3.png)
+![Example 3 part 4](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_contex3.png)
 
-![Example 3 part 5](src/Assests/execution_contex4.png)
+![Example 3 part 5](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_contex4.png)
 
 **Note:** Microtask queue has got higher priority
