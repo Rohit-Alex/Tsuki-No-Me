@@ -222,6 +222,7 @@ Upar jo hua, poora controller tum thi. Tum executor hai. Tum decide kar rhi ki r
         
 **Daily Implementation: Api call in open modal. If api successful then do something, error mein notification, finally modal close.**
 
+![Image to visualize](src/Assests/Promises.png)
 Let's see same example using promises.
 
 

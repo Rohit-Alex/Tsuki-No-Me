@@ -70,6 +70,8 @@ setTimeout(()=>{
 }, -400)
 ```
 ##### Explain the call stack formation for e.g 4 i.e. How the functions are pushed and popped. Starts with GEC.
+![GEC](src/Assests/callStackAndEventLoop.png)
+![GEC Akshay saini](src/Assests/EventLoop1.jpeg)
 ```
 setTimeout(() => {
     console.log("Excited for flight!")
@@ -115,4 +117,24 @@ Answer:
     // 1000 of lines of code
     console.log("end")
 
-**Note: Microtask queue has got higher priority**
+3. 
+```
+    var n = 2
+    function square(num) {
+        var ans = num * num;
+        return ans
+    }
+    var square2 = square(n);
+    var square4 = square(4);
+```
+![Example 3 part 1](src/Assests/execution_context.png)
+
+![Example 3 part 2](src/Assests/execution_context1.png)
+
+![Example 3 part 3](src/Assests/execution_context2.png)
+
+![Example 3 part 4](src/Assests/execution_contex3.png)
+
+![Example 3 part 5](src/Assests/execution_contex4.png)
+
+**Note:** Microtask queue has got higher priority
