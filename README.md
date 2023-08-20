@@ -517,8 +517,9 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 #### 43> Currying [click to open](src/Tutorials/currying.md)
 
 #### 44> Asynchronous behaviour
-- Event loop: [click to open](src/Tutorials/eventLoop.js)
-- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.js)
+- Event loop: [click to open](src/Tutorials/eventLoop.md)
+- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.md)
+    - async/await [click to open Async/Await](src/Tutorials/asyncAwait.js)
     - Promises variants: [click to open](src/Tutorials/PromiseVariant.js)
         - Promise.all
         - Promise.allSettled
