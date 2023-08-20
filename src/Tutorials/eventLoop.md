@@ -133,8 +133,8 @@ Answer:
 
 ![Example 3 part 3](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context2.png)
 
-![Example 3 part 4](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_contex3.png)
+![Example 3 part 4](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context3.png)
 
-![Example 3 part 5](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_contex4.png)
+![Example 3 part 5](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context4.png)
 
 **Note:** Microtask queue has got higher priority
