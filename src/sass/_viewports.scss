@@ -1,0 +1,45 @@
+@mixin desktop {
+  /* Medium devices (desktops, 1280px and up) */
+  @media only screen and (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin sm-desktop {
+  /**
+     * Used in exclusive cases, For More info sync up with Praveen
+     * For desktops, from 1280px to 1440px
+     */
+  @media (min-width: 1280px) and (max-width: 1440px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  /* Small devices (tablets, 768px and up) */
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin tablet-landscape {
+  /* Small devices (tablets, 1025 and landscape) */
+  @media (min-width: 1025px) and (max-width: 1279px) and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  /* < 768px */
+  @media (min-width: 320px) and (max-width: 767px) {
+    @content;
+  }
+}
+
+/* Use this media query exclusively for iPhone5/SE devices */
+@mixin x-small {
+  /* < 360px */
+  @media (max-width: 360px) {
+    @content;
+  }
+}

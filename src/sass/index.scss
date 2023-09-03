@@ -19,9 +19,11 @@
 // utilities (margin, padding, opacity, etc)
 @import 'utilities';
 
-@import "./border-radius.scss";
-@import "./colors.scss";
-@import "./gap.scss";
-@import "./margin.scss";
-@import "./padding.scss";
-@import "./helpers.scss";
+@import './variables';
+@import './viewports';
+@import "./colors";
+@import "./helpers";
+@import "./border-radius";
+@import "./gap";
+@import "./margin";
+@import "./padding";

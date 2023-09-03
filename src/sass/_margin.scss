@@ -14,7 +14,7 @@ $base: 0.25;
     }
 
     .#{$viewport}-mr#{$i} {
-      margin-#{$right}: $margin-value + rem;
+      margin-right: $margin-value + rem;
     }
 
     .#{$viewport}-mb#{$i} {
@@ -22,12 +22,12 @@ $base: 0.25;
     }
 
     .#{$viewport}-ml#{$i} {
-      margin-#{$left}: $margin-value + rem;
+      margin-left: $margin-value + rem;
     }
 
     .#{$viewport}-mx#{$i} {
-      margin-#{$left}: $margin-value + rem;
-      margin-#{$right}: $margin-value + rem;
+      margin-left: $margin-value + rem;
+      margin-right: $margin-value + rem;
     }
 
     .#{$viewport}-my#{$i} {
@@ -49,7 +49,7 @@ $base: 0.25;
     }
 
     .mr#{$i} {
-      margin-#{$right}: $margin-value + rem;
+      margin-right: $margin-value + rem;
     }
 
     .mb#{$i} {
@@ -57,12 +57,12 @@ $base: 0.25;
     }
 
     .ml#{$i} {
-      margin-#{$left}: $margin-value + rem;
+      margin-left: $margin-value + rem;
     }
 
     .mx#{$i} {
-      margin-#{$left}: $margin-value + rem;
-      margin-#{$right}: $margin-value + rem;
+      margin-left: $margin-value + rem;
+      margin-right: $margin-value + rem;
     }
 
     .my#{$i} {
@@ -78,16 +78,16 @@ $base: 0.25;
   @include generate-viewport-margin(sm);
 
   .sl-auto {
-    margin-#{$left}: auto;
+    margin-left: auto;
   }
 
   .sr-auto {
-    margin-#{$right}: auto;
+    margin-right: auto;
   }
 
   .sx-auto {
-    margin-#{$left}: auto;
-    margin-#{$right}: auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -95,16 +95,16 @@ $base: 0.25;
   @include generate-viewport-margin(md);
 
   .ml-auto {
-    margin-#{$left}: auto;
+    margin-left: auto;
   }
 
   .mr-auto {
-    margin-#{$right}: auto;
+    margin-right: auto;
   }
 
   .mx-auto {
-    margin-#{$left}: auto;
-    margin-#{$right}: auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -112,15 +112,15 @@ $base: 0.25;
   @include generate-viewport-margin(lg);
 
   .lg-ml-auto {
-    margin-#{$left}: auto;
+    margin-left: auto;
   }
 
   .lg-mr-auto {
-    margin-#{$right}: auto;
+    margin-right: auto;
   }
 
   .lg-mx-auto {
-    margin-#{$left}: auto;
-    margin-#{$right}: auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
