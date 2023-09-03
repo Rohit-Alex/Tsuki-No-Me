@@ -1,0 +1,275 @@
+// -----------------------------------------------------------------------------
+// This file contains CSS helper classes.
+// -----------------------------------------------------------------------------
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.width-75 {
+  width: 75%;
+}
+
+.width-66 {
+  width: 66%;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.width-33 {
+  width: 33%;
+}
+
+.width-25 {
+  width: 25%;
+}
+
+.width-auto {
+  width: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.content-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.content-equal-width {
+  display: flex;
+  & > * {
+    flex: 1;
+  }
+}
+
+.absolute-center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-baseline {
+  align-items: baseline;
+}
+
+.align-stretch {
+  align-items: stretch;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.flex-grow {
+  flex: 1 0 auto;
+}
+
+.flex-none {
+  flex: none;
+}
+
+.lg-flex-start {
+  align-items: flex-start;
+}
+
+@for $i from 1 through 10 {
+  .flex-#{$i} {
+    flex: $i;
+  }
+}
+
+.comp-mb {
+  margin-bottom: $space-3;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.border-box {
+  box-sizing: border-box;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.word-break {
+  word-break: break-all;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.list-style-none {
+  list-style: none;
+  padding: 0;
+}
+
+.print-area {
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px #ddd;
+  max-width: 500px;
+  position: fixed;
+  top: 50px;
+  width: 93vw;
+  z-index: 99999999;
+}
+
+.print-area-background {
+  background: #fff;
+  bottom: 0;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 999999;
+}
+
+.half-opacity {
+  opacity: 0.5;
+}

@@ -1,0 +1,126 @@
+$margin-blocks: 16;
+$base: 0.25;
+
+@mixin generate-viewport-margin($viewport) {
+  @for $i from 0 through $margin-blocks {
+    $margin-value: $base * $i;
+
+    .#{$viewport}-m#{$i} {
+      margin: $margin-value + rem;
+    }
+
+    .#{$viewport}-mt#{$i} {
+      margin-top: $margin-value + rem;
+    }
+
+    .#{$viewport}-mr#{$i} {
+      margin-#{$right}: $margin-value + rem;
+    }
+
+    .#{$viewport}-mb#{$i} {
+      margin-bottom: $margin-value + rem;
+    }
+
+    .#{$viewport}-ml#{$i} {
+      margin-#{$left}: $margin-value + rem;
+    }
+
+    .#{$viewport}-mx#{$i} {
+      margin-#{$left}: $margin-value + rem;
+      margin-#{$right}: $margin-value + rem;
+    }
+
+    .#{$viewport}-my#{$i} {
+      margin-bottom: $margin-value + rem;
+      margin-top: $margin-value + rem;
+    }
+  }
+}
+@mixin generate-margin() {
+  @for $i from 0 through $margin-blocks {
+    $margin-value: $base * $i;
+
+    .m#{$i} {
+      margin: $margin-value + rem;
+    }
+
+    .mt#{$i} {
+      margin-top: $margin-value + rem;
+    }
+
+    .mr#{$i} {
+      margin-#{$right}: $margin-value + rem;
+    }
+
+    .mb#{$i} {
+      margin-bottom: $margin-value + rem;
+    }
+
+    .ml#{$i} {
+      margin-#{$left}: $margin-value + rem;
+    }
+
+    .mx#{$i} {
+      margin-#{$left}: $margin-value + rem;
+      margin-#{$right}: $margin-value + rem;
+    }
+
+    .my#{$i} {
+      margin-bottom: $margin-value + rem;
+      margin-top: $margin-value + rem;
+    }
+  }
+}
+
+@include generate-margin();
+
+@include mobile {
+  @include generate-viewport-margin(sm);
+
+  .sl-auto {
+    margin-#{$left}: auto;
+  }
+
+  .sr-auto {
+    margin-#{$right}: auto;
+  }
+
+  .sx-auto {
+    margin-#{$left}: auto;
+    margin-#{$right}: auto;
+  }
+}
+
+@include tablet {
+  @include generate-viewport-margin(md);
+
+  .ml-auto {
+    margin-#{$left}: auto;
+  }
+
+  .mr-auto {
+    margin-#{$right}: auto;
+  }
+
+  .mx-auto {
+    margin-#{$left}: auto;
+    margin-#{$right}: auto;
+  }
+}
+
+@include desktop {
+  @include generate-viewport-margin(lg);
+
+  .lg-ml-auto {
+    margin-#{$left}: auto;
+  }
+
+  .lg-mr-auto {
+    margin-#{$right}: auto;
+  }
+
+  .lg-mx-auto {
+    margin-#{$left}: auto;
+    margin-#{$right}: auto;
+  }
+}

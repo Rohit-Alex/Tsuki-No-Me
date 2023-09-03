@@ -1,0 +1,40 @@
+$blocks: 16;
+$base: 0.25;
+
+@mixin generate-border-radius() {
+  @for $i from 0 through $blocks {
+    $value: $base * $i;
+
+    .br#{$i} {
+      border-radius: $value + rem;
+    }
+
+    .br-tl#{$i} {
+      border-top-left-radius: $value + rem;
+    }
+
+    .br-tr#{$i} {
+      border-top-right-radius: $value + rem;
+    }
+
+    .br-bl#{$i} {
+      border-bottom-left-radius: $value + rem;
+    }
+
+    .br-br#{$i} {
+      border-bottom-right-radius: $value + rem;
+    }
+
+    .br-t#{$i} {
+      border-top-left-radius: $value + rem;
+      border-top-right-radius: $value + rem;
+    }
+
+    .br-b#{$i} {
+      border-bottom-left-radius: $value + rem;
+      border-bottom-right-radius: $value + rem;
+    }
+  }
+}
+
+@include generate-border-radius();
