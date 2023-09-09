@@ -62,6 +62,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/*.{js,jsx,tsx,ts} --ignore-path .gitignore",
     "lint:fix": "eslint fix",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "validate": "npm run lint",
     "serve-json": "json-server --watch db.json --port 4000"
   },
@@ -89,8 +90,14 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest-dom": "^4.0.2",
+    "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
+    "prettier": "3.0.3",
     "sass": "^1.53.0",
     "tailwindcss": "^3.1.6"
   },
