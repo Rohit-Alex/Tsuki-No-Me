@@ -1,75 +1,72 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
-import { IApiResponse, IError, IGetParams, IHttpWithApiRes } from "./types";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export interface ICouponList {
-	id?: string;
-	couponCode: string;
-	planId: number;
-	eligibleFrom: string;
-}
 
-const axiosConfig = axios.create({
-    baseURL: 'https://merchant-bp.in/api',
-    headers: { 'content-type': 'application/json'}
-})
+import { IAPIResponse, IError, IGetParams } from './types';
+
+const Request = axios.create({
+	baseURL: process.env.REACT_APP_BASEPATH_MERCHANT,
+	headers: { 'Content-Type': 'application/json' },
+});
 
 const serializeError = (error: AxiosError): IError => {
-    const err = {} as IError
-    const { response } = error;
-    if (!response) throw error;
-    return err
+	const { response } = error;
+	if (!response) throw error;
+	const { status, statusText, data } = response;
+	const { message, responseMessage } = data;
+	let errorMsg = '';
+	try {
+		errorMsg = JSON.parse(message || responseMessage).error.debug_msg;
+	} catch (e) {
+		errorMsg = message || responseMessage;
+	}
+	const errorObj = {
+		name: 'API ERROR',
+		message: errorMsg || statusText || `API FAILED (${status})`,
+		code: status.toString(),
+		stack: JSON.stringify(error.toJSON()),
+	};
+	return errorObj;
+};
 
-}
+const tokenHeaderInterceptor = (config: AxiosRequestConfig): AxiosRequestConfig => {
+	const token = loadState(TOKEN_SESSION_KEY);
+	if (!token) return config;
+	config.headers['token'] = token;
+	if (config?.url?.includes('https://cards-qr.bharatpe')) {
+		config.headers['entity'] = 'MERCHANT';
+	}
+	return config;
+};
 
-const tokenInjection = (config: AxiosRequestConfig): AxiosRequestConfig => {
-    const token = localStorage.getItem('token')
-    if (!token) return config
-    config.headers!.Authorization = `Bearer ${token}`
-    config.headers!.token = token
-    return config
-}
+const onErrorInterceptor = (error: AxiosError): IError => {
+	throw serializeError(error);
+};
 
-const handleSuccessResponse = (response: AxiosResponse) => {
-    return response
-}
+Request.interceptors.request.use(tokenHeaderInterceptor);
+Request.interceptors.response.use(undefined, onErrorInterceptor);
 
-const handleErrorResponse = (error: AxiosError) => {
-    if (error?.response?.status === 401) {
-        // if at any time we get unauthorize then logout the user
-        // import('store').then(module => module.default.dispatch({type: 'auth/logout' }))
-    }
-    throw serializeError(error)
+const responseExtractor = <T>(response: AxiosResponse<IAPIResponse<T>>) => {
+	const { status, data, statusText } = response;
+	const { message, success, status: externalStatus } = data;
+	if (!data || !status || status !== 200) throw new Error(statusText);
+	if (!success && !externalStatus) throw new Error(message);
+	return data.data;
+};
 
-}
+const httpResponseExtractor = <T>(response: AxiosResponse<T>) => {
+	const { status, data, statusText } = response;
+	if (!data || !status || status !== 200) throw new Error(statusText);
+	return data;
+};
 
-axiosConfig.interceptors.request.use(tokenInjection)
-axiosConfig.interceptors.response.use(handleSuccessResponse, handleErrorResponse) // First argument here if for each success response
+export const Get = <T>(path: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> =>
+	Request.get<IAPIResponse<T>>(path, { params, cancelToken }).then(responseExtractor);
 
+export const HttpGet = <T>(path: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> =>
+	Request.get<T>(path, { params, cancelToken }).then(httpResponseExtractor);
 
-const getExtractor1 = <T>(response: AxiosResponse<IApiResponse<T>>) => {
-    const { status, data, statusText } = response;
-    if (status !== 200) throw new Error(statusText)
-    if (!data || !data.success) throw new Error(data.message)
-    return data.data
-}
+export const Post = <T>(path: string, payload: unknown, cancelToken?: CancelToken): Promise<T> =>
+	Request.post<IAPIResponse<T>>(path, payload, { cancelToken }).then(responseExtractor);
 
-const getExtractor2 =  <T>(response: AxiosResponse<IApiResponse<T>>): IHttpWithApiRes<T> => {
-    const { status, data, statusText } = response;
-    if (status !== 200) throw new Error(statusText)
-    if (!data || !data.success) throw new Error(data.message)
-    return { httpStatus: status, httpStatusText: statusText, data }
-}
-
-const postExtractor = <T>(response: AxiosResponse<IApiResponse<T>>) => {
-    const { status, data, statusText } = response;
-    if (status !== 200) throw new Error(statusText)
-    if (!data || !data.success) throw new Error(data.message)
-    return data.message
-}
-
-
-export const GET_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
-export const GET_API_2 =  <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<IHttpWithApiRes<T>> => axiosConfig.get<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor2)
-
-export const POST_API_1 = <T>(url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<T> => axiosConfig.post<IApiResponse<T>>(url, { params, cancelToken}).then(getExtractor1)
-export const POST_API_2 = (url: string, params?: Partial<IGetParams>, cancelToken?: CancelToken): Promise<string> => axiosConfig.post<IApiResponse<string>>(url, { params, cancelToken}).then(postExtractor)
+export const HttpPost = <T>(path: string, payload: unknown, cancelToken?: CancelToken): Promise<T> =>
+	Request.post<T>(path, payload, { cancelToken }).then(httpResponseExtractor);

@@ -54,3 +54,66 @@ const counterReducer = (state: State, action: Action) => {
   }
 };
 const [state, dispatch] = useReducer(counterReducer, { value: 0 });
+React.ComponentPropsWithoutRef<'button'>
+
+#### Generics examples
+
+```
+  function convertToArray<T>(input: T): T[] {
+    return [input]
+  }
+
+  const convertToArray = <T>(input: T): T[] => [input]
+
+  convertToArray(5)
+```
+
+###### Now if we want to restrict it to only except number and string then,
+
+```
+  function convertToArray<T extends number | string>(input: T): T[] {
+    return [input]
+  }
+
+  convertToArray(5)
+  convertToArray('AOT')
+```
+
+
+```
+    function convertToArray<T, K>(input: T, input2: K): [T, K] {
+        return [input, input2]
+    }
+
+    convertToArray<number, string>(5, 'AOT') // not required to pass the type here, it automatically infers from arguments
+    convertToArray(5, 'AOT')
+```
+
+#### Get Error Message util function
+
+```
+    const getErrorMessage = (error: unknown): string => {
+      let message: string
+      if (error instanceof Error) {
+        message = error.message
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        message = error.message.toString();
+      } else if (typeof error === 'string') {
+        message = error
+      } else {
+        message = 'Something went wrong!'
+      }
+      return message
+    }
+```
+
+#### Generics in Components props 
+
+interface IProps<T> {
+  themeOptions: T[];
+  theme: T;
+}
+
+function ThemeOptions<T>({themeOptions, theme}: IProps<T>) {
+  
+} 

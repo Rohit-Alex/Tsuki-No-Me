@@ -70,3 +70,41 @@ export { customRender as rtlRender }
 
 // 6. check for attributes of an element
     expect(inputTag).toHaveAttribute('value','123')
+
+// 7. Reject and throw Error
+
+test('rejects to octopus', () => {
+  // make sure to add a return statement
+  return expect(Promise.reject(new Error('octopus'))).rejects.toThrow(
+    'octopus',
+  );
+});
+
+
+// 8. toHaveReturned: mock function successfully returned (i.e., did not throw an error) at least one time
+
+test('drinks returns', () => {
+  const drink = jest.fn(() => true);
+
+  drink();
+
+  expect(drink).toHaveReturned();
+});
+
+
+// 9. toHaveReturnedWith(value) : mock function returned a specific value.
+
+
+test('drink returns La Croix', () => {
+  const beverage = {name: 'La Croix'};
+  const drink = jest.fn(beverage => beverage.name);
+
+  drink(beverage);
+
+  expect(drink).toHaveReturnedWith('La Croix');
+});
+
+
+// 10. .toHaveProperty(keyPath, value?)
+
+// 11.  as jest.Mock

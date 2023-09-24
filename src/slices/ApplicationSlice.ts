@@ -1,74 +1,67 @@
 import { useSelector } from 'react-redux';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { GENERALIZED_RESPONSE } from 'api/constants';
-import { getApplicationData } from 'api/apiCalls';
-import { IACTION, IApplicationData, IHttpWithApiRes } from 'api/types';
-import Toasty from 'Components/Toasty';
 
-const setAPIError = (state: ReturnType<typeof GENERALIZED_RESPONSE>, action: IACTION): void => {
-	state.loading = false;
-	state.error = action?.error?.message || 'Something went wrong';
-	action?.error?.message !== 'Please contact your KAM to process your order.' && Toasty.error(state.error);
-};
+import { Get } from 'api/apiService';
+import { IGetParams, IInitialState, IDispatcherType, IAPI_ACTION } from 'api/types';
 
-const application = createAsyncThunk('get/application', getApplicationData);
+const RESPONSE_INITIAL_STATE = <T>(isDataPresent = true, data: T = {} as T): IInitialState<T> => ({
+	loading: false,
+	isFetched: false,
+	error: '',
+	...(isDataPresent && { data }),
+});
 
-export const ApplicationSlice = createSlice({
-	name: 'application',
-	initialState: GENERALIZED_RESPONSE(),
+const validateScannedQr = (params: IGetParams): Promise<IValidateResponse> =>
+	Get<IValidateResponse>(`${BASE_PATH_CARD_QR}/${API_URL.validate}`, params);
+
+const validateScannedQrThunk = createAsyncThunk('validateQr', validateScannedQr);
+
+export const ValidateScannedQrSlice = createSlice({
+	name: 'validateScannedQr',
+	initialState: RESPONSE_INITIAL_STATE<IValidateResponse>(),
 	reducers: {
 		CLEAR_ERROR: (state) => {
 			state.error = '';
 		},
-		RESET: (state) => Object.assign(state, GENERALIZED_RESPONSE()),
+		RESET: (state) => Object.assign(state, RESPONSE_INITIAL_STATE()),
 	},
-	// extraReducers: {
-	// 	[application.pending.toString()]: (state: ReturnType<typeof GENERALIZED_RESPONSE>) => {
-	// 		state.data = {};
-	// 		state.error = '';
-	// 		state.loading = true;
-	// 		state.fetched = false;
-	// 	},
-	// 	[application.rejected.toString()]: setAPIError,
-	// 	[application.fulfilled.toString()]: (state, action: IACTION<IApplicationData>) => {
-	// 		state.loading = false;
-	// 		state.fetched = true;
-	// 		state.error = '';
-	// 		state.data = action.payload;
-	// 	},
-	// },
-	extraReducers: (builder) => {
-		builder
-		.addCase(application.pending, (state) => {
-			state.data = {};
-			state.error = '';
+	extraReducers: {
+		[validateScannedQrThunk.pending.toString()]: (state: ReturnType<typeof RESPONSE_INITIAL_STATE>) => {
 			state.loading = true;
-			state.fetched = false;
-		})
-		.addCase(application.rejected, (state, action) => {
+		},
+		[validateScannedQrThunk.rejected.toString()]: (
+			state: ReturnType<typeof RESPONSE_INITIAL_STATE>,
+			action: IAPI_ACTION,
+		) => {
 			state.loading = false;
-			state.error = action.error?.message || 'Something went wrong';
-			action.error?.message !== 'Please contact your KAM to process your order.' && Toasty.error(state.error);
-		})
-		.addCase(application.fulfilled, (state, action) => {
+			state.error = action.error.message || 'Something went wrong';
+			Toasty.error(state.error);
+		},
+		[validateScannedQrThunk.fulfilled.toString()]: (state, action: IAPI_ACTION<IValidateResponse>) => {
 			state.loading = false;
-			state.fetched = true;
-			state.error = '';
-			state.data = action.payload.data;
-		});
+			state.data = action.payload;
+			state.isFetched = true;
+		},
 	},
 });
 
-interface IApplicationStates {
-	[ApplicationSlice.name]: ReturnType<typeof ApplicationSlice.reducer>;
+interface IStates {
+	[ValidateScannedQrSlice.name]: ReturnType<typeof ValidateScannedQrSlice.reducer>;
 }
 
-export const useApplication = () => useSelector((state: IApplicationStates) => state[ApplicationSlice.name] || {});
+export const useValidateScannedQr = (): IInitialState<IValidateResponse> =>
+	useSelector((state: IStates) => state[ValidateScannedQrSlice.name] || {});
 
-export const triggerApplicationApi = () => async (dispatch: any): Promise<void> => {
-	await dispatch(application());
-};
+export const triggerValidateScannedQrApi =
+	(params: any) =>
+	async (dispatch: IDispatcherType, getState: () => IStates): Promise<IValidateResponse> => {
+		await dispatch(validateScannedQrThunk(params));
+		return getState()[ValidateScannedQrSlice.name].data as IValidateResponse;
+	};
 
-export const resetApplication = () => async (dispatch: any): Promise<void> => {
-	await dispatch(ApplicationSlice.actions.RESET());
-};
+export const resetValidateScannedQr =
+	() =>
+	async (dispatch: IDispatcherType): Promise<void> => {
+		await dispatch(ValidateScannedQrSlice.actions.RESET());
+		return;
+	};
