@@ -197,9 +197,8 @@
         const newObj = {}
         for (const key in obj) {
             const val = obj[key];
-            if (typeof val === "object" && val.constructor === Object & val !== null) {
+            if (typeof val === "object" && val.constructor === Object && val !== null) {
                     const updatedObj = removeFalsyValuesInObj(val);
-                    console.log(updatedObj, newObj)
                     newObj[key] = updatedObj
             }
             else {

@@ -117,3 +117,59 @@ interface IProps<T> {
 function ThemeOptions<T>({themeOptions, theme}: IProps<T>) {
   
 } 
+
+#### Tricks
+
+i> typeof
+  ```
+  const val = 5
+  typeof val
+  ```
+
+ii> ReturnType
+
+const func = () => {
+  const val = 'rohit'
+  return val
+}
+
+type funcType = ReturnType<typeof func> => 'string'
+
+
+const func2 = async() => {
+  const val = 'rohit'
+  return val
+}
+
+type funcType2 = ReturnType<typeof func2> => 'Promise<string>'
+type funcType2Res = Awaited<ReturnType<typeof func2>> => 'string'
+
+
+iii> Prettify
+
+type Prettify<T> = {
+  [k in typeof T]: T[k]
+} & {}
+
+interface person {
+  name: string
+  age: number
+}
+
+type NestedType = person & {
+  gender: 'male' | 'female'
+}
+
+type prettified = Prettify<NestedType>
+
+
+iv> keyof 
+
+const obj = {
+  name: 'rohit',
+  age: 24
+}
+
+type objKeysType = keyof typeof obj
+
+v> Omit(for simple) and Exclude(for complex)
