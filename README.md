@@ -365,8 +365,6 @@ slice, substring, substr(deprecated, hence optional to know), includes, at, trim
     indexOf() => equivalent method in array of object => findIndex()
     lastIndexOf() => equivalent method in array of object => findLastIndex()
     
-NOTE: reverse() => ❌ no equivalent method for this in array of object
-    
     # Desctructive methods -> alternative non-destructive methods
     push()                 -> [...arr, newValue]
     pop()                  -> slice(0, arr.length - 1) or toSpliced(arr.length - 1, 1)
@@ -554,3 +552,8 @@ More Input Output Questions (150 Important questions) : [click to open](https://
 #### 15> Event delegation
 #### 16> Event bubbling & event capturing
 #### 17> DOMContentLoaded and onLoad
+
+
+## <------------------------- Phase 5 ------------------------->
+
+[REACT QUES.](src/Tutorials/ReadmeFiles/React RoadMap.md)

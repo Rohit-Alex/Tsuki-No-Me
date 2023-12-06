@@ -1,6 +1,6 @@
 /*
-Basic Euclidean Algorithm for GCD: 
-The algorithm is based on the below facts. 
+Basic Euclidean Algorithm for GCD:
+The algorithm is based on the below facts.
 
     i> If we subtract a smaller number from a larger one (we reduce a larger number), GCD doesn’t change. So if we keep subtracting repeatedly the larger of two, we end up with GCD.
     ii> Now instead of subtraction, if we divide the smaller number, the algorithm stops when we find the remainder 0.
@@ -8,31 +8,30 @@ The algorithm is based on the below facts.
 
 const getHCF = (a, b) => {
   while (b !== 0) {
-    const temp = b;
-    b = a % b;
-    a = temp;
+    const temp = b
+    b = a % b
+    a = temp
   }
-  return a;
+  return a
 }
-
+// O(max(a,b)) => Time & Space complexity
 const getHCFRecursion = (a, b) => {
-   if (b === 0) {
-    return a;
+  if (b === 0) {
+    return a
   }
-  return getHCFRecursion(b, a % b);
-
+  return getHCFRecursion(b, a % b)
 }
 
 const getLCM = (a, b) => {
-  const hcf = getHCFRecursion(a, b);
-  return Math.abs(a * b) / hcf;
+  const hcf = getHCFRecursion(a, b)
+  return Math.abs(a * b) / hcf
 }
 
 const isPrime = (num) => {
-    for (let i = 2; i <= Math.sqrt(num); i++) {
-        if (num % i === 0) return false
-    }
-    return true
+  for (let i = 2; i <= Math.sqrt(num); i++) {
+    if (num % i === 0) return false
+  }
+  return true
 }
 
 const countFactors = (num) => {
@@ -43,5 +42,17 @@ const countFactors = (num) => {
       if (num / i !== i) count++
     }
     return count + 2
+  }
+}
+
+const primeFactor = (num) => {
+  for (let i = 2; i * i <= num; i++) {
+    while (num % i === 0) {
+      console.log(i)
+      num = num / i;
+    }
+  }
+  if (num > 1) {
+    console.log(num)
   }
 }

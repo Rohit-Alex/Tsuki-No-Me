@@ -73,3 +73,7 @@ React Machine coding question:
 	9> Counter
 	10> Reverse counter
 	11> 
+
+https://codesandbox.io/p/sandbox/seekers-i4kstj
+https://codesandbox.io/p/devbox/cars-24-y82lgm
+https://codesandbox.io/p/sandbox/netomi-interview-fxmngd?file=%2Fsrc%2Findex.js

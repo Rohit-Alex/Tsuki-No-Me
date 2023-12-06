@@ -151,3 +151,35 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
     // }
     // getMarriageApprovalUsingAwait()
 })()
+
+// Write the o/p. source (Akshay saini)
+
+const promise1 = new Promise((res, rej) => {
+    setTimeout(() => {
+        res(300)
+    }, 3000)
+})
+
+const promise2 = new Promise((res, rej) => {
+    setTimeout(() => {
+        res(500)
+    }, 5000)
+})
+
+const getAns = async() => {
+    const ans1 = await promise1
+    console.log(ans1)
+    const ans2 = await promise2
+    console.log(ans1, ans2)
+}
+
+getAns() // ye bata ki, after how many seconds we will get the consoles
+
+const getAns2= async() => {
+    const ans1 = await promise2
+    console.log(ans1)
+    const ans2 = await promise1
+    console.log(ans1, ans2)
+}
+
+getAns2() //ye bata ki, after how many seconds we will get the consoles
