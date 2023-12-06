@@ -240,9 +240,9 @@ Explaination: first {} is not considered as an object literal, but rather as a b
 /* Explanation: according to operator precedence. 
   ==> (!+[]) + [] + (![])
   ==> !0 + [] + !''
-  ==> true + [] + false
-  ==> true + '' + false
-  ==> 'truefalse'
+  ==> true + [] + true
+  ==> true + '' + true
+  ==> 'truetrue'
 */
 
 [null].toString() = '';
