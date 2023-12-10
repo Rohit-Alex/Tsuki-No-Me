@@ -38,10 +38,10 @@
 
 3.
 ```
+    var name = "window";
     function whichName() {
         console.log(this.name);
     }
-    var name = "window";
     const obj1 = {
         name: "Obj 1",
         whichName
