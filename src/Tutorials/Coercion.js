@@ -211,8 +211,8 @@ NaN === NaN; //false (NaN is not even equal to itself)
 
 0 || "0" && {};  
 /* Explanation
-  ==>  0 || ("0" && {})
-  ==> "0" || {}
+  ==>  (0 || "0") && {}
+  ==> "0" && {}
   ==> {}
 */
 
