@@ -213,7 +213,7 @@ NaN === NaN; //false (NaN is not even equal to itself)
 /* Explanation
   ==>  0 || ("0" && {})
   ==> "0" || {}
-  ==> '0'
+  ==> {}
 */
 
 [1,2,3] == [1,2,3];
