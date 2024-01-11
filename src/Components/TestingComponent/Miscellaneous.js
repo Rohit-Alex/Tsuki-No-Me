@@ -1,4 +1,4 @@
-import { Input } from "antd"
+import { Input, Button } from "antd"
 import { useCallback, useState } from "react";
 import debounce from 'lodash/debounce';
 import DatePickers from "../CustomDatepicker";
@@ -6,11 +6,13 @@ import { sub } from "date-fns";
 import SelectWrapper from "./Select";
 import AllInOne from "./AllInOne";
 import RangePicker from "./RangePicker";
+import { useNotificationContext } from "Context/notificationContext";
 
 const Miscellaneous = () => {
     const [searchValue, setSearchValue] = useState('')
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState('')
+    const { openNotification } = useNotificationContext()
 
     const debouncedSave = useCallback(
         debounce((nextVal) => console.log('inside debounce after 400', nextVal), 400),
@@ -31,6 +33,14 @@ const Miscellaneous = () => {
     const disabledDateForStartDate = (current) => {
         return current && current.valueOf() > Date.now();
     };
+
+    const showNotification = () => { 
+        openNotification({
+            message: 'hi',
+            description: "hiaf adad",
+            duration: 3
+        })
+     }
 
     return (
         <>
@@ -56,6 +66,7 @@ const Miscellaneous = () => {
             <div>
                 <AllInOne />
             </div>
+            <Button onClick={showNotification} data-testid="ant-notification">Open notification</Button>
         </>
     )
 }

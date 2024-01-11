@@ -15,6 +15,9 @@ import {
 // import jwt from 'jsonwebtoken'
 import { addMonths, format } from "date-fns";
 import { checkIsAuthenticated } from "TestFunctionUtils";
+import { useNotificationContext } from "Context/notificationContext";
+
+jest.mock('Context/notificationContext')
 jest.mock("node-cache");
 jest.useFakeTimers();
 jest.mock("../../../Utilies/utils", () => ({
@@ -167,5 +170,21 @@ describe('Throw Error test cases', () => {
       throw new Error('Unauthorize') 
     })
     expect(() => checkIsAuthenticated(401)).toThrowError('Unauthorize')
+  })
+})
+
+describe.only('antd notification', () => {
+  const openNotificationMocked = jest.fn()
+ beforeEach(() => {
+   useNotificationContext.mockReturnValue({
+    openNotification: openNotificationMocked
+  })
+ })
+  it('should show notification', () => {
+    render(<Miscellaneous />)
+    console.log(screen.debug())
+    const btnNotification = screen.getByTestId('ant-notification')
+    fireEvent.click(btnNotification)
+    expect(openNotificationMocked).toBeCalled()
   })
 })
