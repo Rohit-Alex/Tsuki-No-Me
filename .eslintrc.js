@@ -6,51 +6,24 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended",
-		"plugin:react/recommended",
-		"plugin:react-hooks/recommended",
-		"prettier"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier",
   ],
   overrides: [],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
-    sourceType: "module"
+    sourceType: "module",
   },
-  plugins: [
-    "react",
-    "@typescript-eslint",
-    "prettier",
-    "jest"
-  ],
+  plugins: ["@typescript-eslint", "prettier", "jest"],
   rules: {
-    "react/react-in-jsx-scope": [
-      "off"
-    ],
-    "react/prop-types": [
-      "off",
-      {
-        ignore: null,
-        customValidators: null,
-        skipUndeclared: null
-      }
-    ],
-    "no-empty-function": [
-      "off",
-      {
-        allow: [
-          "arrowFunctions"
-        ]
-      }
-    ],
-    "@typescript-eslint/no-empty-function": [
-      "off",
-      {
-        allow: [
-          "arrowFunctions"
-        ]
-      }
-    ]
-  }
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "no-empty-function": ["off", { allow: ["arrowFunctions"] }],
+    "@typescript-eslint/no-empty-function": ["off", { allow: ["arrowFunctions"] }],
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off"
+  },
 };
