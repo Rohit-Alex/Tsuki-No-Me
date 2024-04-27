@@ -4,8 +4,8 @@ import { BrowserRouter } from "react-router-dom"
 import { FormProvider } from "../Context/FormContext"
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import store from "../Redux/store"
-import { NotificationContextProvider } from "Context/notificationContext"
-
+import { App } from 'antd';
+import NotificationContextProvider from "Context/notificationContext"
 const queryClient = new QueryClient()
 /* For some default settings
 const queryClient = new QueryClient({
@@ -21,14 +21,17 @@ const AllTheProviders = ({ children }) => {
     return (
         <BrowserRouter>
             <Provider store={store}>
-                <FormProvider>
-                    <NotificationContextProvider>
-                    <QueryClientProvider client={queryClient}>
-                        {children}
-                        <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
-                    </QueryClientProvider>
-                    </NotificationContextProvider>
-                </FormProvider>
+                <QueryClientProvider client={queryClient}>
+                    <FormProvider>
+                        <NotificationContextProvider>
+                            <App>
+                                {children}
+                                <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+                            </App>
+                        </NotificationContextProvider>
+                    </FormProvider>
+                </QueryClientProvider>
+
             </Provider>
         </BrowserRouter>
     )

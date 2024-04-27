@@ -1,19 +1,18 @@
 import { Input, Button } from "antd"
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import debounce from 'lodash/debounce';
 import DatePickers from "../CustomDatepicker";
 import { sub } from "date-fns";
 import SelectWrapper from "./Select";
 import AllInOne from "./AllInOne";
 import RangePicker from "./RangePicker";
-import { useNotificationContext } from "Context/notificationContext";
+import { NotificationContext } from "Context/notificationContext";
 
 const Miscellaneous = () => {
     const [searchValue, setSearchValue] = useState('')
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState('')
-    const { openNotification } = useNotificationContext()
-
+    const { openNotification } = useContext(NotificationContext)
     const debouncedSave = useCallback(
         debounce((nextVal) => console.log('inside debounce after 400', nextVal), 400),
         []
@@ -35,6 +34,11 @@ const Miscellaneous = () => {
     };
 
     const showNotification = () => { 
+        // notification.info({
+        //     message: 'hi',
+        //     description: "hiaf adad",
+        //     duration: 3
+        // })
         openNotification({
             message: 'hi',
             description: "hiaf adad",
@@ -43,7 +47,7 @@ const Miscellaneous = () => {
      }
 
     return (
-        <>
+        <App>
             <Input placeholder='SEARCH_RULE_NAME' onChange={handleSearch} value={searchValue} style={{ width: '180px' }} />
             {['startDate', 'endDate'].map((type, index) =>
                 <DatePickers
@@ -67,7 +71,7 @@ const Miscellaneous = () => {
                 <AllInOne />
             </div>
             <Button onClick={showNotification} data-testid="ant-notification">Open notification</Button>
-        </>
+        </App>
     )
 }
 

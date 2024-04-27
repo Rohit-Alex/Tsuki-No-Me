@@ -15,9 +15,7 @@ import StyledComponent from 'Components/styledComponent';
  import { Slide, ToastContainer } from 'react-toastify';
 import packageData from '../package.json'
 import { GIT_BRANCH } from 'git-info';
-import { useNotificationContext } from 'Context/notificationContext';
 const LearnCourses = () => <div>This is learn courses page <Outlet /></div>
-
 const CourseDetailsByID = () => {
   const {courseId} = useParams()
   return (
@@ -43,10 +41,8 @@ const Learn = () => {
 
 function App() {
   console.log(`Version: ${packageData.version} ---- BranchName: ${GIT_BRANCH}`)
-  const { contextHolder} = useNotificationContext()
   return (
       <div className="App">
-        {contextHolder}
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/navigation' element={<Navigation />} />
