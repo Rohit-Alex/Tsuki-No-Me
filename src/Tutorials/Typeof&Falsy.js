@@ -1,48 +1,48 @@
-typeof 37 
-typeof `template literal`
-typeof !!1;
-typeof /regex/
-typeof 3.14 
-typeof Boolean(1)
-typeof Math.LN2 
-typeof true
-typeof [1, 2, 4]
-typeof Symbol();
-typeof declaredButUndefinedVariable;
-typeof new Number(1)
-typeof undeclaredVariable;
-typeof "bla"; 
-typeof Infinity 
-typeof ""; 
-typeof NaN
-typeof Number("1") 
-typeof Number("shoe") 
-typeof "1";
-typeof new String("abc"); 
-typeof 42n
-typeof typeof 1 
-typeof String(1)
-typeof false 
-typeof Symbol("foo") 
-typeof undefined
-typeof { a: 1 }
-typeof new Date()
-typeof function () {}
-typeof class C {}
-typeof new Boolean(true)
-typeof Math.sin
+typeof 37; // => 'number'
+typeof `template literal`; // => 'string'
+typeof !!1; // => 'boolean'
+typeof /regex/; // => 'object'
+typeof 3.14; // => 'number'
+typeof Boolean(1); // => 'boolean'
+typeof Math.LN2; // => 'number'
+typeof true; // => 'boolean'
+typeof [1, 2, 4]; // => 'object'
+typeof Symbol(); // => 'symbol'
+typeof declaredButUndefinedVariable; // => 'undefined'
+typeof new Number(1); // => 'object'
+typeof undeclaredVariable; // => 'undefined'
+typeof "bla"; // => 'string'
+typeof Infinity; // => 'number'
+typeof ""; // => 'string'
+typeof NaN; // => 'number'
+typeof Number("1"); // => 'number'
+typeof Number("shoe"); // => 'number'
+typeof "1"; // => 'string'
+typeof new String("abc"); // => 'object'
+typeof 42n; // => 'bigint'
+typeof typeof 1; // => 'string'
+typeof String(1); // => 'string'
+typeof false; // => 'boolean'
+typeof Symbol("foo"); // => 'symbol'
+typeof undefined; // => 'undefined'
+typeof { a: 1 }; // => 'object'
+typeof new Date(); // => 'object'
+typeof function () {}; // => 'function'
+typeof class C {}; //; // => 'function' ***********
+typeof new Boolean(true); // => 'object'
+typeof Math.sin; // => 'function'
 
 
-if (true)
-if ({})
-if ([])
-if (42)
-if ("0")
-if ("false")
-if (new Date())
-if (-42)
-if (12n)
-if (3.14)
-if (-3.14)
-if (Infinity)
-if (-Infinity)
+if (true) // truthy
+if ({}) // truthy
+if ([]) // truthy
+if (42) // truthy
+if ("0") // truthy
+if ("false") // truthy
+if (new Date()) // truthy
+if (-42) // truthy
+if (12n) // truthy
+if (3.14) // truthy
+if (-3.14) // truthy
+if (Infinity) // truthy
+if (-Infinity) // truthy
