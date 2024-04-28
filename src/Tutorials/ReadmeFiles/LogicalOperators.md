@@ -4,19 +4,19 @@
 
 If x can be converted to true, returns x; else, returns y.
 ```
-0 || 1;
-1 || 2;
-true || true; 
-false || true; 
-true || false;
-false || 3 === 4; 
-"Cat" || "Dog"; 
-false || "Cat"; 
-"Cat" || false;
-[] || "dog" 
-"" || false; 
-false || "";
-'' || -0 || [1,2] || 'maan jaao' || {}
+0 || 1; => 1
+1 || 2; => 1
+true || true; => true 
+false || true; => true
+true || false; => true
+false || 3 === 4; => false
+"Cat" || "Dog"; => "Cat"
+false || "Cat"; => "Cat"
+"Cat" || false; => "Cat"
+[] || "dog" => []
+"" || false; => false
+false || ""; => ""
+'' || -0 || ['suno'] || 'maan jaao' || {}; => ['suno']
 ```
 
 #### 2. LOGICAL AND(&&)
@@ -24,28 +24,28 @@ false || "";
 
 Logical AND (&&) evaluates operands from left to right, returning immediately with the value of the first falsy operand it encounters; if all values are truthy, the value of the last operand is returned.
 ```
-0 && 1
-1 && 2
-true && true; 
-true && false; 
-false && true; 
-false && 3 === 4; 
-"Cat" && "Dog"; 
-false && "Cat"; 
-"Cat" && false;
-{} && "dog" 
-"" && false; 
-false && ""; 
-4 && 'kya kar rhi' && ['acha', 'padh', 'rhi'] && null && {nirali: 'namooni'}
+0 && 1 => 0
+1 && 2 => 2
+true && true; => true
+true && false; => false
+false && true; => false
+false && 3 === 4; => false
+"Cat" && "Dog"; => "Dog"
+false && "Cat"; => false
+"Cat" && false; => false
+[] && "dog" => "dog"
+"" && false; => ""
+false && ""; => false
+4 && 'kya kar rhi' && ['acha', 'padh', 'rhi'] && null && {nirali: 'namooni'} => null
 ```
 
 > **Note:**
  && operator has a **higher precedence** than the || operator, meaning the && operator is executed before the || operator (see operator precedence).
 
 ```
-true || false && false;
-true && (false || false);
-(2 === 3) || (4 < 0) && (1 === 1);
+true || false && false; true || (false && false) => true || false =>  true
+true && (false || false); => false
+(2 === 3) || (4 < 0) && (1 === 1); => false || false && true => false
 ```
 
 
