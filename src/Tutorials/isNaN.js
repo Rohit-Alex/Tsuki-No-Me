@@ -20,16 +20,16 @@ Number.isNaN(2)
 // Remember: Number.isNaN(NaN) => Only this gives true, rest all gives false
 
 
-isNaN("NaN");
-isNaN(undefined); 
-isNaN({});
-isNaN("blabla")
-isNaN(true);
-isNaN(null);
-isNaN("37");
-isNaN("37.37");
-isNaN("");
-isNaN(" ");
+isNaN("NaN"); // => true
+isNaN(undefined);  // => true
+isNaN({}); // => true
+isNaN("blabla") // => true
+isNaN(true); // => false
+isNaN(null); // => false
+isNaN("37"); // => false
+isNaN("37.37"); // => false
+isNaN(""); // => false
+isNaN(" "); // => false
 
 
 
