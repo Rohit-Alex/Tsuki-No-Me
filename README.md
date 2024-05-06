@@ -316,6 +316,8 @@ slice, substring, substr(deprecated, hence optional to know), includes, at, trim
     -> syntax
 [click to open](src/Tutorials/Object.js)
 
+### Iterator methods: 
+[click to open](src/Tutorials/Iterators.js)
 #### 27> Array methods:
 ```sh
     -> push() => add at last. Returns the length of new array. Modifies original array.

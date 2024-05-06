@@ -183,3 +183,33 @@ const getAns2= async() => {
 }
 
 getAns2() //ye bata ki, after how many seconds we will get the consoles
+
+const myPromise = () => new Promise((res) => setTimeout(() => res(5), 2000))
+
+
+const fun = async () => {
+  console.log('start of fun')
+    try {
+        const res = await myPromise()
+        console.log('after await', res)
+    } catch(err) {
+        console.log(err)
+    } finally {
+        console.log('inside finally')
+    }
+  	console.log('end of fun')
+}
+
+const fun2 = () => {
+  console.log('start of fun')
+  myPromise().then(res => {
+    console.log(res)
+  }).catch(err => {
+    console.log(err)
+  }).finally(() => {
+    console.log('inside finally')
+  })
+  console.log('end of fun')
+}
+
+fun()
