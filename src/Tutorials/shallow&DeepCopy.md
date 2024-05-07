@@ -52,22 +52,28 @@ console.log(people);
 ```
 ##### 2. JSON.parse(JSON.stringify())
 
+```
 const copyOfPeople2 = JSON.parse(JSON.stringify(people))
 copyOfPeople2[0].name = "Rohit"
 console.log(copyOfPeople2)
 console.log(people);
+```
 
 ##### 3. Lodash
+```
 const copyOfPeople3 = _.cloneDeep(people)
 copyOfPeople3[0].name = "Satakshi"
 console.log(copyOfPeople3);
 console.log(people);
+```
 
 ##### 4. Structure clone
+```
 const copyOfPeople3 = structuredClone(people)
 copyOfPeople3[0].name = "Richa"
 console.log(copyOfPeople3);
 console.log(people);
+```
 
 ##### Which to choose?
 
