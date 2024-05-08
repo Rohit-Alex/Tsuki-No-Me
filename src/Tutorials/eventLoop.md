@@ -70,8 +70,8 @@ setTimeout(()=>{
 }, -400)
 ```
 ##### Explain the call stack formation for e.g 4 i.e. How the functions are pushed and popped. Starts with GEC.
-![GEC](src/Assests/callStackAndEventLoop.png)
-![GEC Akshay saini](src/Assests/EventLoop1.jpeg)
+![GEC](/src/Assests/callStackAndEventLoop.png)
+![GEC Akshay saini](/src/Assests/EventLoop1.jpeg)
 ```
 setTimeout(() => {
     console.log("Excited for flight!")
