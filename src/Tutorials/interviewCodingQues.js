@@ -33,13 +33,15 @@ const compareNestedObject = (obj1, obj2) => {
         return false 
     }
     for (const key in obj1) {
-        if (!obj2.hasOwnProperty(key)) { // Note: why not obj2[key] !== undefined
+        if (obj2[key] === undefined) { // Note: why not obj2[key] !== undefined
             return false
         }
         const value1 = obj1[key]
         const value2 = obj2[key]
         if (isObject(obj1[key])) {
-            return compareNestedObject(value1, value2)
+             if (!compareNestedObject(value1, value2)) {
+                return false
+             }
         }
 
         if (value1 !== value2) {
@@ -210,3 +212,31 @@ console.log(compareArrays(arr1, arr2))
 // memoization
 // Overlapping intervals
 // Recursion question on arrays and objects
+
+/*
+    Question: If Object.freeze does shallow freeze then how can we make it deep freeze?
+
+    Ans: 
+        const deepFreeze = (obj) => {
+          for (const key in obj) {
+              if (typeof obj[key] === "object") deepFreeze(obj[key]);
+          }
+          return Object.freeze(obj);
+        };
+        deepFreeze(obj);
+*/
+
+function deepFlatten(array) {
+  const flatten = (arr, result) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (Array.isArray(arr[i])) {
+        flatten(arr[i], result);
+      } else {
+        result.push(arr[i]);
+      }
+    }
+    return result;
+  };
+
+  return flatten(array, []);
+}

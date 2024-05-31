@@ -12,6 +12,24 @@ iykykCopy[0] = 32
 console.log(iykyk); // [32, 28, 32]
 console.log(iykykCopy) // [32, 28, 32]
 ```
+
+```
+let ifkyk = [10, 20];
+const copy = ifkyk;
+ifkyk[0] = 40
+ifkyk = null
+console.log(copy)
+```
+
+```
+let person = { name: 'Lydia' };
+const members = [person];
+person = null;
+
+console.log(members);
+```
+###### Objects interact by reference when setting them equal to each other. When you assign a reference from one variable to another, you make a copy of that reference. (note that they don't have the same reference!)
+
 ##### Task: -> Make a copy of <u>*detailsObj</u>* and try to add a property name "age" with value 25
 ```
 const detailsObjCopy = detailsObj

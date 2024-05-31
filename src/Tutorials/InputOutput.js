@@ -306,7 +306,23 @@ console.log(b);
 
 Q.
 console.log('1' - - '1')
-console.log('1' + - '1'
+console.log('1' + - '1');
 
-Q.
+
 [...'Namooni'];
+
+
+function getInfo(member, year) {
+  member.name = 'Lydia';
+  year = '1998';
+}
+
+const person2 = { name: 'Sarah' };
+const birthYear = '1997';
+
+getInfo(person2, birthYear);
+
+console.log(person2, birthYear);
+
+
+//46, 51, 53, 54, 55, 58,61, 96, 102, 133

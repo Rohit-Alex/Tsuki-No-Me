@@ -97,6 +97,9 @@ arr1.__proto__.myFun = function () {
 }
 console.log(arr1.myFun());
 
+// We can delete properties from objects prototype chain as well.
+// e.g. delete arr1.__proto__.myFun
+
 /* 
     <------------- Pollyfills for various Method and adding it in their respective prototype ------------>
 

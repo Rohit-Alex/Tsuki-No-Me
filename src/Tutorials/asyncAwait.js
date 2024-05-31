@@ -213,3 +213,40 @@ const fun2 = () => {
 }
 
 fun()
+
+// <------------Ques------------>
+const myPromise = () => Promise.resolve('I have resolved!');
+
+function firstFunction() {
+  myPromise().then(res => console.log(res));
+  console.log('second');
+}
+
+async function secondFunction() {
+  console.log(await myPromise());
+  console.log('second');
+}
+
+firstFunction();
+secondFunction();
+// <-----------------End--------->
+
+// <------------Ques------------>
+const myPromise = Promise.resolve(Promise.resolve('Promise'));
+
+function funcOne() {
+  setTimeout(() => console.log('Timeout 1!'), 0);
+  myPromise.then(res => res).then(res => console.log(`${res} 1!`));
+  console.log('Last line 1!');
+}
+
+async function funcTwo() {
+  const res = await myPromise;
+  console.log(`${res} 2!`)
+  setTimeout(() => console.log('Timeout 2!'), 0);
+  console.log('Last line 2!');
+}
+
+funcOne();
+funcTwo();
+// <-----------------End--------->

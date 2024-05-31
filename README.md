@@ -426,6 +426,14 @@ Then it does remove it but leaves undefined at that place. So size still remains
     console.log(arr[1]); // undefined 
     console.log(arr); // ['Paisa', ,'Paisa'] 
 
+const name = 'Lydia';
+age = 21;
+
+console.log(delete name); // false
+console.log(delete age); // true. here we are deleting window.age
+
+Note: variables declared with the var, const, or let keywords cannot be deleted using the delete operator.
+
 #### 29> sort method on array and strings.
     -> Math.random()
     -> Math.ceil()
