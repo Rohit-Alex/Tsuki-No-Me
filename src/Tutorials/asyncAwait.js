@@ -184,6 +184,8 @@ const getAns2= async() => {
 
 getAns2() //ye bata ki, after how many seconds we will get the consoles
 
+// <------------Ques------------>
+
 const myPromise = () => new Promise((res) => setTimeout(() => res(5), 2000))
 
 
@@ -213,17 +215,21 @@ const fun2 = () => {
 }
 
 fun()
+// <-----------------End--------->
+
 
 // <------------Ques------------>
-const myPromise = () => Promise.resolve('I have resolved!');
+
+const myPromise1 = () => Promise.resolve('I have resolved!');
+const myPromise2 = () => Promise.resolve('I have resolved!');
 
 function firstFunction() {
-  myPromise().then(res => console.log(res));
+  myPromise1().then(res => console.log(res));
   console.log('second');
 }
 
 async function secondFunction() {
-  console.log(await myPromise());
+  console.log(await myPromise2());
   console.log('second');
 }
 
