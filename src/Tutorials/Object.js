@@ -102,8 +102,8 @@ console.log(Reflect.has(checkKeyInObj, 'namooni')) // true
 console.log(checkKeyInObj.hasOwnProperty('namooni')) // true
 
 console.log('toString' in checkKeyInObj) // true As toString is an inbuilt method present in Object
-console.log(Reflect.has(checkKeyInObj, 'toString')) // false
-console.log(checkKeyInObj.hasOwnProperty('toString')) // true
+console.log(Reflect.has(checkKeyInObj, 'toString')) // true
+console.log(checkKeyInObj.hasOwnProperty('toString')) // false
 
 
 
