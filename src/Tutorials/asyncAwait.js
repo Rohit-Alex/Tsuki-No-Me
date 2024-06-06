@@ -77,21 +77,7 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
     console.log(await promise)
     console.log("2 lakh bhej!")
     console.log('Ticket kara de')
-
-    /* 
-        Output bata CASE: 3:
-
-        const promise = Promise.resolve('Sharam nhi aati.')
-        promise.then(msg => console.log(msg))
-        console.log("2 lakh bhej!")
-        console.log('Ticket kara de');
-
-        (async() => {
-        console.log(await promise)
-        console.log("2 lakh bhej!")
-        console.log('Ticket kara de')
-        })()
-    */
+})()
 
     // Note: In short jnha jnha .then() hai wnha await use kar lo bus. Let's try some examples
 
@@ -220,12 +206,12 @@ fun()
 
 // <------------Ques------------>
 
-const myPromise1 = () => Promise.resolve('I have resolved!');
-const myPromise2 = () => Promise.resolve('I have resolved!');
+const myPromise1 = () => Promise.resolve('I have resolved1!');
+const myPromise2 = () => Promise.resolve('I have resolved2!');
 
 function firstFunction() {
   myPromise1().then(res => console.log(res));
-  console.log('second');
+  console.log('first');
 }
 
 async function secondFunction() {
