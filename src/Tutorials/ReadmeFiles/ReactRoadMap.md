@@ -59,3 +59,7 @@
 [cars 24 interview](https://codesandbox.io/p/devbox/cars-24-y82lgm)
 
 [js based dsa questions asked on interviews](https://codesandbox.io/p/sandbox/netomi-interview-fxmngd?file=%2Fsrc%2Findex.js)
+
+- Intersection Observer
+- Resize Observer
+- different hooks example

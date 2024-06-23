@@ -69,7 +69,7 @@
             };
             c.hi(); // new obj c called function
         };
-        b(); // ran by a window.a(b())
+        b(); // ran by a window.a()b()
     };
     a(); // called by window
     // a Window {…}
@@ -238,3 +238,4 @@ The above code works but it can still be simplified. 👆
     d.say()(); // d {name: 'jay', say()...}
     // arrow function does not rebind this and inherits this from parent
 ```
+https://dev.to/liaowow/take-this-quiz-understand-how-this-works-in-javascript-44dj

@@ -82,3 +82,14 @@ POSITION:
 }
 
 <-----OVERLAY--------->
+
+
+- animation on display none to block
+- animation on image load
+- grid-template-columns(200px fit-content(40ch), 1fr)
+- text-wrap: pretty / balanced
+- white-space
+- image property: {object-fit: cover, object-position: center, inline-size: 100%, block-size: 100%}
+- scroll-snape
+- border-image
+- accent-color
