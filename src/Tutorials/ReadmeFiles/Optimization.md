@@ -138,4 +138,8 @@ html {
 
 
 
+1> using lazy load of images
+2> using virtualized list for infinite or long lists
+3> using react hooks like useMemo, useCallback, memo, useDeffered, useTransition
+4> Making use of throttle and debouncing methods
 

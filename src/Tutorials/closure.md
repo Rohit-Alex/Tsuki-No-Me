@@ -9,9 +9,9 @@
 1. 
 ```
     function outer () {
-        const nirali = 'hi'
+        const Amane = 'hi'
         function inner() {
-            console.log(`Log: ${nirali}`)
+            console.log(`Log: ${Amane}`)
         }
         inner()
     }
@@ -22,9 +22,9 @@
 2. 
 ```
     function outer () {
-        const nirali = 'hi'
+        const Amane = 'hi'
         return function inner() {
-            console.log(`Log: ${nirali}`)
+            console.log(`Log: ${Amane}`)
         }
     }
     const returnedFn = outer()
@@ -37,25 +37,25 @@
 3. 
 ```
     function outer () {
-        let nirali = 'bye'
+        let Amane = 'bye'
         function inner() {
-            console.log(`Log: Nirali ${nirali}`)
+            console.log(`Log: Amane ${Amane}`)
         }
-        nirali = 'hi again!'
+        Amane = 'hi again!'
         return inner
     }
 
     outer()()
-   // Log: Nirali hi again!
+   // Log: Amane hi again!
 ```
 
 4.
 ```
     function outer () {
         function inner() {
-            console.log(`Log: ${nirali}`)
+            console.log(`Log: ${Amane}`)
         }
-        const nirali = 'hi'
+        const Amane = 'hi'
         return inner
     }
     const returnVal = outer()

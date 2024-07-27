@@ -152,8 +152,8 @@
 10. 
 ```
 const obj = {
-    name: 'Nirali',
-    surname: 'Bhalodiya',
+    name: 'Amane',
+    surname: 'Ubuyashiki',
     age: 25,
     printName: function() {
         console.log(`My Name: ${this.name} and age: ${this.age}`)

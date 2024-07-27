@@ -1,7 +1,7 @@
 // Syntactical sugar for using promises instead of .then()
 
 const getName = async () => {
-    return 'MG'
+    return 'Eren'
 }
 
 console.log(getName())
@@ -82,13 +82,13 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
     // Note: In short jnha jnha .then() hai wnha await use kar lo bus. Let's try some examples
 
 
-    fetch('https://demo3926231.mockable.io/bhalodiya/nirali')
+    fetch('https://demo3926231.mockable.io/Ubuyashiki/Amane')
         .then(res => res.json())
         .then(res => console.log('Final response in then():', res))
         .catch(err => console.log('Error while using then():', err))
         .finally(() => console.log("End of fetch using then(). Saaf safai karo ab"))
 
-    const response = await fetch('https://demo3926231.mockable.io/bhalodiya/nirali');
+    const response = await fetch('https://demo3926231.mockable.io/Ubuyashiki/Amane');
     const finalResponse = await response.json();
     console.log('Final response in await:', finalResponse);
 
@@ -103,7 +103,7 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
         * <------ try catch finally ------>
     */
     try {
-        const response = await fetch('https://demo3926231.mockable.io/bhalodiya/nirali');
+        const response = await fetch('https://demo3926231.mockable.io/Ubuyashiki/Amane');
         const finalResponse = await response.json();
         console.log('Final response in await & try:', finalResponse);
     } catch (err) {
@@ -242,3 +242,34 @@ async function funcTwo() {
 funcOne();
 funcTwo();
 // <-----------------End--------->
+
+
+const promise = new Promise((res, rej) => {
+    setTimeout(() => {
+        res(5)
+    },200)
+})
+
+const cbFun = () => {
+   promise.then(res => {
+        console.log('res 2', res)
+    }).catch(err => {
+        console.error('error')
+    }).finally(() => {
+       console.log('in finally nested') 
+    }) 
+}
+
+const fun = () => {
+    promise.then(res => {
+        cbFun()
+        console.log('res 1', res)
+        
+    }).catch(err => {
+        console.error('error', err)
+    }).finally(() => {
+       console.log('in finally') 
+    }) 
+}
+
+fun()

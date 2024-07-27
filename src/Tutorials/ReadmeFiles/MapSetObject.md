@@ -40,8 +40,8 @@ Both allow us to store collection of data in key-value pair. However, there are 
     - Maps can have key of any data type. Unlike objects, keys are not converted to strings.
 ```
     e.g.
-        const user1 = { name: "MG" };
-        const user2 = { name: "Nirali" };
+        const user1 = { name: "Eren" };
+        const user2 = { name: "Amane" };
         const obj = {}; 
         obj[user1] = 234; 
         obj[user2] = 123;

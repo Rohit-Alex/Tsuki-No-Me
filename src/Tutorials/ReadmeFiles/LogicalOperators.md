@@ -36,7 +36,7 @@ false && "Cat"; => false
 [] && "dog" => "dog"
 "" && false; => ""
 false && ""; => false
-4 && 'kya kar rhi' && ['acha', 'padh', 'rhi'] && null && {nirali: 'namooni'} => null
+4 && 'kya kar rhi' && ['acha', 'padh', 'rhi'] && null && {Amane: 'namooni'} => null
 ```
 
 > **Note:**

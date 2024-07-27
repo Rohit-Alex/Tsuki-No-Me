@@ -114,7 +114,7 @@ console.log(p);
 
 // 14
 console.log('Glow' > 'Glee');
-console.log('Nirali' > 'nirali');
+console.log('Amane' > 'Amane');
 
 // 15
 console.log('' || -0 || 'Yaad karegi?' || [1,2] || {})
@@ -226,7 +226,7 @@ console.log(person['.25e2']);
 Q.
 const arr = ['my', 'name', 'is', 'mg']
 console.log(arr.pop())
-console.log(arr.push('Nirali'))
+console.log(arr.push('Amane'))
 console.log(arr.unshift('Hi', 'there'))
 console.log(arr.shift())
 
@@ -297,9 +297,9 @@ b = 20;
 console.log(a);
 console.log(b);
 
-var a = 'Nirali';
+var a = 'Amane';
 var b = a;
-b = 'Bhalodiya';
+b = 'Ubuyashiki';
 
 console.log(a);
 console.log(b);
@@ -325,4 +325,4 @@ getInfo(person2, birthYear);
 console.log(person2, birthYear);
 
 
-//46, 51, 53, 54, 55, 58,61, 96, 102, 133
+//46, 51, 53, 54, 55, 58, 61, 96, 102, 133

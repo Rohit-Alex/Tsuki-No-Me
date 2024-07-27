@@ -34,12 +34,12 @@
 // 1
 console.log(frndo);
 var frndo;
-frndo = 'nirali';
+frndo = 'Amane';
 console.log(frndo);
 
 // 2
 console.log(frndo1);
-var frndo1 = 'nirali';
+var frndo1 = 'Amane';
 
 // 3
 console.log(welcome)
@@ -50,11 +50,11 @@ function welcome() {
 
 // 4
 console.log(frndo2)
-let frndo2 = 'nirali'; 
+let frndo2 = 'Amane'; 
 
 // 5
 console.log(frndo3)
-const frndo3 = 'nirali';
+const frndo3 = 'Amane';
 
 // 6
 console.log(welcome)

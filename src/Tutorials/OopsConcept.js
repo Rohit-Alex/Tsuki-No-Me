@@ -131,7 +131,7 @@ console.log(groom4.getAfterMarraigeSchedule())
     ii> The important difference of class fields is that they are set on individual objects, not User.prototype:
 
     e.g. Add class field 👇 at line 95
-        bride = 'Nirali' // Note: Can't write const bride = 'Nirali'
+        bride = 'Amane' // Note: Can't write const bride = 'Amane'
 
 
 */

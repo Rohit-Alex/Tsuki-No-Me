@@ -1,7 +1,7 @@
 #### <<<<---------- Optional Chaining ----------->>>
 ```
 const knowMeObj = {
-    name: 'Nirali Bhalodiya',
+    name: 'Amane Ubuyashiki',
     nickName: 'Namooni',
     address: {
         city: 'Vadodara',
@@ -34,7 +34,7 @@ By using optional chaining, if the object accessed or function called using this
  The ideal object which would give all the expected answer is 
  ```
  const knowMeObj = {
-    name: 'Nirali Bhalodiya',
+    name: 'Amane Ubuyashiki',
     nickName: 'Namooni',
     address: {
         city: 'Vadodara',
@@ -75,7 +75,7 @@ console.log(...num1)
 const personality = ['Beautiful', 'Addictive', 'hot-headed']
 console.log(...personality)
 
-const str = 'Nirali'
+const str = 'Amane'
 console.log(...str)
 console.log([...str])
 
@@ -138,7 +138,7 @@ console.log(restWishes)
 // Question: Swap two numbers using destructring
 
 const bioData = {
-    name: 'Nirali Bhalodiya',
+    name: 'Amane Ubuyashiki',
     age: 25,
     dahejDo: 3000000,
     address: {

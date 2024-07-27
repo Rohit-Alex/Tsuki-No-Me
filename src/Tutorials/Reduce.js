@@ -55,7 +55,7 @@ console.log(sumWithInitial);
 
 const peopleObj = [
   {
-    name: "Nirali",
+    name: "Amane",
     age: 25,
   },
   {
@@ -63,7 +63,7 @@ const peopleObj = [
     age: 17,
   },
   {
-    name: "MG",
+    name: "Eren",
     age: "25",
   },
   {
@@ -75,11 +75,11 @@ const peopleObj = [
 /*
   const op = {
     25: [ {
-      name: "Nirali",
+      name: "Amane",
     age: 25,
     }, 
       {
-    name: "MG",
+    name: "Eren",
     color: "25",
   },
   ], 24: [ { name: 'rohit' ,age: 24}], 17: [{ name: 'prateek', age: 17 }]

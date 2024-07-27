@@ -72,11 +72,11 @@ const objExp = {
   interest: ['Get', 'rich'], 
   plan: {
     planA: 'Get rich',
-    planB: "Marry Nirali's fantisied rich person"
+    planB: "Marry Amane's fantisied rich person"
   },  
   carPrice: 6*1e7 
 }
-JSON.stringify(objExp) // '{"goal":"Get rich","interest":["Get","rich"],"plan":{"planA":"Get rich","planB":"Marry Nirali's fantisied rich person"},"carPrice":60000000}'
+JSON.stringify(objExp) // '{"goal":"Get rich","interest":["Get","rich"],"plan":{"planA":"Get rich","planB":"Marry Amane's fantisied rich person"},"carPrice":60000000}'
 
 
 // Using addition arguments of JSON.stringify
@@ -98,14 +98,14 @@ JSON.parse(null) // null
 JSON.parse(undefined) // invalid JSON
 JSON.parse('false') // false
 JSON.parse('true') // true
-JSON.parse('MG') // invalid JSON
+JSON.parse('Eren') // invalid JSON
 JSON.parse('[24, 1, "DOB"]'); // [24, 1, 'DOB']
-JSON.parse('{"name": "Nirali", "age": 25}') // { name: 'Nirali', age: 25}
+JSON.parse('{"name": "Amane", "age": 25}') // { name: 'Amane', age: 25}
 
 // STORING & ACCESSING from Application storage
 
 sessionStorage.setItem('numberKey', 24)
-sessionStorage.setItem('stringKey', 'Nirali')
+sessionStorage.setItem('stringKey', 'Amane')
 sessionStorage.setItem('booleanKey', false)
 sessionStorage.setItem('arrayKey', ['no', 9, 'know'])
 sessionStorage.setItem('objectKey', {key: 'some value'})

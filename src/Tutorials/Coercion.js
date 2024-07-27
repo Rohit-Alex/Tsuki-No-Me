@@ -32,7 +32,7 @@ Explicit Conversion: Number('5') => 5
 5> loose equality operator ==, !=
 
 Note that == does not trigger numeric conversion when both operands are strings.
-'nirali' === 'namooni' => false (this doesn't trigger numeric conversion)
+'Amane' === 'namooni' => false (this doesn't trigger numeric conversion)
 
 Number(null)          // 0
 Number(undefined)     // NaN

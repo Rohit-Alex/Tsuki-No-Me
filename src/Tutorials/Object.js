@@ -16,9 +16,9 @@ const dummyObj = {
   number: 2,
   string: 'Hey there!',
   boolean: true,
-  array: [2, 4, 1, 'nirali'],
+  array: [2, 4, 1, 'Amane'],
   myName() {
-    console.log("Nirali here.")
+    console.log("Amane here.")
   },
   obj: {
     nestedKey: 1
@@ -27,8 +27,8 @@ const dummyObj = {
 
 
 const obj = {
-    name: 'Nirali',
-    surname: 'Bhalodiya',
+    name: 'Amane',
+    surname: 'Ubuyashiki',
     address: {
         city: 'Vadodara'
     },
@@ -108,8 +108,8 @@ console.log(checkKeyInObj.hasOwnProperty('toString')) // false
 
 
 const arr1 = [
-  ["name", "Nirali"],
-  ["surname", "Bhalodiya"],
+  ["name", "Amane"],
+  ["surname", "Ubuyashiki"],
   ["bf", "xyz"],
 ];
 

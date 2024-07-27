@@ -18,7 +18,7 @@
     6> Array -> Array.prototype -> Object.prototype -> null
     7> Object -> Object.prototype -> null
 */
-    const niraliLife = {
+    const AmaneLife = {
         fulltime: 'thrill'
     };
     const rohitLife = {
@@ -29,11 +29,11 @@
         partTime: 'Annoying rohit'
     };
 
-    console.log(niraliLife) // See the [[Prototype]] value in browser console
-    console.log(niraliLife.partTime) // undefined
-    niraliLife.__proto__ = protoObj; // Added protoObj to its Prototype
-    console.log(niraliLife) // Now, See the [[Prototype]] value in browser console
-    console.log(niraliLife.partTime) // 'Annoying rohit'
+    console.log(AmaneLife) // See the [[Prototype]] value in browser console
+    console.log(AmaneLife.partTime) // undefined
+    AmaneLife.__proto__ = protoObj; // Added protoObj to its Prototype
+    console.log(AmaneLife) // Now, See the [[Prototype]] value in browser console
+    console.log(AmaneLife.partTime) // 'Annoying rohit'
     /* 
         But now suppose I want to add "partTime" key to rohitLife as well.
 
@@ -50,8 +50,8 @@
    // Replace line no. 28 to 30 with
     Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole, not to any specific object) Protype.
    // Note the difference b/w previous [[Prototype]] property (using __proto__) and now (using Prototype)
-    console.log(niraliLife)
-    console.log(niraliLife.partTime) // 'Annoying rohit'
+    console.log(AmaneLife)
+    console.log(AmaneLife.partTime) // 'Annoying rohit'
     console.log(rohitLife.partTime)  // 'Annoying rohit'
 
     /*
@@ -60,11 +60,11 @@
             * __proto__ is generally applied when we need to add to individual array/object/function. 
             * Prototype syntax is used to add to all types of array/object/function
         ii> 
-            niraliLife.__proto__ = protoObj; 
+            AmaneLife.__proto__ = protoObj; 
             This ☝️ line is equivalent to obj.age = 24. Relate kar paa rhi na.
-            means niraliLife is now:-> 
+            means AmaneLife is now:-> 
 
-                const niraliLife = {
+                const AmaneLife = {
                     fulltime: 'thrill',
                     __proto__: {
                         partTime: 'Annoying rohit'

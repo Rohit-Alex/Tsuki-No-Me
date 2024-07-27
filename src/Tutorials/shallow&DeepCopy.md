@@ -1,7 +1,7 @@
 ```
 const iykyk = [30, 28, 32];
 const detailsObj = {
-    fname: 'Nirali'
+    fname: 'Amane'
 }
 ```
 #### Problem
@@ -43,7 +43,7 @@ From above two examples, we see that even if we are modifying the copied variabl
 const detailsObjCopy = detailsObj
 ```
 Then basically we are accessing the same variable just by 2 different name.
-Simple bhasa mein bole toh, hum nirali ko kuch kahe ya mg ko, bol toh tumhi ko rhe na. Bus 2 alag alag naam kar diye. Orginal name aur nickname type.
+Simple bhasa mein bole toh, hum Amane ko kuch kahe ya mg ko, bol toh tumhi ko rhe na. Bus 2 alag alag naam kar diye. Orginal name aur nickname type.
 #### SOLUTION
 ##### 1. Spread operator 
 ###### works for simple arrays (array of primitive type) and simple object with values of primitive types. It creates a shallow copy.
@@ -55,8 +55,8 @@ console.log(iykyk); // [30,28,32]
 
 const detailsObjCopy = { ...detailsObj }
 detailsObjCopy.age = 25
-console.log(detailsObjCopy) // {fname: 'Nirali', age: 25 }
-console.log(detailsObj) // {fname: 'Nirali' }
+console.log(detailsObjCopy) // {fname: 'Amane', age: 25 }
+console.log(detailsObj) // {fname: 'Amane' }
 ```
 ##### spread operator does not work in deep copy
 ```

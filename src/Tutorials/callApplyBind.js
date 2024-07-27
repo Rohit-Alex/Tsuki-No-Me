@@ -18,8 +18,8 @@ const obj = {
 }
 
 const obj1 = {
-    firstName: 'Nirali',
-    surname: 'Bhalodiya',
+    firstName: 'Amane',
+    surname: 'Ubuyashiki',
     age: 24
 }
 

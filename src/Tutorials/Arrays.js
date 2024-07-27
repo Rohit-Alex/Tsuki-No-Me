@@ -136,7 +136,7 @@ const availableOptions = [
     i> isEmployed
     ii> isEmployed and surname with patel. dono satisfy ho
     iii> salary more than 2500000 or surname with patel
-    iv> only those whose surname is either patel or bhalodiya
+    iv> only those whose surname is either patel or Ubuyashiki
     iv> anyone from Australia
     v> Create a new array such that each item only contains:
         -> name, country, surname, salary
@@ -150,8 +150,8 @@ const ans2 = availableOptions.filter(options => options.isEmployed && options.su
 const ans3 = availableOptions.filter(options => options.salary > 2500000 || options.surname === 'patel')
 const ans4 = availableOptions.filter(options => options.salary > 2500000 || options.surname === 'patel')
 const ans5 = availableOptions.filter(options => {
-  // return options.surname === 'patel' || options.surname === 'bhalodiya'
-  return ['patel', 'bhalodiya'].includes(options.surname) // one liner
+  // return options.surname === 'patel' || options.surname === 'Ubuyashiki'
+  return ['patel', 'Ubuyashiki'].includes(options.surname) // one liner
 })
 const ans6 = availableOptions.map(options => ({ name: options.name, country: options.location.country, surname: options.surname, salary: options.salary}))
 const ans7 = availableOptions.find(option => option.location.state === 'Gujarat').name

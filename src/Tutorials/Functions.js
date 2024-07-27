@@ -38,11 +38,11 @@ function showMessage() {
 showMessage();
 
 //Default arguments
-function getNiraliSkill(skill = "kanjoos") {
-  console.log("Nirali's skill " + skill );
+function getAmaneSkill(skill = "kanjoos") {
+  console.log("Amane's skill " + skill );
 }
 
-getNiraliSkill();
+getAmaneSkill();
 
 
 // Also tell her about the length method on functions
@@ -92,8 +92,8 @@ tuSetHogi()
         callbackFn(name, someCalc)
     }
 
-    takeDecision('Nirali', forgetBy)
-    takeDecision('Nirali', beAsItIs)
+    takeDecision('Amane', forgetBy)
+    takeDecision('Amane', beAsItIs)
 
     // Note: Here takeDescision function is just calling the function passed to it.
     //       Different functions are passed as the need may be and takeDecision just executes it
@@ -165,7 +165,7 @@ const returnNumber = () => 2
 const returnString = () => 'Missing me? 🫤'
 const returnBoolean = () => false
 const returnArray = () => ['Kya kya', 'example de rha 😠']
-const returnObj = () => ({ husnKiPari: 'Nirali' })
+const returnObj = () => ({ husnKiPari: 'Amane' })
 
 /*
     Length of a function

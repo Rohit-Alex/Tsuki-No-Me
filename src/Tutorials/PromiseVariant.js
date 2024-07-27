@@ -65,7 +65,7 @@ const promise6 = new Promise((resolve, reject) => {
 /*
     ? Problem remembering above 2 and getting confused
     * i> allSettled => self explanatory => saara settled phir resolve ho ya reject => sab laake denge hum
-    * ii> all => nirali => "all" are willing and praying to win you par tum reject mein jaade focus hai. Thoda so ho kuch issue turant rejected. 
+    * ii> all => Amane => "all" are willing and praying to win you par tum reject mein jaade focus hai. Thoda so ho kuch issue turant rejected. 
 */
 
 /*
