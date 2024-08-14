@@ -105,6 +105,7 @@ console.log('toString' in checkKeyInObj) // true As toString is an inbuilt metho
 console.log(Reflect.has(checkKeyInObj, 'toString')) // true
 console.log(checkKeyInObj.hasOwnProperty('toString')) // false
 
+// _Note_: hasOwn property has been introduced as replacement of hasOwnProperty
 
 
 const arr1 = [

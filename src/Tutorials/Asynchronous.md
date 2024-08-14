@@ -196,7 +196,7 @@ Ab soch aisa har function ke liye karna ho toh kitna complicated ho jaayega. Sam
     
     2. Reject
         - koi reason de do ki, jaise mera tabiyat kharab hai toh phir baad mein bata dungi (Aise ye mat karna)
-        - Result iss moment pe -> { state: 'rejected', result: joExcuseHoTumhara }
+        - Result iss moment pe -> { state: 'rejected', reason: joExcuseHoTumhara }
         - Ye promise settle ho gya and you mocked it i.e. "rejected" / un-fulfilled your promise.  
 
             

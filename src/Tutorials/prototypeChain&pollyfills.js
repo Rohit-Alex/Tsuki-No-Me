@@ -146,6 +146,32 @@ const sum = [1,5,7,2,9].myReduce((acc, currVal, currIndex, ar) => {
 }, 0);
 console.log(sum);
 
+// Flat method
+
+const flatArray = (ip, currLevel, targetLevel) => {
+  let op = [];
+  const length = ip.length;
+  for (let i = 0; i < length; i++) {
+    const currEle = ip[i];
+    if (typeof currEle === "object" && Array.isArray(currEle)) {
+      currLevel++;
+      if (targetLevel >= currLevel) {
+        op = op.concat(flatArray(currEle, currLevel, targetLevel));
+      } else {
+        op.push(currEle);
+      }
+    } else {
+      op.push(currEle);
+    }
+  }
+  return op;
+};
+
+Array.prototype.myFlat = function (level) {
+  const iteratingArr = this;
+  return flatArray(iteratingArr, 0, level);
+};
+
 //Call Method
 Function.prototype.myCall = function(context, ...args) {
     const fun = this

@@ -17,12 +17,12 @@ const promise3 = new Promise((resolve, reject) => {
 });
 
 Promise.all([promise1, promise2, promise3]).then((values) => {
-  console.log(values);
+  console.log(values); // ['Bangalore', 700000, 'macbook pro']
 });
 
 (async () => {
     const values = await Promise.all([promise1, promise2, promise3])
-    console.log(values)
+    console.log(values) // ['Bangalore', 700000, 'macbook pro']
 })();
 
 // e.g. 2
@@ -31,7 +31,7 @@ Promise.all([promise1, promise2, promise3]).then((values) => {
         const values = await Promise.all([24, Promise.resolve('Your grace'), Promise.reject('Namooni')]);
         console.log(values)
     } catch(err) {
-        console.log("Error: ", err)
+        console.log("Error: ", err) //Error:  Namooni
     }
 })()
 
@@ -56,7 +56,22 @@ const promise6 = new Promise((resolve, reject) => {
 (async () => {
     try {
         const values = await Promise.allSettled([promise4, promise5, promise6])
-        console.log(values)
+        console.log(values) /* 
+        [
+            {
+                "status": "fulfilled",
+                "value": "Gurgaon"
+            },
+            {
+                "status": "fulfilled",
+                "value": 600000
+            },
+            {
+                "status": "rejected",
+                "reason": "No laptop"
+            }
+        ] 
+    */
     } catch (err) {
         // never gets to this line
     }
@@ -65,7 +80,7 @@ const promise6 = new Promise((resolve, reject) => {
 /*
     ? Problem remembering above 2 and getting confused
     * i> allSettled => self explanatory => saara settled phir resolve ho ya reject => sab laake denge hum
-    * ii> all => Amane => "all" are willing and praying to win you par tum reject mein jaade focus hai. Thoda so ho kuch issue turant rejected. 
+    * ii> all => isko sab chahiye, paisa, buddhi, liabilities, ek bhi nhi mila toh nhi milega satifaction 
 */
 
 /*
@@ -75,8 +90,6 @@ const promise6 = new Promise((resolve, reject) => {
     *   -> Returns a single Promise that fulfills (resolve) with the "value 1st fulfilled (resolved) promise".
     *   -> rejects when all of the input's promises reject, with an AggregateError containing an array of rejection reasons.
 
-        e.g. Jaise normal ladkiya mainly bihar ki => jo sabse pehla successful(govt. job) waala aa jaaye usko consider kar lenge.
-             Agar saare failure ladko (berojgaar) aa rhe toh bahana deke chor denge 
 */
 
 // e.g. 1
@@ -91,7 +104,7 @@ const quickPromise = new Promise((resolve, reject) => {
 (async () => {
     try{
         const value = await Promise.any([errPromise, slowPromise, quickPromise])
-        console.log(value)
+        console.log(value) // Done quickly
     } catch (err) {
         console.log('Error: ', err)
     }
@@ -104,7 +117,7 @@ const peedhaPrms = new Promise((resolve, reject) => {
 (async () => {
     try{
         const value = await Promise.any([Promise.reject('Dukh'), Promise.reject('Dard'), peedhaPrms])
-        console.log(value)
+        console.log(value) // Error:  AggregateError: All promises were rejected
     } catch (err) {
         console.log('Error: ', err)
     }

@@ -61,6 +61,8 @@ const curriedSum1 = curry(sum1);
 console.log(curriedSum1(1)(2)); // 3
 ```
 
+<-----------------Start---------------------->
+
 **Task:** Make a function which takes any no of arguments i.e. all or one by one or any combination of arguments can be passed to it.
 
 ```
@@ -76,6 +78,17 @@ function curryAdvanced(func) {
     }
 }
 
+const curryAdvanced = (func) => {
+    const curried = (...args1) => {
+        if (args1.length >= func.length) {
+            return func.apply(this, args1);
+        } else {
+            return (...args2) => curried.apply(this, args1.concat(args2));
+        }
+    };
+    return curried;
+}
+
 function product(a, b, c) {
   return a * b * c;
 }
@@ -86,3 +99,81 @@ console.log(curriedSum(1, 2, 3)); // 6
 console.log(curriedSum(1)(2,3)); // 6
 console.log(curriedSum(1)(2)(3)); // 6
 ```
+<-----------------End---------------------->
+
+
+
+<-----------------Start---------------------->
+
+function curryOp(...args) {
+    // get the summ of all arguments passed in given function.
+    const sumArgs = args.reduce((acc, val) => acc + val, 0);
+    
+    // Return a function that accepts more arguments
+    return function (...nextArgs) {
+        // If no arguments are provided, return the sum
+        if (nextArgs.length === 0) {
+            return sumArgs;
+        }
+        // Otherwise, recursively accumulate the sum with new arguments
+        const innerArgsSum = nextArgs.reduce((acc, val) => acc + val, 0)
+        return curryOp(sumArgs + innerArgsSum);
+    };
+}
+
+                    OR
+
+function curryOp(...initialArgs) {
+    let args = [...initialArgs];
+
+    return function curried(...nextArgs) {
+        if (nextArgs.length === 0) {
+            return args.reduce((acc, num) => acc + num, 0);
+        }
+        args = [...args, ...nextArgs];
+        return curried;
+    }
+}
+
+
+console.log(curryOp(10)(11)(1, 2, 34)(12)()); // Output: 70
+
+<-----------------End---------------------->
+
+<----------------Start--------------------->
+
+function curryOp(...args) {
+    // get the summ of all arguments passed in given function.
+    const sumArgs = args.reduce((acc, val) => acc + val, 0);
+
+    // Return a new function that accumulates the sum
+    const next = (...nextArgs) => {
+        if (nextArgs.length === 0) {
+            return sumArgs;
+        }
+        const nextArgsSum = nextArgs.reduce((acc, val) => acc + val, 0)
+        return curryOp(sumArgs + nextArgsSum);
+    };
+
+    // Convert the function to a primitive value when it is finally returned
+    next.valueOf = () => sumArgs;
+
+    return next;
+}
+
+                    OR
+
+function curryOp(...initialArgs) {
+    let args = [...initialArgs];
+    function curried(...newArgs) {
+        args = [...args, ...newArgs];
+        return curried;
+    }
+    curried.toString = () => args.reduce((acc, num) => acc + num, 0);
+    return curried;
+}
+
+// Example usage:
+console.log(+curryOp(10)(11)(1, 2, 34)(12)); // Output: 70
+
+<-----------------End---------------------->

@@ -12,7 +12,7 @@
 - Rendering (server/client)
 - Data fetching
 - Styling (css modules, tailwind, sass)
-- Optimization (font. images and scripts)
+- Optimization (font, images and scripts)
 - Dev and prod build system
 
 #### Component Hierarchy

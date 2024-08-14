@@ -88,8 +88,31 @@ const groom2 = {
 */
 
 /*
+    ! Solution using constructor function
+*/
+
+function groom(name, age, hobbies, height, occupation, salary) {
+    this.name = name;
+    this.age = age;
+    this.hobbies = hobbies;
+    this.height = height;
+    this.occupation = occupation;
+    this.salary = salary;
+    this.getIntro = function() {
+        return `Meet ${this.name}, a ${this.age}-year-old ${this.occupation} who stands tall at ${this.height}.\n I like ${this.hobbies} `
+    }
+    this.getPickupLine = function() {
+        return helperObj[this.name].pickupLine
+    }
+    this.getAfterMarraigeSchedule = function() {
+        return helperObj[this.name].afterMarraigeSchedule
+    }
+}
+
+/*
     ! Solution using Classes
 */
+
 
 class Groom {
     constructor(name, age, hobbies, height, occupation, salary) {

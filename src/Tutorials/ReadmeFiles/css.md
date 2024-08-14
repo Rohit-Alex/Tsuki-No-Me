@@ -93,3 +93,11 @@ POSITION:
 - scroll-snape
 - border-image
 - accent-color
+
+
+<----For Text wrapping with hyphens------>
+overflow-wrap: 'break-word'
+hypen: auto
+
+
+white-speace: property

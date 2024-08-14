@@ -67,13 +67,25 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
 */
 (async () => {
     const promise = Promise.resolve('Sharam nhi aati.')
-
-    // Output bata CASE: 1
     promise.then(msg => console.log(msg))
     console.log("2 lakh bhej!")
     console.log('Ticket kara de');
+})()
 
-    // Output bata CASE: 2
+(async () => {
+    const promise = Promise.resolve('Sharam nhi aati.')
+    console.log(await promise)
+    console.log("2 lakh bhej!")
+    console.log('Ticket kara de')
+})()
+
+(async () => {
+    const promise = Promise.resolve('Sharam nhi aati.')
+
+    promise.then(msg => console.log('.then', msg))
+    console.log("2 lakh bhej!")
+    console.log('Ticket kara de');
+
     console.log(await promise)
     console.log("2 lakh bhej!")
     console.log('Ticket kara de')
@@ -136,7 +148,6 @@ getFairyName().then(name => console.log(name, ':-> using .then()'));
     //     }
     // }
     // getMarriageApprovalUsingAwait()
-})()
 
 // Write the o/p. source (Akshay saini)
 
@@ -156,7 +167,7 @@ const getAns = async() => {
     const ans1 = await promise1
     console.log(ans1)
     const ans2 = await promise2
-    console.log(ans1, ans2)
+    console.log(ans2)
 }
 
 getAns() // ye bata ki, after how many seconds we will get the consoles
@@ -165,7 +176,7 @@ const getAns2= async() => {
     const ans1 = await promise2
     console.log(ans1)
     const ans2 = await promise1
-    console.log(ans1, ans2)
+    console.log(ans2)
 }
 
 getAns2() //ye bata ki, after how many seconds we will get the consoles
@@ -188,6 +199,8 @@ const fun = async () => {
   	console.log('end of fun')
 }
 
+fun()
+
 const fun2 = () => {
   console.log('start of fun')
   myPromise().then(res => {
@@ -200,7 +213,7 @@ const fun2 = () => {
   console.log('end of fun')
 }
 
-fun()
+fun2()
 // <-----------------End--------->
 
 
@@ -244,32 +257,87 @@ funcTwo();
 // <-----------------End--------->
 
 
-const promise = new Promise((res, rej) => {
+// <------------Ques------------>
+const promise5 = new Promise((res, rej) => {
     setTimeout(() => {
         res(5)
     },200)
 })
 
+
+
 const cbFun = () => {
-   promise.then(res => {
+   promise5.then(res => {
         console.log('res 2', res)
     }).catch(err => {
         console.error('error')
     }).finally(() => {
-       console.log('in finally nested') 
+       console.log('in finally child') 
     }) 
 }
 
 const fun = () => {
-    promise.then(res => {
+    promise5.then(res => {
         cbFun()
         console.log('res 1', res)
         
     }).catch(err => {
         console.error('error', err)
     }).finally(() => {
-       console.log('in finally') 
+       console.log('in finally parent') 
     }) 
 }
 
 fun()
+
+//res 1 5
+// res 2 5
+// in finally parent
+// in finally child
+
+// <-----------------End--------->
+
+
+// <------------Ques------------>
+const promise11 = new Promise((res, rej) => {
+    setTimeout(() => {
+        res(5)
+    },200)
+})
+
+const promise22 = new Promise((res, rej) => {
+    setTimeout(() => {
+        res(5)
+    },200)
+})
+
+const cbFun = () => {
+   promise22.then(res => {
+        console.log('res 2', res)
+    }).catch(err => {
+        console.error('error')
+    }).finally(() => {
+       console.log('in finally child') 
+    }) 
+}
+
+const fun = () => {
+    promise11.then(res => {
+        cbFun()
+        console.log('res 1', res)
+        
+    }).catch(err => {
+        console.error('error', err)
+    }).finally(() => {
+       console.log('in finally parent') 
+    }) 
+}
+
+fun()
+
+//res 1 5
+// in finally parent
+// res 2 5
+// in finally child
+
+// <-----------------End--------->

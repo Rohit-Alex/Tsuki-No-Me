@@ -43,14 +43,15 @@ console.log(num.sort((a, b) => a - b))
     Second -> 1 (no matter what)
     baaki left order ascending order mein
 */
+
 numArr.sort((a, b) => {
-    if (a === 24 || a === 1) {
-        return -1
-    }
-    if (b === 24 || b === 1) {
-        return 1
-    }
-    return a - b
+    if (a === 24) return -1;
+    if (b === 24) return 1; 
+
+    if (a === 2) return -1; 
+    if (b === 2) return 1;  
+
+    return a - b;        
 });
 
 

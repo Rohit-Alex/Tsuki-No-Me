@@ -125,6 +125,32 @@ computer. This is called "Just in Time" or JIT Compiler.
 1> Prodution build
 2> Reselect/Re-reselect for redux store memoization
 3> Web workers
+
+onmessage = (event) => {
+  console.log('Received message from the main thread:', event.data);
+
+  // Perform some computation
+  const result = event.data * 2;
+
+  // Send the result back to the main thread
+  postMessage(result);
+};
+
+<--------app.js-------->
+  useEffect(() => {
+    const myWorker = new Worker('worker-path');
+
+    myWorker.onmessage = function (event) {
+      console.log('Received result from worker:', event.data);
+      setResult(event.data);
+    };
+
+    return () => {
+      myWorker.terminate();
+    };
+  }, []); 
+ worker.postMessage(5); // on click or when we need to start computation
+
 4> weakset, weakmap
 5> structuredClone
 6> shadowDOM

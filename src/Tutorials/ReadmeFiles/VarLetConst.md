@@ -116,26 +116,26 @@ var a = 100;
     var a = 10;
     let b = 20;
     const c = 30;
-    console.log(a);
-    console.log(b);
-    console.log(c);
+    console.log(a); // 10
+    console.log(b); // 20
+    console.log(c); // 30
 }
-console.log(a);
-console.log(b);
-console.log(c);
+console.log(a); // 10
+console.log(b); // Reference error
+console.log(c); // Reference error
 
 2.
 var b = 20;
 {
     let b = 50;
-    console.log(b)
+    console.log(b) // 50
 }
-console.log(b)
+console.log(b) // 20
 
 3.
 let x = 20;
 {
-    var x = 30;
+    var x = 30; // x already defined, can't redefined within same scope. Syntax error
     console.log(x);
 }
 console.log(x);
@@ -146,14 +146,14 @@ function temp() {
     var m = 30;
     console.log(m)
 }
-console.log(m)
+console.log(m) // 24
 
 5.
 function fun() {
     var q = 24
     console.log(q)
 }
-console.log(q)
+console.log(q) // reference error
 
 6.
 const p = 6;
@@ -161,10 +161,10 @@ const p = 6;
     const p = 5;
     {
         const p = 10;
-        console.log(p);
+        console.log(p); // 10
     }
-    console.log(p);
+    console.log(p); // 5
 }
-console.log(p);
+console.log(p); // 6
 ```
 

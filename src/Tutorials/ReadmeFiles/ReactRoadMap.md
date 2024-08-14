@@ -63,3 +63,121 @@
 - Intersection Observer
 - Resize Observer
 - different hooks example
+
+
+<-------------------Important Pts-------------------------->
+
+1. CDN -> Content Delivery Network or Content Distribution Network. It is a geographically distributed network of proxy servers that allows fetching resources from nearest servers. 
+    i. This decreases load time
+    ii. lower latency (time gap between request and response)
+    iii. increased scalability and efficiency
+
+2. CORS -> Cross origin mechanism that allows memory resources (fonts, js) on a webpage to be requested from one domain to another
+
+3. NPM -> Package manager. It is used to install, share, and manage dependencies in
+          node.js projects.
+4. Bundler -> Development tool that combines multiple js code and its dependency together into a single file that is production ready and loadable in    browser (e.g. parcel, rollup, webpack)
+
+5. React Fibre -> Re-implementation of React core's feature to enhance user interface responsiveness and renderability  
+
+
+<----------------Lifecycle methods-------------->
+
+1. Mounting Phase:
+    1. constructor() - Initializes the component and sets up initial state and bindings.
+    2. static getDerivedStateFromProps() - Syncs state with props before the initial render. (Rarely used during         mounting phase unless necessary)
+    3. render() - Outputs the JSX to render the component to the DOM.
+    4. componentDidMount() - Invoked after the component is rendered to the DOM. Ideal for side-effects like data fetching, DOM manipulations, etc.
+
+2. Updating Phase:
+    1. static getDerivedStateFromProps() - Syncs state with new props before the component updates. (Triggered on prop or state change)
+    2. shouldComponentUpdate() - Determines if the component should re-render. If false is returned, the update is skipped.
+    3. render() - Re-renders the component.
+    4. getSnapshotBeforeUpdate() - Captures some information from the DOM before it updates (e.g., scroll position). The value returned here is passed to componentDidUpdate.
+    5. componentDidUpdate() - Called after the component has been updated in the DOM. This is where you can use the snapshot value, perform side-effects, etc.
+
+3. Unmounting Phase:
+    1. componentWillUnmount() - Invoked just before the component is removed from the DOM. Use this to clean up resources like timers, event listeners, etc.
+
+4. Error Handling Phase:
+    1. static getDerivedStateFromError() - Called when a descendant component throws an error. It allows the component to update its state to show a fallback UI.
+    2. componentDidCatch() - Logs the error and its information. It can also be used to perform side-effects related to error handling.
+
+```
+import React from 'react';
+
+class LifecycleExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+    console.log('1st: Constructor - Component is being initialized');
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log('2nd (or 5th): getDerivedStateFromProps - Syncing state with props if necessary');
+    // Return null or an object to update the state
+    return null;
+  }
+
+  componentDidMount() {
+    console.log('4th: componentDidMount - Component has been mounted to the DOM');
+    // You can perform side-effects here, like fetching data
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('6th: shouldComponentUpdate - Deciding if component should re-render');
+    // Return true if the component should update
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('8th: getSnapshotBeforeUpdate - Capturing information before DOM is updated');
+    // Return a value to pass to componentDidUpdate, or null
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('9th: componentDidUpdate - Component has been updated');
+    // You can perform additional operations here
+  }
+
+  componentWillUnmount() {
+    console.log('10th: componentWillUnmount - Component is about to be removed from the DOM');
+    // Perform cleanup like removing timers, canceling network requests, etc.
+  }
+
+  static getDerivedStateFromError(error) {
+    console.log('Error Handling - getDerivedStateFromError: Handling error');
+    // Update state so the next render shows a fallback UI
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.log('Error Handling - componentDidCatch: Error caught in the component tree');
+    // Log error information
+  }
+
+  handleClick = () => {
+    this.setState((prevState) => ({
+      count: prevState.count + 1,
+    }));
+  };
+
+  render() {
+    console.log('3rd (or 7th): Render - Rendering the component');
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.handleClick}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default LifecycleExample;
+```

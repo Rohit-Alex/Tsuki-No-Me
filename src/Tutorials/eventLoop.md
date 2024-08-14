@@ -7,7 +7,7 @@ setTimeout(cbFn, 500, 'Your Grace')
 ```
 **Note:** Here we passed cbFb in setTimeout and not cbFn() as it takes reference of callBackFn and not the result of execution
 
-Now suppose, I am obsessed with you, I want it to keep printing after every 500ms then
+To keep printing after every 500ms then
 
     setInterval(cbFn, 500, 'Your Grace')
 
@@ -30,7 +30,7 @@ setTimeout(() => {
   console.log("Ruko zara, hum first");
 }, -2);
 setTimeout(() => {
-  console.log("First");
+  console.log("Aur mein?");
 }, 200);
 setTimeout(() => {
   console.log("Nhi hum first");
@@ -42,7 +42,7 @@ setTimeout(() => {
 // Ruko zara, hum first
 // Nhi hum first
 // Hum first
-// First
+// Aur mein?
 ```
 
 ##### General rule of execution order of setTimeout:
@@ -63,7 +63,7 @@ setTimeout(() => {
     console.log("Namooni")
 }, 0)
 setTimeout(()=>{
-    console.log("Date pe kab chal rhi?")
+    console.log("xxxx pe kab chal rhi?")
 })
 setTimeout(()=>{
     console.log("ye bata")
