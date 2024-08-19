@@ -38,7 +38,7 @@ function showMessage() {
 showMessage();
 
 //Default arguments
-function getAmaneSkill(skill = "Loyal") {
+function getAmaneSkill(skill = "Loyality") {
   console.log("Amane's skill " + skill );
 }
 

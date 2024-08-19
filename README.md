@@ -292,7 +292,6 @@ Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
 
 #### 24> Functions, Arrow Function(without this), Function Expression, Callbacks, IIFE? [click to open](src/Tutorials/Functions.js)
     
-
 #### 25> string methods.
 
 slice, substring, substr(deprecated, hence optional to know), includes, at, trim, padStart, padEnd, split, join, match, matchAll
