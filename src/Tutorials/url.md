@@ -5,14 +5,14 @@
     https://www.example.com:8080/chalegi/date/pe?answer=nhi&answer2=nhiOYO#section
 ```
 
-> 1. **Scheme:** *<u>https:</u>* (http, ftp, mailto)
+> 1. **Scheme:** *<u>https:</u>* (http, ftp, mailto) (protocol property in url)
 2. **Host:** *<u>www.example.com</u>*
     1. **SubDomain:** *<u>www.</u>*
     2. **Domain:** *<u>example</u>*
     3. **Top-Level Domain**: *<u>.com</u>*
 3. **Port Number:** *<u>8080</u>*
 4. **Path:** *<u>/chalegi/date/pe</u>*
-5. **Query Params/String:** *<u>?answer=nhi&answer2=bhoolJaa</u>*
+5. **Query Params/String:** *<u>?answer=nhi&answer2=bhoolJaa</u>* (search property in url to get in string, searchParam to get in object with methods)
 6. **Fragment:** *<u>section</u>*
 >
  ###### Default port is 80 and 443. Default port are not considered while displaying port number.
@@ -34,7 +34,7 @@
 
         new URL("/en-US/docs", 'https://developer.mozilla.org/en-US/docs') => 'https://developer.mozilla.org/en-US/docs'
 
-        new URL("/en-US/docs", "https://developer.mozilla.org/fr-FR/toto") => 'https://developer.mozilla.org/en-US/docs'
+        new URL("/en-US/docs", "https://developer.mozilla.org/fr-FR/toto") => 'https://developer.mozilla.org/en-US/docs' // the path from baseurl is ignored (fr-FR/toto) and relative path is used provided in first param
         
         new URL("http://www.example.com") => 'http://www.example.com/' (no need of baseURL as given url is absolute)
 

@@ -32,67 +32,67 @@
     // Explain the execution context of above code.
     
 // 1
-console.log(frndo);
+console.log(frndo); //undefined
 var frndo;
 frndo = 'Amane';
-console.log(frndo);
+console.log(frndo); // Amane
 
 // 2
-console.log(frndo1);
+console.log(frndo1); // Reference Error
 var frndo1 = 'Amane';
 
 // 3
-console.log(welcome)
+console.log(welcome) // [Function: welcome]
 welcome()
 function welcome() {
     console.log('Hello world')
 }
 
 // 4
-console.log(frndo2)
+console.log(frndo2) // Reference Error
 let frndo2 = 'Amane'; 
 
 // 5
-console.log(frndo3)
+console.log(frndo3) // Reference Error
 const frndo3 = 'Amane';
 
 // 6
-console.log(welcome)
-welcome()
+console.log(welcome) // undefined
+welcome() // TypeError
 var welcome = function () {
     console.log('Hello world')
 }
 
 // 7
-console.log(welcome1)
+console.log(welcome1) // Reference Error
 welcome1()
 let welcome1 = function () {
     console.log('Hello world')
 }
 
 // 8
-console.log(welcome2)
+console.log(welcome2) // Reference Error
 welcome2()
 const welcome2 = function () {
     console.log('Hello world')
 }
 
 // 9
-console.log(welcome3)
-welcome3()
+console.log(welcome3) // undefined
+welcome3() // Type Error
 var welcome3 = () => {
     console.log('Hello world')
 }
 
 // 10
-console.log(welcome4)
+console.log(welcome4) // Reference Error
 welcome4()
 let welcome4 = () => {
     console.log('Hello world')
 }
 
 // 11
-console.log(welcome5)
+console.log(welcome5) // Reference Error
 welcome5()
 const welcome5 = () => {
     console.log('Hello world')
@@ -106,7 +106,7 @@ function b() {
     function a() { }
 }
 b();
-console.log(a);
+console.log(a); // 1
 
 // 13
 function print() {
@@ -118,7 +118,7 @@ function print() {
   var square2 = number * number
   console.log(square2)
 }
-print()
+print() // NaN, 2500
 
 // 14
 function foo() {
@@ -130,7 +130,7 @@ function foo() {
         return 8;
     }
 }
-console.log(foo());
+console.log(foo()); // 8
 
 // 15
 function parent() {
@@ -140,11 +140,11 @@ function parent() {
     }
     return hoisted();
 }
-console.log(parent());
+console.log(parent()); // Type Error
 
 
 // 16
-console.log(foo1());
+console.log(foo1()); // 3
 function foo1() {
     var bar = function () {
         return 3;

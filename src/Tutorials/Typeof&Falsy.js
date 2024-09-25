@@ -33,6 +33,17 @@ typeof new Boolean(true); // => 'object'
 typeof Math.sin; // => 'function'
 
 
+/*
+    Every values except these are truthy value in JS:
+        i> false
+        ii> 0 (and -0)
+        iii> 0n (BigInt zero)
+        iv> "" (empty string)
+        v> null
+        vi> undefined
+        vii> NaN
+*/
+
 if (true) // truthy
 if ({}) // truthy
 if ([]) // truthy

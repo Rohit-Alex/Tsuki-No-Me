@@ -309,7 +309,7 @@ console.log('1' - - '1')
 console.log('1' + - '1');
 
 
-[...'Namooni'];
+[...'Ubuyashiki'];
 
 
 function getInfo(member, year) {

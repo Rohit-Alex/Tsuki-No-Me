@@ -40,7 +40,7 @@ or using ES6 Arrow functions.
     console.log(sum(1)(2)(3)(4)());
 
 
-#### <-------- Dhayn de idhar, namooni --------->
+#### <-------- Dhayn de idhar, Ubuyashiki --------->
 
 
 Curry function which takses 1 argument at a time in each call
@@ -66,13 +66,13 @@ console.log(curriedSum1(1)(2)); // 3
 **Task:** Make a function which takes any no of arguments i.e. all or one by one or any combination of arguments can be passed to it.
 
 ```
-function curryAdvanced(func) {
-    return function curried(...args1) {
-        if (args1.length >= func.length) {
-            return func.apply(this, args1)
+const curryAdvanced = (func) => {
+    return function curry(...args) {
+        if (args.length === func.length) {
+            return func(...args)
         } else {
-            return function(...args2) {
-                return curried.apply(this, args1.concat(args2))
+            return (...args2) => {
+                return curry(...(args.concat(args2)))
             }
         }
     }

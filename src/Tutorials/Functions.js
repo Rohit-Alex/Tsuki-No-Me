@@ -158,7 +158,7 @@ const arrowFun1 = name =>  console.log(`Hello ${name}`);
 
 
 normalFun('nammoni')
-arrowFun1('namooni')
+arrowFun1('Ubuyashiki')
 
 // Now simplify it to one line and show paranthesis removal.
 const returnNumber = () => 2

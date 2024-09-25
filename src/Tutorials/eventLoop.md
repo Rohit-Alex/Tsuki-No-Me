@@ -60,7 +60,7 @@ setTimeout(() => {
     console.log("Let me check my busy schedule")
 }, 200)
 setTimeout(() => {
-    console.log("Namooni")
+    console.log("Ubuyashiki")
 }, 0)
 setTimeout(()=>{
     console.log("xxxx pe kab chal rhi?")

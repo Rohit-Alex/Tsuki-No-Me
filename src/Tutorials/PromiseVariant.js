@@ -28,10 +28,10 @@ Promise.all([promise1, promise2, promise3]).then((values) => {
 // e.g. 2
 (async () => {
     try {
-        const values = await Promise.all([24, Promise.resolve('Your grace'), Promise.reject('Namooni')]);
+        const values = await Promise.all([24, Promise.resolve('Your grace'), Promise.reject('Ubuyashiki')]);
         console.log(values)
     } catch(err) {
-        console.log("Error: ", err) //Error:  Namooni
+        console.log("Error: ", err) //Error:  Ubuyashiki
     }
 })()
 

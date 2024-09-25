@@ -2,7 +2,7 @@
 ```
 const knowMeObj = {
     name: 'Amane Ubuyashiki',
-    nickName: 'Namooni',
+    nickName: 'Ubuyashiki',
     address: {
         city: 'Vadodara',
         state: 'Gujarat',
@@ -35,7 +35,7 @@ By using optional chaining, if the object accessed or function called using this
  ```
  const knowMeObj = {
     name: 'Amane Ubuyashiki',
-    nickName: 'Namooni',
+    nickName: 'Ubuyashiki',
     address: {
         city: 'Vadodara',
         state: 'Gujarat',

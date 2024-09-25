@@ -18,70 +18,70 @@
     6> Array -> Array.prototype -> Object.prototype -> null
     7> Object -> Object.prototype -> null
 */
-    const AmaneLife = {
-        fulltime: 'thrill'
-    };
-    const rohitLife = {
-        fullTime: 'Dukh, dard, peeda'
-    }
+const AmaneLife = {
+    fulltime: 'thrill'
+};
+const rohitLife = {
+    fullTime: 'Dukh, dard, peeda'
+}
 
-    const protoObj = {
-        partTime: 'Annoying rohit'
-    };
+const protoObj = {
+    partTime: 'Annoying rohit'
+};
 
-    console.log(AmaneLife) // See the [[Prototype]] value in browser console
-    console.log(AmaneLife.partTime) // undefined
-    AmaneLife.__proto__ = protoObj; // Added protoObj to its Prototype
-    console.log(AmaneLife) // Now, See the [[Prototype]] value in browser console
-    console.log(AmaneLife.partTime) // 'Annoying rohit'
-    /* 
-        But now suppose I want to add "partTime" key to rohitLife as well.
+console.log(AmaneLife) // See the [[Prototype]] value in browser console
+console.log(AmaneLife.partTime) // undefined
+AmaneLife.__proto__ = protoObj; // Added protoObj to its Prototype
+console.log(AmaneLife) // Now, See the [[Prototype]] value in browser console
+console.log(AmaneLife.partTime) // 'Annoying rohit'
+/* 
+    But now suppose I want to add "partTime" key to rohitLife as well.
 
-        if we write now, 👇 we get undefined as we haven't added to rohitLife Prototype
-            rohitLife.partTime 
+    if we write now, 👇 we get undefined as we haven't added to rohitLife Prototype
+        rohitLife.partTime 
+    
+    Toh tu bolegi ki, 👇 line likh de work kar jaayega.
+        rohitLife.__proto__ = protoObj; 
+    
+    Par suppose ab I want this "partTime" property to be available to each and every object. Sabkoi pareshaan karta.
+    So, to do this. 👇
+*/
+
+// Replace line no. 28 to 30 with
+Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole, not to any specific object) Protype.
+// Note the difference b/w previous [[Prototype]] property (using __proto__) and now (using Prototype)
+console.log(AmaneLife)
+console.log(AmaneLife.partTime) // 'Annoying rohit'
+console.log(rohitLife.partTime)  // 'Annoying rohit'
+
+/*
+    ? <---- Understanding difference b/w __proto__ and Prototype ------->
+    i> 
+        * __proto__ is generally applied when we need to add to individual array/object/function. 
+        * Prototype syntax is used to add to all types of array/object/function
+    ii> 
+        AmaneLife.__proto__ = protoObj; 
+        This ☝️ line is equivalent to obj.age = 24. Relate kar paa rhi na.
+        means AmaneLife is now:-> 
+
+            const AmaneLife = {
+                fulltime: 'thrill',
+                __proto__: {
+                    partTime: 'Annoying rohit'
+                }
+            };
+            { fulltime: 'thrill' } -> { partTime: 'Annoying rohit' } ->  Object.prototype -> null
+                    ☝️                           ☝️                             ☝️
+                Original object              local prototype           Prototype present to each object
         
-        Toh tu bolegi ki, 👇 line likh de work kar jaayega.
-            rohitLife.__proto__ = protoObj; 
         
-        Par suppose ab I want this "partTime" property to be available to each and every object. Sabkoi pareshaan karta.
-        So, to do this. 👇
-    */
+        And now 2nd line:
+        Object.prototype.partTime = 'Annoying Rohit'
+        This ☝️ line directly adds a new property to existing Object prototype and doesn't create any local prototype.
 
-   // Replace line no. 28 to 30 with
-    Object.prototype.partTime = 'Annoying Rohit' // Added to Object(as a whole, not to any specific object) Protype.
-   // Note the difference b/w previous [[Prototype]] property (using __proto__) and now (using Prototype)
-    console.log(AmaneLife)
-    console.log(AmaneLife.partTime) // 'Annoying rohit'
-    console.log(rohitLife.partTime)  // 'Annoying rohit'
-
-    /*
-        ? <---- Understanding difference b/w __proto__ and Prototype ------->
-        i> 
-            * __proto__ is generally applied when we need to add to individual array/object/function. 
-            * Prototype syntax is used to add to all types of array/object/function
-        ii> 
-            AmaneLife.__proto__ = protoObj; 
-            This ☝️ line is equivalent to obj.age = 24. Relate kar paa rhi na.
-            means AmaneLife is now:-> 
-
-                const AmaneLife = {
-                    fulltime: 'thrill',
-                    __proto__: {
-                        partTime: 'Annoying rohit'
-                    }
-                };
-                { fulltime: 'thrill' } -> { partTime: 'Annoying rohit' } ->  Object.prototype -> null
-                        ☝️                           ☝️                             ☝️
-                    Original object              local prototype           Prototype present to each object
-            
-            
-            And now 2nd line:
-            Object.prototype.partTime = 'Annoying Rohit'
-            This ☝️ line directly adds a new property to existing Object prototype and doesn't create any local prototype.
-
-            * __proto__ can be thought of local prototype.
-            * Prototype can be thought of global prototype for its type.
-    */
+        * __proto__ can be thought of local prototype.
+        * Prototype can be thought of global prototype for its type.
+*/
 
 const arr1 = ['one', 'two', 'three', 'four']
 //adding prototype to the Array prototype
@@ -117,30 +117,30 @@ Array.prototype.myMap = function (cb) {
 console.log([2, 5, 7].myMap((e, idx, ar) => e * 2 + idx + ar[2]))
 
 //Filter method
-Array.prototype.myFilter = function(cb) {
+Array.prototype.myFilter = function (cb) {
     const newArr = []
-    this.forEach((e,idx)=>{
-        if (cb(e,idx, this)) {
+    this.forEach((e, idx) => {
+        if (cb(e, idx, this)) {
             newArr.push(e)
         }
     })
     return newArr
 }
-console.log([5,7,9].myFilter((e,idx)=> e % 2 === 0))
+console.log([5, 7, 9].myFilter((e, idx) => e % 2 === 0))
 
 //Reduce method
-Array.prototype.myReduce = function(cb, initialValue) {
+Array.prototype.myReduce = function (cb, initialValue) {
     // initialValue => acc = initialValue
     //                currElement = arr[0] : arr[1]
     //                currIndex = 0 : 1
     let accumulator = initialValue !== undefined ? initialValue : this[0]
-    for(let i = initialValue !== undefined ? 0 : 1; i < this.length; i++) {
+    for (let i = initialValue !== undefined ? 0 : 1; i < this.length; i++) {
         accumulator = cb(accumulator, this[i], i, this)
     }
     return accumulator
 }
 
-const sum = [1,5,7,2,9].myReduce((acc, currVal, currIndex, ar) => {
+const sum = [1, 5, 7, 2, 9].myReduce((acc, currVal, currIndex, ar) => {
     console.log(acc, currVal, currIndex, ar);
     return acc + currVal;
 }, 0);
@@ -149,36 +149,56 @@ console.log(sum);
 // Flat method
 
 const flatArray = (ip, currLevel, targetLevel) => {
-  let op = [];
-  const length = ip.length;
-  for (let i = 0; i < length; i++) {
-    const currEle = ip[i];
-    if (typeof currEle === "object" && Array.isArray(currEle)) {
-      currLevel++;
-      if (targetLevel >= currLevel) {
-        op = op.concat(flatArray(currEle, currLevel, targetLevel));
-      } else {
-        op.push(currEle);
-      }
-    } else {
-      op.push(currEle);
+    let op = [];
+    const length = ip.length;
+    for (let i = 0; i < length; i++) {
+        const currEle = ip[i];
+        if (typeof currEle === "object" && Array.isArray(currEle)) {
+            currLevel++;
+            if (targetLevel >= currLevel) {
+                op = op.concat(flatArray(currEle, currLevel, targetLevel));
+            } else {
+                op.push(currEle);
+            }
+        } else {
+            op.push(currEle);
+        }
     }
-  }
-  return op;
+    return op;
 };
 
+if (!Array.prototype.flat) {
+    Array.prototype.flat = function (depth = 1) {
+        const flatten = (arr, depth) => {
+            if (depth === 0) return arr;
+            let result = [];
+            for (let i = 0; i < arr.length; i++) {
+                const value = arr[i];
+                if (Array.isArray(value)) {
+                    result = result.concat(flatten(value, depth - 1));
+                } else {
+                    result.push(value);
+                }
+            }
+            return result;
+        };
+
+        return flatten(this, depth);
+    };
+}
+
 Array.prototype.myFlat = function (level) {
-  const iteratingArr = this;
-  return flatArray(iteratingArr, 0, level);
+    const iteratingArr = this;
+    return flatArray(iteratingArr, 0, level);
 };
 
 //Call Method
-Function.prototype.myCall = function(context, ...args) {
+Function.prototype.myCall = function (context, ...args) {
     const fun = this
     let randomUniqueKey = Math.random()
     while (context[randomUniqueKey] !== undefined) randomUniqueKey = Math.random()
     context[randomUniqueKey] = fun
-    const result =  context[randomUniqueKey](...args)
+    const result = context[randomUniqueKey](...args)
     delete context[randomUniqueKey]
     return result
 }
@@ -195,9 +215,9 @@ Function.prototype.myApply = function (context, argArr) {
 }
 
 //Bind
-Function.prototype.myBind = function(context, ...args) {
+Function.prototype.myBind = function (context, ...args) {
     const fun = this
-    return function() {
+    return function () {
         return fun.apply(context, args)
     }
 }
@@ -217,11 +237,11 @@ Function.prototype.myBind = function(context, ...args) {
     ******* <<<------>>>
 */
 Promise.prototype.myPromiseAll = promiseArr => {
-    return new Promise((res, rej)=>{
+    return new Promise((res, rej) => {
         let resolvedPromise = 0
         let returnArr = []
-        promiseArr.forEach((prms, index)=> {
-            Promise.resolve(prms).then((val)=>{
+        promiseArr.forEach((prms, index) => {
+            Promise.resolve(prms).then((val) => {
                 returnArr[index] = val
                 resolvedPromise += 1
             }).catch((err) => {
@@ -238,21 +258,42 @@ Promise.prototype.myPromiseAll = promiseArr => {
     ! Fulfills when all promises settle.
     ******* <<<------>>>
 */
-Promise.prototype.mySettledAll = function (promiseArr) {
-    return new Promise((res) => {
-        const resolvedPromises = [];
-        promiseArr.forEach((prms, idx) => {
-            Promise.resolve(prms)
-                .then((response) => {
-                    resolvedPromises[idx] = response;
-                })
-                .catch((err) => {
-                    resolvedPromises[idx] = err;
-                });
+// Check if Promise.allSettled is not defined
+if (!Promise.allSettled) {
+    Promise.allSettled = function (promises) {
+        return new Promise((resolve) => {
+            const results = [];
+            let completed = 0;
+
+            const checkCompletion = () => {
+                if (completed === promises.length) {
+                    resolve(results);
+                }
+            };
+
+            for (let i = 0; i < promises.length; i++) {
+                const promise = promises[i];
+
+                Promise.resolve(promise)
+                    .then((value) => {
+                        results[i] = { status: "fulfilled", value };
+                    })
+                    .catch((reason) => {
+                        results[i] = { status: "rejected", reason };
+                    })
+                    .finally(() => {
+                        completed++;
+                        checkCompletion();
+                    });
+            }
+
+            if (promises.length === 0) {
+                resolve(results);
+            }
         });
-        res(resolvedPromises);
-    });
-};
+    };
+}
+
 
 /*
     ******* <<<------>>>
@@ -288,15 +329,15 @@ Promise.prototype.myAny = function (promiseArr) {
             .forEach((prms, idx) => {
                 Promise.resolve(prms).then((res) => {
                     resolve(res);
+                }).catch((err) => {
+                    rejectedPrmsVals[idx] = err;
+                    rejectedPrms++;
+                    if (rejectedPrms === promiseArr.length) reject(new Error("Aggregate"));
                 });
             })
-            .catch((err) => {
-                rejectedPrmsVals[idx] = err;
-                rejectedPrms++;
-                if (rejectedPrms === promiseArr.length) reject(new Error("Aggregate"));
-            });
-    });
-};
+    })
+}
+
 
 /*
     Sun, agar kuch na samajh aaye toh tension mat le. 

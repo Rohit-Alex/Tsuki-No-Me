@@ -132,20 +132,6 @@ const advanceCompareArrays = (arr1, arr2) => {
     // Try to do with every method
 }
 
-const advanceCompareArray = (arr1, arr2) => {
-    // Order doesn't matter
-    if (arr1.length !== arr2.length) return false;
-    for (let i = 0; i < arr1.length; i++) {
-        const val1 = arr1[i]
-        if (!arr2.includes(val1)) return false
-    }
-    return true
-    /*
-        Note: The above method won't work for
-        [4,5,2,4,2,3] [4,3,2,2,5,2]
-        Moreover, it's not optimized.
-    */
-}
 
 const optimizedCompareArrays = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
@@ -195,6 +181,48 @@ const optimizedCompareArrays = (arr1, arr2) => {
 
 */
 console.log(compareArrays(arr1, arr2))
+function deepCompare(value1, value2) {
+  // If both are identical (for primitive types like number, string, etc.)
+  if (value1 === value2) {
+    return true;
+  }
+
+  // Handle null and undefined cases
+  if (value1 === null || value2 === null || value1 === undefined || value2 === undefined) {
+    return value1 === value2;
+  }
+
+  // If the types are different, they're not equal
+  if (typeof value1 !== typeof value2) {
+    return false;
+  }
+
+  // Handle arrays
+  if (Array.isArray(value1) && Array.isArray(value2)) {
+    if (value1.length !== value2.length) return false;
+    for (let i = 0; i < value1.length; i++) {
+      if (!deepCompare(value1[i], value2[i])) return false;
+    }
+    return true;
+  }
+
+  // Handle objects (non-null objects that aren't arrays)
+  if (typeof value1 === 'object' && typeof value2 === 'object') {
+    const keys1 = Object.keys(value1);
+    const keys2 = Object.keys(value2);
+
+    if (keys1.length !== keys2.length) return false;
+
+    for (let key of keys1) {
+      if (!deepCompare(value1[key], value2[key])) return false;
+    }
+    return true;
+  }
+
+  // For all other types (including functions, dates, etc.), they should have failed by this point
+  return false;
+}
+
 
 // Anagrams
 // Prime Number
@@ -213,30 +241,53 @@ console.log(compareArrays(arr1, arr2))
 // Overlapping intervals
 // Recursion question on arrays and objects
 
-/*
-    Question: If Object.freeze does shallow freeze then how can we make it deep freeze?
+// Question 1 (Deep Flat)
+const givenArr = [2, 4, [8, 9], [0, -1, [1, 2, [4, 5]]]];
+const deepFlatArr = (arr) => {
+  let op = [];
 
-    Ans: 
-        const deepFreeze = (obj) => {
-          for (const key in obj) {
-              if (typeof obj[key] === "object") deepFreeze(obj[key]);
-          }
-          return Object.freeze(obj);
-        };
-        deepFreeze(obj);
-*/
-
-function deepFlatten(array) {
-  const flatten = (arr, result) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (Array.isArray(arr[i])) {
-        flatten(arr[i], result);
-      } else {
-        result.push(arr[i]);
-      }
+  for (let val of arr) {
+    if (typeof val !== "object") {
+      op.push(val);
     }
-    return result;
-  };
+    if (typeof val === "object" && Array.isArray(val)) {
+      op = op.concat(deepFlatArr(val));
+    }
+  }
+  return op;
+};
+console.log(deepFlatArr(givenArr));
 
-  return flatten(array, []);
-}
+// 2nd question (Deep Clone)
+const originalObj = { a: 1, b: { c: 2, d: [3, 4] } };
+
+const deepClone = (ipObj) => {
+  if (typeof ipObj !== "object") return ipObj;
+  if (typeof ipObj === "object" && Array.isArray(ipObj))
+    return ipObj.map((e) => deepClone(e));
+  const op = {};
+  for (let key in ipObj) {
+    const val = ipObj[key];
+    op[key] = deepClone(val);
+  }
+  return op;
+};
+console.log(deepClone(originalObj));
+
+//3. Deep Freeze
+
+const deepFreeze = (obj) => {
+  Object.freeze(obj);
+  for (let key in obj) {
+    const val = obj[key];
+    if (typeof val === "object") {
+      deepFreeze(val);
+    }
+  }
+  return obj;
+};
+
+const objToFreeze = { a: 1, b: { c: 2 } };
+deepFreeze(objToFreeze);
+// objToFreeze.b.c = 3; // This will not change the value
+console.log(objToFreeze.b.c); // Output: 2

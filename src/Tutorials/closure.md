@@ -83,8 +83,8 @@ outest()
 ```
 
 > Explanation: Every function forms a closure with the reference to it's lexical environment.
->Lexical environment comprises of the variables and parameters inside of a function.
->Matlab, sabse pehle function apne scope mein doondhta variable ko, agar nhi milta toh apne upar dekhta means outer function, jab tak wo window level mein na aa jaaye ya usko mil na jaaye. Jo sabse pehle mila, niche se upar aane mein, wo use karega
+> Lexical environment comprises of the variables and parameters inside of a function.
+> Matlab, sabse pehle function apne scope mein doondhta variable ko, agar nhi milta toh apne upar dekhta means outer function, jab tak wo window level mein na aa jaaye ya usko mil na jaaye. Jo sabse pehle mila, niche se upar aane mein, wo use karega
 
 Interview Question: Print 1,2,3 after 1,2,3 seconds respectively.
 

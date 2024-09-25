@@ -147,6 +147,7 @@ function temp() {
     console.log(m)
 }
 console.log(m) // 24
+temp() // 30
 
 5.
 function fun() {

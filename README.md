@@ -13,12 +13,14 @@
 #### 2> What is the difference between interpreted and compiled language?
 > ###### Interpreted Language:  
     i> Source code -> executable code
-    ii> Executed line by line
+    ii> Executed line by line at runtime
     iii> More flexible and easier to use
     iv> Doesn't require the creation of executable file.
+    v> Slower execution speed due to real time translation
     e.g. Javascript, Python
 > ###### Compiled Language:
-    i> Source code -> Machine code -> Executable code
+    i> Source code -> Machine code (before execution or runtime)-> Executable code
+    ii> Faster execution due to pre-compiled machine code
     ii> Executes the entire code in one go.
     iii> compiled code is optimized for execution and can be executed more quickly than interpreted code.Hence, better performance.
 
@@ -82,7 +84,7 @@ The webpage may also include external resources such as images, videos, and scri
 Both async and defer allows us to download the script file parallely while browser continues to parse the HTML. The difference lies in the order and way of execution of the sript files.
 ```sh
 i> DEFER:
-        a> Here the scipt tag is downloaded parallely while the browser continues to parse the HTML and build DOM. The script is kept ready (downloaded) and     executed only when the entire HTML is parsed and DOM is built completely.
+        a> Here the scipt tag is downloaded parallely while the browser continues to parse the HTML and build DOM. The script is kept ready (downloaded) and executed only when the entire HTML is parsed and DOM is built completely.
         b> Scripts with defer never block the page.
         c> Scripts with defer always execute when the DOM is ready (but before DOMContentLoaded event).
         d> Maitains order of execution of scripts in the order it were written.
@@ -307,7 +309,7 @@ slice, substring, substr(deprecated, hence optional to know), includes, at, trim
     Note: When NaN is provided as index, then it's treated as 0 for every above method.
 
 #### 26> object methods.
-    -> Different way to create object.
+    -> Different way to create object. (Object.assign, Object literal, new keyword, classes, constructor function)
     -> construction function to create object
     -> Freeze vs Seal
     -> If Object.freeze does shallow freeze then how can we make it deep freeze?
@@ -526,7 +528,6 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 #### 44> Asynchronous behaviour
 - Event loop: [click to open](src/Tutorials/eventLoop.md)
 - Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.md)
-    - async/await [click to open Async/Await](src/Tutorials/asyncAwait.js)
     - Promises variants: [click to open](src/Tutorials/PromiseVariant.js)
         - Promise.all
         - Promise.allSettled

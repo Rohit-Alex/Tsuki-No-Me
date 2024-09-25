@@ -79,7 +79,7 @@ _Interview question._ Think of the scenario where you might find this useful. i.
             '0': true,
             '-2': false
         }
-        console.log(Object.keys(obj))
+        console.log(Object.keys(obj)) // OP: [ "0", "1", "2", "3", "00", "b", "a", "-2"]
         for (const key in obj) {
             console.log(key)
         }

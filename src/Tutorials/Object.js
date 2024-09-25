@@ -11,6 +11,40 @@
   iv> using classes
 */
 
+// Object.assign
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+
+const returnedTarget = Object.assign(target, source);
+
+console.log(target); // Object { a: 1, b: 4, c: 5 }
+
+console.log(returnedTarget === target); // true
+
+// Object.defineProperty
+const object1 = {};
+
+Object.defineProperty(object1, 'property1', {
+  value: 42,
+  writable: false,
+});
+
+object1.property1 = 77;
+
+// Object.defineProperties
+const object1 = {};
+
+Object.defineProperties(object1, {
+  property1: {
+    value: 42,
+    writable: true,
+  },
+  property2: {},
+});
+
+console.log(object1.property1);
+// Expected output: 42
+
 // Syntax showing the values can be of anything (any datatypes)
 const dummyObj = {
   number: 2,
@@ -95,11 +129,11 @@ const mouse = {
 */
 
 const checkKeyInObj = {
-  namooni: 'Your Grace',
+  Ubuyashiki: 'Your Grace',
 };
-console.log('namooni' in checkKeyInObj) // true
-console.log(Reflect.has(checkKeyInObj, 'namooni')) // true
-console.log(checkKeyInObj.hasOwnProperty('namooni')) // true
+console.log('Ubuyashiki' in checkKeyInObj) // true
+console.log(Reflect.has(checkKeyInObj, 'Ubuyashiki')) // true
+console.log(checkKeyInObj.hasOwnProperty('Ubuyashiki')) // true
 
 console.log('toString' in checkKeyInObj) // true As toString is an inbuilt method present in Object
 console.log(Reflect.has(checkKeyInObj, 'toString')) // true

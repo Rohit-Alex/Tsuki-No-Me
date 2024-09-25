@@ -38,7 +38,7 @@ const favSerires = function (seriesname, nickName) {
 console.log(obj.fullNameRegular('listening songs'))
 console.log(obj.fullNameRegular.call(obj1, 'modelling'))
 console.log(favSerires.call(obj, 'GOT'))
-console.log(favSerires.call(obj1, 'After', 'Namooni'))
+console.log(favSerires.call(obj1, 'After', 'Ubuyashiki'))
 
 /*
      APPLY :-> i> Quite similar to Call method. Only difference is that the rest arguments needs to passed in an array. 
@@ -49,7 +49,7 @@ console.log(favSerires.call(obj1, 'After', 'Namooni'))
 
 //Apply
 console.log(favSerires.apply(obj, ['GOT']))
-console.log(favSerires.apply(obj1, ['After', 'Namooni']))
+console.log(favSerires.apply(obj1, ['After', 'Ubuyashiki']))
 
 /*
      Bind :-> i> Quite similar to Call method. Only difference is that it creates a new function and doesn't call the function there itself.
@@ -59,7 +59,7 @@ console.log(favSerires.apply(obj1, ['After', 'Namooni']))
 
 // Bind
 const bindFun1 = favSerires.bind(obj, 'GOT')
-const bindFun2 = favSerires.bind(obj1, 'After', 'Namooni')
+const bindFun2 = favSerires.bind(obj1, 'After', 'Ubuyashiki')
 console.log(bindFun1())
 console.log(bindFun2())
 
