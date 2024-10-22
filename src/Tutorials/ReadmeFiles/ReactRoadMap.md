@@ -239,3 +239,71 @@ class LifecycleExample extends React.Component {
 
 export default LifecycleExample;
 ```
+
+-> parent render
+-> child render
+-> child useLayout effect
+-> parent useLayout effect
+-> child useEffect
+-> parent useEffect
+
+DOM updates (useLayoutEffect) vs Browser paints(useEffect)
+
+1.  
+  The DOM is a tree-like structure that represents the HTML elements on the page. The browser parses HTML and constructs the DOM. As changes are made to the DOM (e.g., via JavaScript or React rendering), the DOM is immediately updated to reflect these changes in its internal data structure. However, these updates are not yet visible to the user.
+
+  Painting refers to the actual process of drawing the visual content of the page onto the screen. This includes rendering the layout, text, colors, images, and any other visual elements that the browser needs to display to the user.
+  After the DOM has been updated, the browser goes through a series of steps (called the rendering pipeline) before actually painting the changes to the screen.
+    - style recomputation
+    - layout findings
+    - paints & composite
+
+In brief: 
+- DOM Updates refer to changes in the structure/content of the page that happen immediately when the DOM is manipulated.
+- Browser Paint is the process of actually rendering the visual changes to the screen, which occurs after the DOM is updated, styles are recalculated, and the layout is determined.
+
+useLayoutEffect: Runs synchronously after the DOM updates but before the browser paints. You can use it to measure or manipulate the DOM (e.g., measuring an element's size or position) before the browser renders the new changes on the screen.
+
+useEffect: Runs asynchronously after the DOM updates and after the browser has already painted. This is useful for tasks like fetching data, logging, or setting up event listeners without blocking the rendering process.
+
+
+React.memo(comp, arePropsEqual) => if arePropsEqual returns true then doesn't re-render, if returns false then it re-renders
+
+
+### Diff b/w clientWidth, offsetWidth, scrollWidth, innerWidth (window property), outerWidth (windowProperty)
+
+```
+<div style="width: 300px; padding: 10px; border: 5px solid black; margin: 20px;">
+  Content
+</div>
+```
+clientWidth:
+  Returns the width of the content + padding, so 320px (300px width + 10px padding on both sides).
+offsetWidth:
+  Returns the width of the content + padding + border, so 330px (300px width + 10px padding + 5px border on both sides).
+scrollWidth:
+  If the content inside overflows the container, it will return the width of the content including the overflowed part.
+innerWidth:
+  If referring to window.innerWidth, it will return the width of the entire viewport.
+outerWidth:
+  Refers to the full width of the browser window, including toolbars and borders.
+
+### Difference b/w direct state value initialization and lazy initialization (function)
+
+###### const [data, setData] = useState(localStorage.getItem('someKey'));
+
+- <b> First render:</b> The useState hook will run, and localStorage.getItem('someKey') will be called. The value returned will be used as the initial state for data.
+- <b>Subsequent renders:</b> The expression localStorage.getItem('someKey') will still run (even though useState only uses the initial value once). 
+React will ignore the return value of localStorage.  getItem('someKey') because the state (data) is preserved. So, even though it computes, it won’t affect the state unless setData is explicitly called to change it.
+
+#### The Problem:
+Although the state (data) is preserved between renders, the issue is that the localStorage.getItem('someKey') expression is evaluated every time the component re-renders, which is unnecessary and can cause performance issues if the operation is expensive (e.g., fetching large data from local storage, making API calls, etc.).
+
+######  const [data, setData] = useState(() => localStorage.getItem('someKey'));
+
+- Now, the localStorage.getItem('someKey') will only run once, during the first render.
+- For subsequent renders, React will simply return the preserved state (data) without re-evaluating localStorage.getItem('someKey').
+
+##### in Brief:
+-  If you pass an expression like localStorage.getItem('someKey') directly to useState, that expression still runs on every render, even though React will ignore it.
+- To avoid this unnecessary computation, use the lazy initialization pattern (useState(() => localStorage.getItem('someKey'))), ensuring the computation only runs once during the initial render.

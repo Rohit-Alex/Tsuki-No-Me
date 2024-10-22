@@ -11,76 +11,6 @@ const isArray = (arr) => {
     return typeof arr === 'object' && arr.constructor === Array && Array.isArray(arr)
 }
 
-const compareObject = (obj1, obj2) => {
-    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-        return false
-    } 
-    for (const key in obj1) {
-        if (!obj2.hasOwnProperty(key)) { // Note: why not if(obj2[key] !== undefined)
-            return false
-        }
-        const value1 = obj1[key]
-        const value2 = obj2[key]
-        if (value1 !== value2) {
-            return false
-        }
-    }
-    return true
-}
-
-const compareNestedObject = (obj1, obj2) => {
-    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-        return false 
-    }
-    for (const key in obj1) {
-        if (obj2[key] === undefined) { // Note: why not obj2[key] !== undefined
-            return false
-        }
-        const value1 = obj1[key]
-        const value2 = obj2[key]
-        if (isObject(obj1[key])) {
-             if (!compareNestedObject(value1, value2)) {
-                return false
-             }
-        }
-
-        if (value1 !== value2) {
-            return false
-        }
-    }
-    return true
-}
-const isEqual = (val1, val2) => {
-    if (typeof val1 !== 'object' && typeof val2 !== 'object') {
-        // Means both are primitives values
-        return val1 === val2
-    }
-    
-    if (typeof val1 === 'object' && val1 !== null && typeof val2 === "object" && val2 !== null) {
-        // Means both are non-primitive values
-        if (val1.constructor !== val2.constructor)  {
-            // If the type of non-primitives types are different
-            // Means one is array other is object or function
-            return false 
-        }
-        // Means both are of same type
-        if (Object.keys(val1).length != Object.keys(val2).length) {
-            return false;
-        }
-        for (const key in val1) {
-            if (!val2.hasOwnProperty(key)) {
-                return false
-            }
-            if (!isEqual(val1[key], val2[key])) {
-                return false
-            }
-        }
-        return true
-    }
-
-    // Means either one is primitive and other is non-primitive
-    return false
-}
 
 const checkTruthyValueTotally = (value) => {
   return value && !["0", "null", "undefined"].includes(value);
@@ -91,29 +21,6 @@ const treatFalsyAsTruthy = (value) => {
 
 console.log(checkTruthyValueTotally(23));
 console.log(treatFalsyAsTruthy(NaN));
-
-/*
-Test case 1
-const obj1 = {name: 'rohit', age: 24, hobbies: 'Music'}
-const obj2 = {name: 'rohit', age: 24, hobbies: 'Music', skills: 'javascript'}
-
-Test case 2
-const obj1 = {age: 24, skills: 'javascript', hobbies: 'Music', name: 'rohit'}
-const obj2 = {name: 'rohit', age: 24, hobbies: 'Music', skills: 'javascript'}
-
-Test case 3
-const obj1 = {name: 'rohit', age: 24, hobbies: 'Music', isSingle: true}
-const obj2 = {name: 'rohit', age: 24, hobbies: 'Music', skills: 'javascript'}
-
-Test case 4
-const obj1 = { name: "rohit", age: 24, hobbies: "Music", skills: 'javasc' };
-const obj2 = { name: "rohit", age: 24, hobbies: "Music", skills: undefined };
-
-Test case 5
-const obj1 = { a: 20, b: { x: 40, y: 60 }}
-const obj2 = { a: 20, b: { x: 40, y: 80 }}
-*/
-console.log(compareObject(obj1, obj2))
 
 
 const compareArrays = (arr1, arr2) => {
@@ -188,7 +95,7 @@ function deepCompare(value1, value2) {
   }
 
   // Handle null and undefined cases
-  if (value1 === null || value2 === null || value1 === undefined || value2 === undefined) {
+  if ([null, undefined].includes(value1) || [null, undefined].includes(value2) ) {
     return value1 === value2;
   }
 

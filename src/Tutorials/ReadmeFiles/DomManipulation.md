@@ -4,7 +4,9 @@ listItem.appendChild(deleteBtn);
 removeChild(node)
 listItem.getAttribute('arial-name')
 listItem.parentElement
+listItem.remove()
 
+target.className
 
 firstChild
 lastChild
@@ -24,4 +26,4 @@ lastChild vs lastElementChild
 nextSibling vs nextElementSibling
 parentNode vs parentElement
 getAttributeNode(attributeName).value vs getAttribute(attributeName) 
-removeAttribute(attributeName) vs getAttributeNode(attributeName)
+removeAttribute(attributeName)

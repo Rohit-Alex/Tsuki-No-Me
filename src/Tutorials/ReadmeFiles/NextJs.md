@@ -242,7 +242,7 @@ Note:
     - All routes are automatically prepared at build time without additional setup
 
 #### Dynamic Rendering (SSR)
-    - Is a server rendering strategy where routes are rendered for eacb user at request time
+    - Is a server rendering strategy where routes are rendered for each user at request time
     - Useful when a route has data that is personsalized to the user or contains information that can only be known at request time, such as cookies or the URL's search parameters
     - During rendering, if a dynamic function is discovered, Next.js will switch to dynamically rendering the whole route
     - In Next.js, these dynamic functions are: cookies(), headers() and searchParams
