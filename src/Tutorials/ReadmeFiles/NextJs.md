@@ -119,20 +119,21 @@ Note: Error boundary can't be added in layout file for the same level as layout 
 - To define a slot we use @folder naming convention
 - Each slot is passed as prop to the layout.tsx
 
-![folder-view](image-1.png)
-![code](image.png)
+![folder view](../../Assests/parallel-route-folder-structure.png)
+![code](../../Assests/parallel-route-code.png)
 
 ###### Benefits of parallel routes (complex-dashboard)
 
 - Independent route handling
     - Each slot of our layout can have its own loading and error states
     - Beneficial in scenarios where different sections load at varying speeds or encounter unique errors
-    ![example](image-2.png)
+    ![example](../../Assests/parallel-independent-route-handling.png)
+
 - Sub navigation in routes
     - Each slot can essentially function as mini application, complete with its own navigation and state management
     - This is especially useful in a complex application such as our dashboard where different sections serve distinct purpose 
     - user can switch to different part of application without un-necessary reload and layout shifts
-    ![example](image-3.png)
+    ![example](../../Assests/parallel-route-sub-navigation.png)
 
     ###### Unmatched routes in parallel routes
 
