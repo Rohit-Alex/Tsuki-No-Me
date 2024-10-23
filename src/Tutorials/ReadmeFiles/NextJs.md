@@ -70,6 +70,44 @@ Note:
 - Metadata is read in order, from the root level down to the final page level.
 - When there's metadata in multiple places for the same route, they get combined, but page metadata will replace layout metadata if they have the same properties.
 
+```
+    import Metadata from "next";
+
+    export const generateMetadata = ({params}: Props): Metadata => ({ title: 'Product params. productId})
+
+    type Props = {
+        params: {
+            productId: string;
+        }
+    }
+    
+    export default function ProductDetails( {params }: Props) {
+        return <hl>Details about product (params.productId)</h1>
+    }
+
+```
+
+#### Error handling
+
+- To just show the error screen if something wrong/crash occurs then make a error.tsx file (client component)
+- If we want to have a functionality to reload the page or help the error page to recover from it then it's page.tsx must be made client component as well.
+
+```
+    'use client'
+
+    export default function ErrorBoundary({error, reset}: { error: Error; reset: () => void }) {
+        return (
+            <div>
+                {error.message}
+                <button onClick={reset}>Try again</button>
+            </div>
+        )
+    }
+
+```
+
+Note: Error boundary can't be added in layout file for the same level as layout is at the very top of heirarchy of folder layout. As shown in *Component Hierarchy*
+
 #### Templates vs Layouts
 
 - Exactly the same, but with templates, when a user navigates between routes that share a template, a new instance of the component is mounted, DOM elements are re-created, state isn't preserved and effects are re-synchronized.
@@ -81,14 +119,20 @@ Note:
 - To define a slot we use @folder naming convention
 - Each slot is passed as prop to the layout.tsx
 
+![folder-view](image-1.png)
+![code](image.png)
+
 ###### Benefits of parallel routes (complex-dashboard)
 
 - Independent route handling
     - Each slot of our layout can have its own loading and error states
     - Beneficial in scenarios where different sections load at varying speeds or encounter unique errors
+    ![example](image-2.png)
 - Sub navigation in routes
     - Each slot can essentially function as mini application, complete with its own navigation and state management
     - This is especially useful in a complex application such as our dashboard where different sections serve distinct purpose 
+    - user can switch to different part of application without un-necessary reload and layout shifts
+    ![example](image-3.png)
 
     ###### Unmatched routes in parallel routes
 
@@ -101,9 +145,6 @@ Note:
 
         - The default.tsx file serves as a fallback to render content when the framework cannot retrieve a slot's active state from the current URL
         - In most of the cases it will be exact replica of page.tsx for the slots
-
-#### Conditional Routing (complex-dashboard, login/sign)
-
 
 #### Rendering
 
