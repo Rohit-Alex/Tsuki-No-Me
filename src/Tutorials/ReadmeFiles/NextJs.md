@@ -147,6 +147,22 @@ Note: Error boundary can't be added in layout file for the same level as layout 
         - The default.tsx file serves as a fallback to render content when the framework cannot retrieve a slot's active state from the current URL
         - In most of the cases it will be exact replica of page.tsx for the slots
 
+#### Intercepting Routes
+- Allows us to intercept or stop the default routing behaviour to present an alternate view or component when navigating through the UI, while
+still preserving the intended route for scenarios like page reloads
+![example 1](../../Assests/intercepting-route-1.png)
+![example 2](../../Assests/intercepting-route-2.png)
+
+- ###### Route conventions
+    - (.) to match segment on the same level
+    - (..) to match segment one level above
+    - (..)(..) to match segment two levels above (*currently not working*)
+    - (...) to match segments from the root app directory
+
+    Note: folder name should match post the convention.
+    ![code](../../Assests/intercepting-route-code.png)
+
+ To read more refer this doc [doc link](https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes)
 #### Rendering
 
 - ###### Rendering in React
