@@ -201,6 +201,8 @@ still preserving the intended route for scenarios like page reloads
  2. Server Side Rendering (SSR): Renders pages on demand in response to user requests. It is suitable for personalized content like social media feeds, where HTML depends on logged in user
 
  - ##### Drawbacks of SSR
+
+These issues contribute to an 'all-or-nothing' waterfall scenario, resulting in inefficiencies, especially if certain parts of your application are slower than others
             1. Fetch everything before we can see anything
                 - Components cannot start rendering and then pause or wait while data is still being loaded
                 - If a component needs to fetch data from a database or another source (like API), this fetching must be completed before the server can being rendering the page
@@ -214,7 +216,7 @@ still preserving the intended route for scenarios like page reloads
 
             <-------IN BRIEF-------->
             1. Data fetching must be completed before the server can begin rendering HTML
-            2. The JS required for the components needs to be fully loaded on the client side before the hydration process can start
+            2. The JavaScript required for the components needs to be fully loaded on the client side before the hydration process can start
             3. All components have to be hydrated before they become interactive
 
             creates an "all or nothing" waterfall problem that spans from the server to the client, where each issue must be resolved before moving to the next one
@@ -230,6 +232,35 @@ still preserving the intended route for scenarios like page reloads
 - By wrapping the main section with <Suspense>, we convey that it should not prevent the rest of the page from not just streaming but also from hydrating
 
 - This feature, called selective hydration allows for the hydration of sections as they become available, before the rest of the HTML and JS code are fully dowloaded. Due to this, a heavy peice of JS doesn't prevent the rest of the page from becoming interactive
+
+React begins hydrating as soon as possible, enabling interactions with elements like the header and side navigation without waiting for the main content to be hydrated
+This process is managed automatically by React
+In scenarios where multiple components are awaiting hydration, React prioritizes hydration based on user interactions
+
+#### Drawbacks of Suspense SSR Architecture
+
+1. First, even though JavaScript code is streamed to the browser asynchronously, eventually, the entire code for a web page must be downloaded by the user
+As applications add more features, the amount of code users need to download also grows. This leads to an important question:
+should users really have to download so much data?
+
+2. Second, the current approach requires that all React components undergo hydration on the client-side, irrespective of their actual need for interactivity
+This process can inefficiently spend resources and extend the loading times and time to interactivity for users, as their devices need to process and render components that might not even require client-side interaction
+This leads to another question:
+should all components be hydrated, even those that don't need interactivity?
+
+3. Third, in spite of servers' superior capacity for handling intensive processing tasks, the bulk of JavaScript execution still takes place on the user's device
+This can slow down the performance, especially on devices that are not very powerful
+This leads to another important question:
+should so much of the work be done on the user's device?
+
+#### Evolution of React
+
+CSR → SSR → Suspense for SSR
+Suspense for SSR brought us closer to a seamless rendering experience
+*Challenges*
+    - Increased bundle sizes leading to excessive downloads for users
+    - Unnecessary hydration delaying interactivity
+    - Extensive client-side processing that could result in poor performance
 
 #### React Server Components (RSC)
 
@@ -291,6 +322,7 @@ still preserving the intended route for scenarios like page reloads
 #### Static Rendering (SSR)
 
     - Is a server rendering startegy where we generate HTML pages at the time of building our application i.e. at build time.
+    - built once, cached by CDN and served to the client instantly
     - Along with the HTML, the RSC payload is created for each component, and JS chunks are produced for client-side component hydration in the browser.
     - If nvaigated directly to the page route, the corresponding HTML file is served (request sent to server along with js chunk).
     - If navigated to the route from different one, the route is created on the client side using the RSC payload and JS chunks, without any additional requests to server (its prefetched).
@@ -298,6 +330,12 @@ still preserving the intended route for scenarios like page reloads
     - This optimization also enables the user to share the result of the rendering work among different users, resulting in a significant performance boost for your application
     - This is the default rendering strategy in the app router
     - All routes are automatically prepared at build time without additional setup
+
+    **Prefetching**
+        - Prefetching is a technique used to preload a route in the background before the user navigates to it
+        - Routes are automatically prefetched as they become visible in the user's viewport, either when the page first loads or as it comes into view through scrolling
+        - For static routes, the entire route is prefetched and cached by default
+        - When we load the homepage, Next.js prefetches the About and Dashboard routes, keeping them ready for instant navigation
 
 #### Dynamic Rendering (SSR)
     - Is a server rendering strategy where routes are rendered for each user at request time
@@ -308,5 +346,19 @@ still preserving the intended route for scenarios like page reloads
 #### Streaming (SSR)
     - strategy that allows for progressive UI rendering from the server
     - Work is divided into chunks and streamed to the client as soon as it's ready
-    - This enables users to see parts of the page immediateluy, before the entire content has finished rendering
+    - This enables users to see parts of the page immediately, before the entire content has finished rendering
     - This improves both the initial load time performance and rendering of UI elements that rely on slower data fetches, which would otherwise block the entire route
+
+
+**Server only code** : when server side functions are included in a client component then we get error while compiling itself.
+
+**Client only code** : Just as it's important to restrict certain operations to the server, it's equally important to confine some functionality to the client side
+- Client-only code typically interacts with browser-specific features like the DOM, the window object, localStorage etc which are not available on the server
+- Ensuring that such code is executed only on the client side prevents errors during server-side rendering
+- To prevent unintended server side usage of client side code, we can use a client-only package
+
+#### Context in NextJS
+- Context providers are typically rendered near the root of an application to share global application state and logic
+For example, the application theme
+- However, since React context is not supported in Server Components, attempting to create a context at the root of your application will result in an error
+- To address this, you can create a context and render its provider inside a separate Client Component
