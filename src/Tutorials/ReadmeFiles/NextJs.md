@@ -362,3 +362,50 @@ Suspense for SSR brought us closer to a seamless rendering experience
 For example, the application theme
 - However, since React context is not supported in Server Components, attempting to create a context at the root of your application will result in an error
 - To address this, you can create a context and render its provider inside a separate Client Component
+
+#### Interleaving server and client components
+
+- We can have server components inside server components => ✅ works
+- importing client components inside client component => ✅ works
+- importing client component inside server component. Means client is child and server is parent => ✅ works
+- import server component inside client component. Means server is child and client is parent => ❌ Error (Reason being any component nested inside client 
+                                                                                                component is automatically converted into client component. 
+                                                                                                Since, client component are rendered after server component)
+
+    - workaround for this is to not import server component inside client component, instead pass the server component as a children prop in client component
+
+    ```
+        Note: This is a server component, where we imported ClientComponentOne and passing ServerComponentOne as a children to it
+
+        import { ClientComponentOne } from "@/components/client-component-one";
+        import { ServerComponentOne } from "@/components/server-component-one";
+        export default function InterleavingPage() {
+        return (
+            <>
+            <h1>Interleaving Page</h1>
+            <ClientComponentOne>
+                <ServerComponentOne />
+            </ClientComponentOne>
+            </>
+        );
+        }
+
+
+        "use client";
+        import { useState } from "react";
+        import { ServerComponentOne } from "./server-component-one";
+        export const ClientComponentOne = ({
+        children,
+        }: {
+        children: React.ReactNode;
+        }) => {
+        const [name, setName] = useState("Batman");
+        return (
+            <>
+            <h1>ClientComponentOne</h1>
+            {children}
+            </>
+        );
+        };
+    ```                                                                                
+    
