@@ -409,3 +409,17 @@ For example, the application theme
         };
     ```                                                                                
     
+#### Opting out of caching in data-fetching
+- By default all fetch request are cached.
+- For individual data fetches, you can opt out of caching by setting the cache option to no-store
+- Once you specify the no-store option for a fetch request, subsequent fetch requests will also not be cached
+- By default, Next.js will cache *fetch()* requests that occur before any dynamic functions (*cookies(), headers(), searchParams*) are used and will not cache requests found after dynamic functions
+
+#### Request Memoization
+
+- Request memoization is a technique that deduplicates requests for the same data within a single render pass (**only for GET request**)
+- This approach allows for re-use of data in a React Component tree, prevents redundant network calls and enhances performance
+- For the initial request, data is fetched from an external source and the result is stored in memory
+- Subsequent requests for the same data within the same render pass retrieve the result from memory, bypassing the need to make the request again
+
+![visualization in same render pass](../../Assests/request-memoization.png)
