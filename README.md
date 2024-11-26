@@ -571,3 +571,4 @@ React Roadmap : [click to open](src/Tutorials/ReadmeFiles/ReactRoadMap.md)
 also go through other files in roadmap folder
 
 Optimization stratigies: [click to open](src/Tutorials/ReadmeFiles/Optimization.md)
+NextJs Notes: [click to open](src/Tutorials/ReadmeFiles/NextJs.md)

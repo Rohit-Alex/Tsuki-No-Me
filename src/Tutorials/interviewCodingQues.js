@@ -22,24 +22,6 @@ const treatFalsyAsTruthy = (value) => {
 console.log(checkTruthyValueTotally(23));
 console.log(treatFalsyAsTruthy(NaN));
 
-
-const compareArrays = (arr1, arr2) => {
-    // This doesn't always work. If order doesn't matter and any value is null and in another array any value is undefined
-    return JSON.stringify(arr1) === JSON.stringify(arr2)
-}
-
-const advanceCompareArrays = (arr1, arr2) => {
-    // If order matters
-    if (arr1.length !== arr2.length) return false;
-    for (let i = 0; i < arr1.length; i++) {
-        if (arr1[i] !== arr2[i]) return false
-    }
-    return true
-
-    // Try to do with every method
-}
-
-
 const optimizedCompareArrays = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
         return false
