@@ -184,6 +184,7 @@ function foo() {
 console.log(foo());
 console.log(count);
 
+// https://levelup.gitconnected.com/5-things-you-dont-know-about-try-catch-finally-in-javascript-5d661996d77c (read more here)
 
 // Write the o/p. source (Akshay saini)
 

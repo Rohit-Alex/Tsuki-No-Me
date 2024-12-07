@@ -220,3 +220,46 @@ onmessage = (event) => {
     ];
 
     Object.values(CUSTOMIZE_IMAGE_DATA_OBJ) is same as CUSTOMIZE_IMAGE_DATA_OBJ_ARR
+
+
+https://maxrozen.com/race-conditions-fetching-data-react-with-useeffect
+
+
+1	c ? p : q	if (c) p else q	(c && p) || (!c && q)
+2	c ? p : true		!c || p
+3	c ? p : false		c && p
+4	c ? true : p		c || p
+5	c ? false : p	   !c && p
+6	c ? true : false	c
+7	c ? false : true	!c
+8	c ? true : true		true
+9	c ? false : false	false
+
+
+   #Bharatpe-office account
+     Host github.com-bp
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/bp
+
+     #Rohit-personal account
+     Host github.com-Rohit-Alex-Personal
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/Rohit-Alex-Personal
+
+
+noSpinners: {
+		'& input[type=number]::-webkit-inner-spin-button, & input[type=number]::-webkit-outer-spin-button': {
+			WebkitAppearance: 'none',
+			margin: 0,
+		},
+		'& input[type=number]': {
+			MozAppearance: 'textfield',
+		},
+	},
+
+(A && (B || C)) === ((A && B) || (A && C))
+(A || (B && C)) === ((A || B) && (A || C))
+!(A || B) === !A && !B
+!(A && B) === !A || !B
