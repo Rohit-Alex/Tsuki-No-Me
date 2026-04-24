@@ -8,14 +8,6 @@
 **inline-block =>** same as inline except that they can have padding and margin added from top & bottom as well and allows to set a width and height on the element.
 
 **currying =>** process of taking a function with multiple arguments and turning it into a sequence of functions.
-
-**charCodeAt =>**  returns the ascii value of the character at given index of the string
-
-    "ABC".charCodeAt(0); // returns 65
-    
-**fromCharCode =>** returns the character for the given ascii value
-
-    String.fromCharCode(65, 66, 67); // returns "ABC"
     
 #### HOC
 - making reuse of the component logic and functionality that is commonly required at different level of hierarchy

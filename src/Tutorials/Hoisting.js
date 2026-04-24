@@ -1,9 +1,11 @@
 /*
+Hoisting is not a real mechanism where code is physically moved. 
+Instead, it's a metaphor describing how JavaScript handles variable and function declarations during compilation, 
+where declarations are processed during the first pass before code execution.
+
    Everything is JS happens inside "Execution Context". It has 2 phases: 
        -> i> Memory allocation phase (variable env.) 
        -> ii> Code execution (Thread of execution)
-
-   Hositiing is a process whereby the interpreter moves the declaration of functions & variables to the top of their scope, prior to execution of the code.
    
    It makes use of the memory allocation phase of execution context. Variables and functions are allocated in memory even before the execution begins. Hence, due to this variables and functions are accessible even before they are declared.
 
@@ -13,8 +15,11 @@
    Only var, and normal functions means (function declartion) are hoisted.
    var is assigned a value "undefined" and In functions, entire code is assigned in memory during allocation phase of global execution context.
 
-   Let and const are also hoisted but they are allocated memory under script as they are block scoped. Hence are not accessible till they are executed i.e initialized a value. 
+   Let and const are also hoisted. They are allocated memory but left uninitialized i.e. nothing gets assigned to it until the actual declaration line is reached (or that line is executed) 
    This zone is called "temporal dead zone". The gap b/w a variable is allocated a memory and till its gets executed and a value is assigned to it is called "temporal dead zone".
+
+   Note: TDZ was primarily created to ensure that const variables maintain their single immutable value and cannot be observed in an intermediate, uninitialized state.
+          so since const and let both have block scoped, TDZ was done for both.
 
    Function expression, arrow functions are treated as normal variables are treated.
    classes are not hoisted.

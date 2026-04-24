@@ -196,6 +196,9 @@ class AdvanceGroom extends Groom {
     }
 }
 
+// we can also call parent method using super keyword. e.g. super.getIntro()
+// this case can arise when there are multiple methods with same name in parent and child class.
+
 const nriGroom = new AdvanceGroom('yenAreEye', 29, 'Taadna', "5'8 feet", 'Majdoori', 1500000, 'Germany')
 
 console.log(nriGroom.getIntro())

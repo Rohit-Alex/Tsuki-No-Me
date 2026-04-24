@@ -66,6 +66,30 @@ tuSetHogi()
         iii> Function expression is like creating an anonymous function and storing it in a variable.
 */
 
+/* Named Function Expression and Anonymous Function Expression */
+var namedFun = function namedFun() {
+  console.log('Named Function Expression');
+}
+
+var anonymousFun = function() {
+  console.log('Anonymous Function Expression');
+}
+
+namedFun();
+anonymousFun();
+
+/*
+An anonymous function expression has no name, 
+while a named function expression is given a specific name. 
+
+Despite being less common, named function expressions are recommended for better clarity and debugging.
+
+? 3 main reasons to prefer named function expressions?
+1. Creates a reliable self-reference to the function (useful for recursion and event handling), 
+2. Provides more debuggable stack traces (it shows up in the stack trace with a meaningful name, allowing developers to more easily understand the source and context of an error without having to read the entire code), 
+3. Makes code more self-documenting by clearly indicating the function's purpose
+*/
+
     /*
         <---------- Callback functions --------->
         * A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of action.

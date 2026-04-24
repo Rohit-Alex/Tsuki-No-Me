@@ -83,6 +83,8 @@ console.log(rohitLife.partTime)  // 'Annoying rohit'
         * Prototype can be thought of global prototype for its type.
 */
 
+/* <-------------- Custom Prototype ------------> */
+
 const arr1 = ['one', 'two', 'three', 'four']
 //adding prototype to the Array prototype
 Array.prototype.myFun = function () {
@@ -106,7 +108,36 @@ console.log(arr1.myFun());
     NOTE: Agar kuch samajh mein nhi aaye toh, last mein mera comment padhna. Pehle try kar samajhne ka.
 */
 
-//Map Method
+/* <-------------- Object.is pollyfill ------------> */
+Object.is = function ObjectIs(x, y) {
+    var xNegZero = isNegZero(x)
+    var yNegZero = isNegZero(y)
+
+    if(xNegZero || yNegZero) {
+        // both -0 then return true
+        // otherwise false
+        return xNegZero && xNegZero;
+    } else if(isItNaN(x) && isItNaN(y)) {        
+        return true;
+    } else {
+        return x === y
+    }
+
+    // ****************************
+    function isNegZero(v) {
+        return v === 0 && (1/v) === -Infinity; 
+        // 1 / 0 => Infinity
+        // 1 / -0 => -Infinity
+    }
+
+    function isItNaN(v) {
+        // can use Number.isNaN()
+        // NaN not equals to itself, can use that otherwise
+        return v !== v
+    }
+}
+
+/* <-------------- Map Method ------------> */
 Array.prototype.myMap = function (cb) {
     const newArr = []
     this.forEach((e, index) => {
@@ -116,7 +147,7 @@ Array.prototype.myMap = function (cb) {
 }
 console.log([2, 5, 7].myMap((e, idx, ar) => e * 2 + idx + ar[2]))
 
-//Filter method
+/* <-------------- Filter Method ------------> */
 Array.prototype.myFilter = function (cb) {
     const newArr = []
     this.forEach((e, idx) => {
@@ -128,7 +159,7 @@ Array.prototype.myFilter = function (cb) {
 }
 console.log([5, 7, 9].myFilter((e, idx) => e % 2 === 0))
 
-//Reduce method
+/* <-------------- Reduce Method ------------> */
 Array.prototype.myReduce = function (cb, initialValue) {
     // initialValue => acc = initialValue
     //                currElement = arr[0] : arr[1]
@@ -146,7 +177,7 @@ const sum = [1, 5, 7, 2, 9].myReduce((acc, currVal, currIndex, ar) => {
 }, 0);
 console.log(sum);
 
-// Flat method
+/* <-------------- Flat Method ------------> */
 
 const flatArray = (ip, currLevel, targetLevel) => {
     let op = [];
@@ -192,7 +223,7 @@ Array.prototype.myFlat = function (level) {
     return flatArray(iteratingArr, 0, level);
 };
 
-//Call Method
+/* <-------------- Call Method ------------> */
 Function.prototype.myCall = function (context, ...args) {
     const fun = this
     let randomUniqueKey = Math.random()
@@ -203,7 +234,7 @@ Function.prototype.myCall = function (context, ...args) {
     return result
 }
 
-// Apply method
+/* <-------------- Apply Method ------------> */
 Function.prototype.myApply = function (context, argArr) {
     const fun = this
     let randomUniqueKey = Math.random()
@@ -214,7 +245,7 @@ Function.prototype.myApply = function (context, argArr) {
     return result
 }
 
-//Bind
+/* <-------------- Bind Method ------------> */
 Function.prototype.myBind = function (context, ...args) {
     const fun = this
     return function () {

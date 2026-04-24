@@ -1,5 +1,5 @@
 /*
-COERCION:
+* COERCION:
 Type coercion is the process of converting value from one type to another (such as string to number, object to boolean, and so on). Any type, be it primitive or an object, is a valid subject for type coercion.
 
 Explicit Type Coversion: Forcefully conversion of one type into another. We can do so by writing the Datatype followed by wrapping the variable within parenthesis(). 
@@ -8,6 +8,15 @@ Implicit Type Coversion: The coversion takes on it's own automatically without u
 
 One operator that does not trigger implicit type coercion is ===, which is called the strict equality operator. 
 The loose equality operator == on the other hand does both comparison and type coercion if needed.
+
+* Note: 
+?      1: Both operators (=== and ==) first check the types of the values being compared, contrary to the common myth that only === checks types.
+?      2: When the types of both compared values are already identical, == and === behave exactly the same and perform the same comparison.
+?      3: Objects with the same structure but different references are not considered equal by either == or ===. They perform identity comparison (reference comparison), not structural comparison.
+
+== converts to primitive value if needed then if different types, then it converts to number and then compares.
+except for null and undefined, they are equal to each other and nothing else.
+and 0 and -0 are equal to each other.
 
 String Conversion
   Explicit conversion
@@ -20,9 +29,10 @@ STRING CONVERSIONS:
 Implicit coercion is triggered by the binary + operator, when any operand is a string:
 
 
-
 Numeric conversion:
 Explicit Conversion: Number('5') => 5
+
+Implicit Conversion:
 1> Triggered by comparison operators (>, <, <=,>=) when comparing 2 different types
 2> bitwise operators ( | & ^ ~)
 3> arithmetic operators (- + * / % ). Note, that binary+ does not trigger numeric conversion, when any operand is a string.
@@ -42,6 +52,7 @@ Number("  ")          // 0
 Number("\n")          // 0
 Number("someNum")     // NaN
 Number(true)          // 1
+Number("-0")          // -0
 Number(" 12 ")        // 12
 Number("-12.34")      // -12.34
 Number(" 12s ")       // NaN
@@ -53,6 +64,35 @@ Number([null])		    // 0
 Number([24])				  // 24 => String([24]) =>'24' => Number('24') => 24
 Number([24, 5])				// NaN => String([24, 5]) => '24,5' => Number('24,5') => NaN
 
+* While coercing a non-primitive value, we try to convert it to a primitive value 
+* using the valueOf() method first. If it's not present, then we try to convert it to a string using the toString() method. 
+* If it's not present, then we throw an error.
+? toString() when used on different datatypes, 
+null -> "null"
+undefined -> "undefined"
+true -> "true"
+false -> "false"
+3.14159 -> "3.14159"
+0 -> "0"
+-0 -> "0"
+
+? For Array
+? Here they serializes the array to a string leaving the brackets.
+? And it will show those contents unless they are null or undefined.
+[] -> ""
+[1,2,3] -> "1,2,3"
+[null, undefined] -> ","
+[1, , 3] -> "1,,3"
+[[[], [], []], []] -> ",,,"
+[,,,,] -> ",,,"
+
+Array.toString() internally calls join(",")
+join -> each element is converted to string and then joined with the separator(here comma).
+[,,] -> ["", ""] -> "" + "," + "" => ","
+
+? For Object, all objects are converted to "[object Object]"
+{} -> "[object Object]" 
+{a:2} "[object Object]"
 
 Exceptions: 
 1> null and undefined equal each other and don’t equal anything else. 
@@ -283,4 +323,20 @@ typeof 4+5;
   Each gets converted to string first and gets joined
   '24,1,1' + '998' 
   '24,1,1998' // (Hope that rings a bell)
+*/
+
+[] == ![];
+/*
+[].toString => ""
+![] => false
+"" == false
+0 == 0
+true
+*/
+
+[] != []
+/*
+!([] == []) => !(false) => true
+[] == [] => false
+!false => true
 */
