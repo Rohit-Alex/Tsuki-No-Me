@@ -1,4 +1,4 @@
-# Interview Prepartion and Cheat Sheet
+# Interview Preparation and Cheat Sheet
 ## <------------------------- PHASE 1 ------------------------->
 
 #### 1> What is JavaScript?
@@ -36,37 +36,34 @@
 > - On the client-side, JavaScript is used to create interactive web pages, validate form data, and provide visual effects. 
 > - On the server-side, JavaScript is used in Node.js to build server applications, interact with databases, and handle incoming HTTP requests.
 
-4> What happens behind the hood when a webpage made using html, css and JS is opened?
-> Here's a general overview of the process:
->   1. ###### HTML parsing:
-The web browser parses the HTML code to create a Document Object Model (DOM) tree, which represents the structure of the webpage. The DOM tree contains all the elements on the webpage, such as headings, paragraphs, images, and links.
->
->   2. ###### CSS parsing: 
-The web browser also parses the CSS code to create a Cascading Style Sheets (CSS) Object Model (CSSOM) tree, which represents the styles and layout of the webpage. The CSSOM tree contains information about the size, position, and appearance of each element on the webpage.
->
->   3. ###### Rendering:
-The web browser combines the DOM tree and the CSSOM tree to create a render tree, which is used to display the webpage on the screen. The render tree contains all the elements and styles needed to paint the webpage.
->
->   4. ###### JavaScript execution:
-If the webpage includes JavaScript code, the web browser executes it. JavaScript can modify the DOM and CSSOM trees, add interactivity to the webpage, and perform other actions.
->
->   5. ###### Layout and painting:
-Due to user activity, some layout or value might update which is repainted.
->
-> 6. ###### Loading external resources:
-The webpage may also include external resources such as images, videos, and scripts. The web browser loads these resources as needed.
+#### 4> What happens behind the hood when a webpage made using html, css and JS is opened?
+Here's a general overview of the process:
+
+1. **HTML parsing:** The web browser parses the HTML code to create a Document Object Model (DOM) tree, which represents the structure of the webpage. The DOM tree contains all the elements on the webpage, such as headings, paragraphs, images, and links.
+
+2. **CSS parsing:** The web browser also parses the CSS code to create a Cascading Style Sheets (CSS) Object Model (CSSOM) tree, which represents the styles and layout of the webpage. The CSSOM tree contains information about the size, position, and appearance of each element on the webpage.
+
+3. **Rendering:** The web browser combines the DOM tree and the CSSOM tree to create a render tree, which is used to display the webpage on the screen. The render tree contains all the elements and styles needed to paint the webpage.
+
+4. **JavaScript execution:** If the webpage includes JavaScript code, the web browser executes it. JavaScript can modify the DOM and CSSOM trees, add interactivity to the webpage, and perform other actions.
+
+5. **Layout and painting:** Due to user activity, some layout or value might update which is repainted.
+
+6. **Loading external resources:** The webpage may also include external resources such as images, videos, and scripts. The web browser loads these resources as needed.
 
 #### 5> What is DOM?
->Tree-like structure, with nodes representing elements, attributes, and text. The DOM provides a way for programs to interact with the web page, allowing them to read, modify, and delete content and styles.
 
-####  6> Explain async and defer in JS?
+Tree-like structure, with nodes representing elements, attributes, and text. The DOM provides a way for programs to interact with the web page, allowing them to read, modify, and delete content and styles.
 
-> **THE PROBLEM -->>**
-- When a web page is loaded, the browser needs to download and execute all the JavaScript files included in the page. 
+#### 6> Explain async and defer in JS?
+
+**THE PROBLEM:**
+
+- When a web page is loaded, the browser needs to download and execute all the JavaScript files included in the page.
 - By default, the browser will download and execute the JavaScript files synchronously, which means it will wait for each script to finish downloading and executing before moving on to the next one.
 - This can slow down the page load time, especially if there are multiple scripts or if the scripts are large.
 
->We can add script tag at two places.
+We can add script tag at two places:
 
     i>  Inside head tag: 
         If script tag is added here then HTML parsing is blocked till the scripts are downloaded and done with execution. This arises 2 problems:
@@ -80,7 +77,7 @@ The webpage may also include external resources such as images, videos, and scri
     
         * The browser notices the script (and can start downloading it) only after it downloaded the full HTML document. For long HTML documents, that may be a noticeable delay.
 
-##### THE SOLUTION (async/defer)
+### THE SOLUTION (async/defer)
 Both async and defer allows us to download the script file parallely while browser continues to parse the HTML. The difference lies in the order and way of execution of the sript files.
 ```sh
 i> DEFER:
