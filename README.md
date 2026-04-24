@@ -113,6 +113,7 @@ ii> ASYNC:
 
 NOTE: We can "async" when the scripts are totally independent of each other and doesn't require the full DOM tree in it's execution.
 ```
+
 #### 7> What are different Datatypes?
 
 1. Primitive Datatypes
@@ -138,6 +139,40 @@ NOTE: We can "async" when the scripts are totally independent of each other and 
     1. Objects: 
         * **Note:** *Array* is included here as well.
     2. Functions
+
+#### What does the ++ operator do according to the specification?
+It grabs the old value, coerces it to a number, and returns the original number after updating it with an increment of one
+
+var y = "5"
+y++;    // 5
+У;      // 6
+
+#### Difference between 'undefined' and 'undeclared'
+'Undefined' means a variable exists but has no value, while 'undeclared' means a variable has never been created in any accessible scope.
+
+#### What is the Temporal Dead Zone (TDZ) in JavaScript?
+A state where block-scoped variables are uninitialized and cannot be accessed, which will result in an error if attempted.
+
+uninitialized (TDZ), 
+undefined (variable exists but has no value), and 
+undeclared (variable never created).
+
+#### Special value -0 (move this to coercion)
+var trendRate = -0;
+
+trendRate === -0；  // true
+trendRate === 0;    // true
+
+trendRate.tostring();   // "O"
+
+trendRate < 0;      // false
+trendRate > 0;      // false
+
+Object.is(trendRate, - 0);    // true
+Object.is(trendRate, 0) ;     // false
+
+#### Defining our own Object.is pollyfill. Should handle -0 and NaN case
+[click to open](src/Tutorials/prototypeChain&pollyfills.js)
 
 #### 8> Difference between null and undefined?
 
@@ -188,6 +223,7 @@ All values are truthy except the above ones. [view more](src/Tutorials/Typeof&Fa
 ```
 object instanceof constructor.
 ```
+
 #### 13> Scopes in JS.
 ###### Global scope:
 - Variables declared outside of all functions.
@@ -288,6 +324,7 @@ Nullish Operator [click to open](src/Tutorials/ReadmeFiles/NullishOperator.md)
     
             the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
             const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
+
 #### 22> Coercion. [click to open](src/Tutorials/Coercion.js)
 
 #### 23>How would you compare a non-primitive datatypes?
@@ -307,6 +344,17 @@ slice, substring, substr(deprecated, hence optional to know), includes, at, trim
     substr => takes a starting point and goes till the length of output string becomes equal to 2nd argument.However, it's deprecated now.      
 
     Note: When NaN is provided as index, then it's treated as 0 for every above method.
+
+    charCodeAt =>  returns the ascii value of the character at given index of the string
+
+    "ABC".charCodeAt(0); // returns 65
+
+    Note: if we don't pass any argument, then it takes 0 by default
+    "A".charCodeAt() => 65
+    
+    fromCharCode => returns the character for the given ascii value.
+    
+    String.fromCharCode(65, 66, 67); // returns "ABC"
 
 #### 26> object methods.
     -> Different way to create object. (Object.assign, Object literal, new keyword, classes, constructor function)
@@ -449,13 +497,13 @@ Note: variables declared with the var, const, or let keywords cannot be deleted 
 
 #### 31> Map and set. [click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
-#### Components of a URL & URL methods [click to open](src/Tutorials/url.md)
+#### Components of a URL & URL methods [click to open](src/Tutorials/ReadmeFiles/url.md)
 
-#### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/StorageAndJSON.md)
+#### 32> JSON.stringify, JSON.parse, LocalStorage, SessionStorage, cookies [click to open](src/Tutorials/ReadmeFiles/StorageAndJSON.md)
 
-#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ES6.md)
+#### 33> ES6 concepts. (Spread, destructuring, rest, optional Chaining). [click to open](src/Tutorials/ReadmeFiles/ES6.md)
 
-#### 34> Shallow copy and deep copy. structureClone [click to open](src/Tutorials/shallow&DeepCopy.md)
+#### 34> Shallow copy and deep copy. structureClone [click to open](src/Tutorials/ReadmeFiles/shallow&DeepCopy.md)
 
 ####  35> Oops in JS?
     i> Classes used for making scalable objects
@@ -465,6 +513,7 @@ Note: variables declared with the var, const, or let keywords cannot be deleted 
         c> Inheritance
         d> Polymorphism
         
+[click to open](src/Tutorials/ReadmeFiles/objects.md)
 [click to open](src/Tutorials/OopsConcept.js)
 
 #### 36> Constructor property of Object?
@@ -519,15 +568,15 @@ It's similar to alert("Hi")[1,2].forEach(alert)
 
 #### 40> Prototype Inheritance. [click to open](src/Tutorials/prototypeChain&pollyfills.js)
 
-#### 41> this operator [click to open](src/Tutorials/thisExample.md)
+#### 41> this operator [click to open](src/Tutorials/ReadmeFiles/thisExample.md)
 
-#### 42> Closure [click to open](src/Tutorials/closure.md)
+#### 42> Closure [click to open](src/Tutorials/ReadmeFiles/closure.md)
 
-#### 43> Currying [click to open](src/Tutorials/currying.md)
+#### 43> Currying [click to open](src/Tutorials/ReadmeFiles/currying.md)
 
 #### 44> Asynchronous behaviour
-- Event loop: [click to open](src/Tutorials/eventLoop.md)
-- Async behavior and why we need Promises: [click to open](src/Tutorials/Asynchronous.md)
+- Event loop: [click to open](src/Tutorials/ReadmeFiles/eventLoop.md)
+- Async behavior and why we need Promises: [click to open](src/Tutorials/ReadmeFiles/Asynchronous.md)
     - Promises variants: [click to open](src/Tutorials/PromiseVariant.js)
         - Promise.all
         - Promise.allSettled
@@ -572,3 +621,6 @@ also go through other files in roadmap folder
 
 Optimization stratigies: [click to open](src/Tutorials/ReadmeFiles/Optimization.md)
 NextJs Notes: [click to open](src/Tutorials/ReadmeFiles/NextJs.md)
+
+
+.mjs/.js
