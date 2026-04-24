@@ -1,10 +1,15 @@
 
-####    <------- Currying -------->
-* Currying in JavaScript transforms a function with multiple arguments into a nested series of functions, each taking a single argument.
-* Currying helps you avoid passing the same variable multiple times, and it helps you create a higher order function.
-* function callable as *f(a, b, c)* into callable as *f(a)(b)(c)*.
+# Currying
 
-```
+## Definition
+
+- Currying in JavaScript transforms a function with multiple arguments into a nested series of functions, each taking a single argument.
+- Currying helps you avoid passing the same variable multiple times, and it helps you create a higher order function.
+- Function callable as *f(a, b, c)* into callable as *f(a)(b)(c)*.
+
+## Basic Example
+
+```javascript
 function add(num1, num2) {
     console.log(num1 + num2)
 }
@@ -18,8 +23,9 @@ add(3,7)
 addCurried(3)(7); // same as above
 ```
 
-In arrow functions:
-```
+### In Arrow Functions
+
+```javascript
 const addCurriedArrow = num1 => num2 => num1 + num2
 console.log(addCurriedArrow(3)(7))
 ```

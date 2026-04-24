@@ -24,7 +24,7 @@ user2.increment = function() {
 }
 ```
 
-#### 3. using Object.create
+##### 3. using Object.create
 ```
 const user3 = Object.create(null); // what if null is not there
 user3.name = "Alex",

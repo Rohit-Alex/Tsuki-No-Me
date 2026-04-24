@@ -1,9 +1,12 @@
 
-- Since, JS is a single threaded and synchronous language. 
-- If a piece of code takes 3 seconds to execute then as long as this line is executed, the execution won't go to next line. 
+# Asynchronous JavaScript
+
+## Why Do We Need Asynchronous Programming?
+
+- Since JS is a single threaded and synchronous language.
+- If a piece of code takes 3 seconds to execute then as long as this line is executed, the execution won't go to next line.
 - This will increase the wait time and block the main thread.
-- We should never block the main thread. We can make that particular code asynchronous, i.e. 
-gets initiated at that moment but gets executed at some later point when call stack is empty.
+- We should never block the main thread. We can make that particular code asynchronous, i.e., gets initiated at that moment but gets executed at some later point when call stack is empty.
 
 e.g: window.onLoad() => when js scripts are loaded.
 

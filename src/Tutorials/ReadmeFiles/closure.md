@@ -1,37 +1,45 @@
 
+# Closures
+
+## Definition
+
+A closure is:
+
 1. Function bundled together with reference to its lexical environment.
-2. Inner function can access the outer functions variables and parameters. 
+2. Inner function can access the outer function's variables and parameters.
 3. Closure is created every time a function is created at execution time.
 4. Even if this function is executed in some other scope, it still remembers its outer lexical environments where it was originally present in code.
 
-#### I/O -> O/P Questions
+## Practice Questions
 
-1. 
-```
-    function outer () {
-        const Amane = 'hi'
-        function inner() {
-            console.log(`Log: ${Amane}`)
-        }
-        inner()
+### Question 1
+
+```javascript
+function outer () {
+    const Amane = 'hi'
+    function inner() {
+        console.log(`Log: ${Amane}`)
     }
-    outer() 
-    // Log: hi
+    inner()
+}
+outer() 
+// Output: Log: hi
 ```
 
-2. 
-```
-    function outer () {
-        const Amane = 'hi'
-        return function inner() {
-            console.log(`Log: ${Amane}`)
-        }
+### Question 2
+
+```javascript
+function outer () {
+    const Amane = 'hi'
+    return function inner() {
+        console.log(`Log: ${Amane}`)
     }
-    const returnedFn = outer()
-    returnedFn()
+}
+const returnedFn = outer()
+returnedFn()
 
-    outer()() // Equivalent to above 2 lines i.e. 29 & 30
-    // Log: hi
+outer()() // Equivalent to above 2 lines
+// Output: Log: hi
 ```
 
 3. 

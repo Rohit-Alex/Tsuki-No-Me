@@ -1,5 +1,8 @@
-#### <<<<---------- Optional Chaining ----------->>>
-```
+# ES6 Features
+
+## Optional Chaining
+
+```javascript
 const knowMeObj = {
     name: 'Amane Ubuyashiki',
     nickName: 'Ubuyashiki',
@@ -17,11 +20,13 @@ const knowMeObj = {
 
 >Similarly there is a **fav19PlusMovies** contained in *<u>secret</u>* and you want to know the one that comes first.
 
-Without optional chaining you would write like this,
+### Without Optional Chaining
 
-        const pincode = knowMeObj.address2 &&  knowMeObj.address2.pincode
-        const knowMyHusband = knowMeObj.secret && knowMeObj.secret.getHusband &&  typeof knowMeObj.secret.getHusband === 'function' && knowMeObj.secret.getHusband()
-        const fav18PlusMovie = knowMeObj.secret && knowMeObj.secret.fav19PlusMovies && Array.isArray(knowMeObj.secret.fav19PlusMovies) && knowMeObj.secret.fav19PlusMovies[0]
+```javascript
+const pincode = knowMeObj.address2 &&  knowMeObj.address2.pincode
+const knowMyHusband = knowMeObj.secret && knowMeObj.secret.getHusband &&  typeof knowMeObj.secret.getHusband === 'function' && knowMeObj.secret.getHusband()
+const fav18PlusMovie = knowMeObj.secret && knowMeObj.secret.fav19PlusMovies && Array.isArray(knowMeObj.secret.fav19PlusMovies) && knowMeObj.secret.fav19PlusMovies[0]
+```
     
 By using optional chaining, if the object accessed or function called using this operator is undefined or null, the expression short circuits and evaluates to undefined instead of throwing an error.
 

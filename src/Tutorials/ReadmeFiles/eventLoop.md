@@ -1,31 +1,43 @@
-```
+# Event Loop
+
+## setTimeout and setInterval
+
+```javascript
 const cbFn = (person) => {
     console.log("Stop spilling your beauty every where you go, " + person)
 }
 
 setTimeout(cbFn, 500, 'Your Grace')
 ```
-**Note:** Here we passed cbFb in setTimeout and not cbFn() as it takes reference of callBackFn and not the result of execution
 
-To keep printing after every 500ms then
+**Note:** Here we passed cbFn in setTimeout and not cbFn() as it takes reference of callBackFn and not the result of execution
 
-    setInterval(cbFn, 500, 'Your Grace')
+To keep printing after every 500ms then:
+
+```javascript
+setInterval(cbFn, 500, 'Your Grace')
+```
 
 - Callback (cbFn) used for handling async activity as it's initiated now but cbFn() is executed after 500ms
 - onLoad and DOMContentLoaded and componentDidMount also handles async activity. It gets initiated at start but when respective events are loaded, then the callback is fired.
 
-**Note:** Both *<u>setTimeout</u>* and *<u>setInterval</u>* returns a unique timerId which can be used to cancel its execution.
+**Note:** Both **setTimeout** and **setInterval** return a unique timerId which can be used to cancel their execution.
 
-    const timeoutId = setTimeout(() => console.log('Timeout to run'), 1000)
-    clearTimeout(timeoutId)
+```javascript
+const timeoutId = setTimeout(() => console.log('Timeout to run'), 1000)
+clearTimeout(timeoutId)
 
-    const intervalId = setInterval(() => console.log('Jo hoga dekha jaayega'), 400)
-    // Ab dekha nhi jaa rha, Bhagwaan. Please stop it
-    clearInterval(intervalId)
-
-
-> 1. Chal output bata iska 
+const intervalId = setInterval(() => console.log('Jo hoga dekha jaayega'), 400)
+// Ab dekha nhi jaa rha, Bhagwaan. Please stop it
+clearInterval(intervalId)
 ```
+
+
+## Practice Question 1
+
+**Challenge:** What will be the output of this code?
+
+```javascript
 setTimeout(() => {
   console.log("Ruko zara, hum first");
 }, -2);
@@ -38,7 +50,10 @@ setTimeout(() => {
 setTimeout(() => {
   console.log("Hum first");
 });
+```
 
+**Output:**
+```
 // Ruko zara, hum first
 // Nhi hum first
 // Hum first
