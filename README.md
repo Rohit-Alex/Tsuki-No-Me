@@ -579,6 +579,7 @@ It's similar to alert("Hi")[1,2].forEach(alert)
         - Promise.allSettled
         - Promise.any
         - Promise.race
+      - generator function [click to oprn](src/Tutorials/ReadmeFiles/generators.md)
       - async/await & error handling: [click to open](src/Tutorials/asyncAwait.js)
             
 ## <------------------------- PHASE 3 ------------------------->
