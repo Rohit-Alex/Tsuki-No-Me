@@ -29,28 +29,53 @@ addCurried(3)(7); // same as above
 const addCurriedArrow = num1 => num2 => num1 + num2
 console.log(addCurriedArrow(3)(7))
 ```
-**Interview Question:** Now implement a function which takes n arguments and returns the sum. Something like, 
 
->sum(1)(2)(3)(4)...()
+<details>
+<summary>Show Answer</summary>
 
-    function sum(a) {
-        return function (b) {
-            if (b) return sum(a+b)
-            return a
-        }
-    }
-
-or using ES6 Arrow functions.
-
-    const sum = a => b => b ? sum(a+b) : a
-    console.log(sum(1)(2)(3)(4)());
-
-
-#### <-------- Dhayn de idhar, Ubuyashiki --------->
-
-
-Curry function which takses 1 argument at a time in each call
 ```
+10
+```
+
+</details>
+## Interview Question: Infinite Currying
+
+**Challenge:** Implement a function which takes n arguments and returns the sum. Something like `sum(1)(2)(3)(4)...()`
+
+<details>
+<summary>Show Answer</summary>
+
+**Solution 1: Regular Function**
+```javascript
+function sum(a) {
+    return function (b) {
+        if (b) return sum(a+b)
+        return a
+    }
+}
+```
+
+**Solution 2: ES6 Arrow Functions**
+```javascript
+const sum = a => b => b ? sum(a+b) : a
+console.log(sum(1)(2)(3)(4)());
+```
+
+**Output:**
+```
+10
+```
+
+**Explanation:** The function keeps returning itself with accumulated sum until no argument is passed.
+
+</details>
+
+
+## Basic Curry Function
+
+**Challenge:** Create a curry function that takes 1 argument at a time in each call.
+
+```javascript
 function curry(f) {
   return function(a) {
     return function(b) {
@@ -64,8 +89,19 @@ function sum1(a, b) {
 }
 
 const curriedSum1 = curry(sum1);
-console.log(curriedSum1(1)(2)); // 3
+console.log(curriedSum1(1)(2));
 ```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+3
+```
+
+**Explanation:** The curry function transforms a regular function into a curried version that accepts one argument at a time.
+
+</details>
 
 <-----------------Start---------------------->
 
@@ -101,10 +137,23 @@ function product(a, b, c) {
 
 let curriedSum = curryAdvanced(product);
 
-console.log(curriedSum(1, 2, 3)); // 6
-console.log(curriedSum(1)(2,3)); // 6
-console.log(curriedSum(1)(2)(3)); // 6
+console.log(curriedSum(1, 2, 3));
+console.log(curriedSum(1)(2,3));
+console.log(curriedSum(1)(2)(3));
 ```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+6
+6
+6
+```
+
+**Explanation:** The advanced curry function can handle any combination of arguments until it receives enough parameters to call the original function.
+
+</details>
 <-----------------End---------------------->
 
 

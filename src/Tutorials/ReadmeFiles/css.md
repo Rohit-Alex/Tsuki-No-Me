@@ -101,3 +101,9 @@ hypen: auto
 
 
 white-speace: property
+
+
+
+height: full doesn't apply when parent container is flex-box and no height is explicitly given.
+
+=> The underlying reason is: percentage heights require a parent with a definite height. Your flex parent's height is auto, so h-full has nothing concrete to resolve against. self-stretch is generally the correct flexbox way to make a vertical divider fill the available height

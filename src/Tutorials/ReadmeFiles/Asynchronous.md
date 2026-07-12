@@ -225,7 +225,7 @@ Upar jo hua, poora controller tum thi. Tum executor hai. Tum decide kar rhi ki r
         
 **Daily Implementation: Api call in open modal. If api successful then do something, error mein notification, finally modal close.**
 
-![Image to visualize](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/Promises.png)
+![Image to visualize](../../Assests/Promises.png)
 Let's see same example using promises.
 
 
@@ -382,35 +382,56 @@ fetch('/article/promise-chaining/user.json')
   }))
   .then(githubUser => alert(`Finished showing ${githubUser.name}`));
 ```
-### <---- QUIZ on Promises ------>
-i> [Promises I/O -> O/P ](https://danlevy.net/javascript-promises-quiz/)
+## Quiz on Promises
 
-ii>
+### Question 1
+For more interactive quiz questions: [Promises I/O Quiz](https://danlevy.net/javascript-promises-quiz/)
+
+### Question 2
+What will be the output of this Promise chain?
+
+```javascript
+const promise = new Promise((res) => res(2));
+
+promise
+.then((v) => {
+    console.log(v);
+    return v * 2;
+})
+.finally(() => {
+    console.log('finally 1');
+    return 'finally 1';
+})
+.then((v) => {
+    console.log(v);
+    return v * 2;
+})
+.finally((v) => {
+    console.log('finally 2',v);
+    return 'finally 2';
+})
+.then((v) => {
+    console.log(v);
+});
 ```
-    const promise = new Promise((res) => res(2));
-    
-    promise
-    .then((v) => {
-        console.log(v);
-        return v * 2;
-    })
-    .finally(() => {
-        console.log('finally 1');
-        return 'finally 1';
-    })
-    .then((v) => {
-        console.log(v);
-        return v * 2;
-    })
-    .finally((v) => {
-        console.log('finally 2',v);
-        return 'finally 2';
-    })
-    .then((v) => {
-        console.log(v);
-    });
+
+<details>
+<summary>Show Answer</summary>
 
 ```
+2
+finally 1
+4
+finally 2 undefined
+8
+```
+
+**Explanation:**
+- `finally()` blocks don't receive values (hence `v` is `undefined` in second finally)
+- `finally()` return values are ignored - the previous `.then()` value is passed through
+- The chain continues with the last returned value from `.then()` blocks
+
+</details>
 * Now, how can we use Promises to escape callback hell?
 * Remember that marraigeApproval analogy? let's try to do so with Promises and handle both acceptance and rejection in each case.
 
@@ -487,4 +508,4 @@ const getMarriageApproval2 = () => {
 }
 getMarriageApproval2()
 ```
-After learning async/await try to simplify above using that.[click to open Async/Await](./asyncAwait.js)
+After learning async/await try to simplify above using that.[click to open Async/Await](AsyncAwait.md)

@@ -94,6 +94,7 @@ Despite being less common, named function expressions are recommended for better
         <---------- Callback functions --------->
         * A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of action.
         * Callback functions are often used in JavaScript to handle asynchronous operations or events.
+        * A callback doesn't itself make JavaScript asynchronous. Instead, callbacks are the mechanism used to handle the result of an asynchronous operation.
         * e.g onLoad, onClick, onChange events and setTimeouts, setInterval
         
          todo: Why use Callback?

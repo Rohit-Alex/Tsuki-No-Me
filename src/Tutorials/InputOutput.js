@@ -149,7 +149,7 @@ console.log(isNaN(undefined))
 console.log(isNaN([]))
 
 // 21
-// Ab src\Tutorials\Coercion.js open kar ligiye "Your Grace".
+// Ab src\Tutorials\ReadmeFiles\Coercion.md open kar ligiye "Your Grace".
 
 // 22
 const ans = 4 ** 3 ** 2

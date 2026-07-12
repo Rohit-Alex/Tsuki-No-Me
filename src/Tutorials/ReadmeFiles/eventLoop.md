@@ -52,25 +52,35 @@ setTimeout(() => {
 });
 ```
 
-**Output:**
+<details>
+<summary>Show Answer</summary>
+
 ```
-// Ruko zara, hum first
-// Nhi hum first
-// Hum first
-// Aur mein?
+Ruko zara, hum first
+Nhi hum first
+Hum first
+Aur mein?
 ```
 
-##### General rule of execution order of setTimeout:
-- with 0 or no delay (equivalent to 0)
-- when passed no delay then treated as 0
-- when passed -ve then also treated as 0
-- with postive delay
+**Explanation:** 
+- All timeouts with 0ms (or negative/no delay) execute first in order of declaration
+- Then timeouts with positive delays execute in order of their delay time
+
+</details>
+
+### General Rules for setTimeout Execution Order:
+- With 0 or no delay (equivalent to 0)
+- When passed no delay then treated as 0
+- When passed negative value then also treated as 0
+- With positive delay
     
-* **Note:** if any delay is of same number then the one declared first will be executed first
+**Note:** If any delay is of the same number, then the one declared first will be executed first.
 
+### Question 2
 
->2. *Iska bata answer ab...*
-```
+What will be the execution order?
+
+```javascript
 setTimeout(() => {
     console.log("Let me check my busy schedule")
 }, 200)
@@ -84,10 +94,30 @@ setTimeout(()=>{
     console.log("ye bata")
 }, -400)
 ```
-##### Explain the call stack formation for e.g 4 i.e. How the functions are pushed and popped. Starts with GEC.
-![GEC](../../Assests/callStackAndEventLoop.png)
-![GEC Akshay saini](../../Assests/EventLoop1.jpeg)
+
+<details>
+<summary>Show Answer</summary>
+
 ```
+Ubuyashiki
+xxxx pe kab chal rhi?
+ye bata
+Let me check my busy schedule
+```
+
+**Explanation:** 
+- All 0ms delays (including no delay and negative delays) execute first in order of declaration
+- Then positive delays execute
+
+</details>
+## Call Stack Formation Example
+
+**Challenge:** Explain the call stack formation - how functions are pushed and popped (starts with GEC).
+
+![Call Stack and Event Loop](../../Assests/callStackAndEventLoop.png)
+![Event Loop Diagram](../../Assests/EventLoop1.jpeg)
+
+```javascript
 setTimeout(() => {
     console.log("Excited for flight!")
 }, 200)
@@ -102,13 +132,30 @@ const x = () => {
 }
 x()
 ```
-Answer: 
-> 1.      First of all GEC is pushed into call stack at the begining of code execution.
-> 2.      Then first x is pushed
-> 3.      Then y is pushed
-> 4.      After y is executed and y is popped
-> 5.      After x is executed
-> 6.      x is popped
+
+<details>
+<summary>Show Answer</summary>
+
+**Call Stack Steps:**
+1. First, GEC (Global Execution Context) is pushed into call stack at the beginning of code execution
+2. `setTimeout` is encountered, callback is registered but not executed (goes to Web APIs)
+3. `x()` is called and pushed to call stack
+4. Inside `x()`, `console.log('x')` executes
+5. `y()` is called and pushed to call stack
+6. Inside `y()`, `console.log('y')` executes
+7. `y()` finishes and is popped from call stack
+8. `x()` finishes and is popped from call stack
+9. After 200ms, setTimeout callback is moved to callback queue
+10. Event loop moves it to call stack when stack is empty
+
+**Output:**
+```
+x
+y
+Excited for flight! (after 200ms)
+```
+
+</details>
 > 7.      GEC is popped
 > 8.      setTimeout cb is fired
 
@@ -142,14 +189,14 @@ Answer:
     var square2 = square(n);
     var square4 = square(4);
 ```
-![Example 3 part 1](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context.png)
+![Example 3 part 1](../../Assests/execution_context.png)
 
-![Example 3 part 2](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context1.png)
+![Example 3 part 2](../../Assests/execution_context1.png)
 
-![Example 3 part 3](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context2.png)
+![Example 3 part 3](../../Assests/execution_context2.png)
 
-![Example 3 part 4](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context3.png)
+![Example 3 part 4](../../Assests/execution_context3.png)
 
-![Example 3 part 5](https://github.com/Rohit-Alex/Tsuki-No-Me/blob/master/src/Assests/execution_context4.png)
+![Example 3 part 5](../../Assests/execution_context4.png)
 
 **Note:** Microtask queue has got higher priority

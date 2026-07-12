@@ -1,42 +1,106 @@
-```
+# Shallow Copy and Deep Copy
+
+## Initial Data
+
+```javascript
 const iykyk = [30, 28, 32];
 const detailsObj = {
     fname: 'Amane'
 }
 ```
-#### Problem
-##### Task: -> Make a copy of <u>*iykyk*</u> and change first value to 32
-```
+## The Problem
+
+### Question 1
+
+**Task:** Make a copy of `iykyk` and change first value to 32
+
+```javascript
 const iykykCopy = iykyk;
-iykykCopy[0] = 32
-console.log(iykyk); // [32, 28, 32]
-console.log(iykykCopy) // [32, 28, 32]
+iykykCopy[0] = 32;
+console.log(iykyk);
+console.log(iykykCopy);
 ```
 
+<details>
+<summary>Show Answer</summary>
+
 ```
+[32, 28, 32]
+[32, 28, 32]
+```
+
+**Problem:** Both arrays changed! This is because objects are passed by reference, not value.
+
+</details>
+
+### Question 2
+
+What will be the output?
+
+```javascript
 let ifkyk = [10, 20];
 const copy = ifkyk;
-ifkyk[0] = 40
-ifkyk = null
-console.log(copy)
+ifkyk[0] = 40;
+ifkyk = null;
+console.log(copy);
 ```
 
+<details>
+<summary>Show Answer</summary>
+
 ```
+[40, 20]
+```
+
+**Explanation:** The `copy` still references the original array object, so it reflects the mutation even after `ifkyk` is set to null.
+
+</details>
+
+### Question 3
+
+What will be the output?
+
+```javascript
 let person = { name: 'Lydia' };
 const members = [person];
 person = null;
-
 console.log(members);
 ```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+[{ name: 'Lydia' }]
+```
+
+**Explanation:** The array `members` contains a reference to the original object. Setting `person = null` doesn't affect the object reference stored in the array.
+
+</details>
 ###### Objects interact by reference when setting them equal to each other. When you assign a reference from one variable to another, you make a copy of that reference. (note that they don't have the same reference!)
 
-##### Task: -> Make a copy of <u>*detailsObj</u>* and try to add a property name "age" with value 25
+### Question 4
+
+**Task:** Make a copy of `detailsObj` and try to add a property "age" with value 25
+
+```javascript
+const detailsObjCopy = detailsObj;
+detailsObjCopy.age = 25;
+console.log(detailsObjCopy);
+console.log(detailsObj);
 ```
-const detailsObjCopy = detailsObj
-detailsObjCopy.age = 25
-console.log(detailsObjCopy) // age added to detailsObjCopy
-console.log(detailsObj) // Note: here as well, age is added to detailsObj
+
+<details>
+<summary>Show Answer</summary>
+
 ```
+{ fname: 'Amane', age: 25 }
+{ fname: 'Amane', age: 25 }
+```
+
+**Problem:** Both objects changed! The `age` property was added to both because they reference the same object.
+
+</details>
 > Explanation of problem:
 From above two examples, we see that even if we are modifying the copied variable, the original data is also getting changed. The reason being that non-primitive types are accessed by reference and not value. When we write,
 ```
@@ -44,54 +108,120 @@ const detailsObjCopy = detailsObj
 ```
 Then basically we are accessing the same variable just by 2 different name.
 Simple bhasa mein bole toh, hum Amane ko kuch kahe ya mg ko, bol toh tumhi ko rhe na. Bus 2 alag alag naam kar diye. Orginal name aur nickname type.
-#### SOLUTION
-##### 1. Spread operator 
-###### works for simple arrays (array of primitive type) and simple object with values of primitive types. It creates a shallow copy.
-```
-const iykykCopy = [...iykyk];
-copyOfNumbers[0] = 32;
-console.log(iykykCopy); // [32, 28, 32]
-console.log(iykyk); // [30,28,32]
+## Solutions
 
-const detailsObjCopy = { ...detailsObj }
-detailsObjCopy.age = 25
-console.log(detailsObjCopy) // {fname: 'Amane', age: 25 }
-console.log(detailsObj) // {fname: 'Amane' }
+### 1. Spread Operator (Shallow Copy)
+
+Works for simple arrays (array of primitive types) and simple objects with primitive values. It creates a shallow copy.
+
+```javascript
+const iykykCopy = [...iykyk];
+iykykCopy[0] = 32;
+console.log(iykykCopy);
+console.log(iykyk);
+
+const detailsObjCopy = { ...detailsObj };
+detailsObjCopy.age = 25;
+console.log(detailsObjCopy);
+console.log(detailsObj);
 ```
-##### spread operator does not work in deep copy
+
+<details>
+<summary>Show Answer</summary>
+
 ```
+[32, 28, 32]
+[30, 28, 32]
+{ fname: 'Amane', age: 25 }
+{ fname: 'Amane' }
+```
+
+**Success!** The spread operator creates separate copies for simple data structures.
+
+</details>
+### Problem: Spread Operator Doesn't Work for Deep Copy
+
+```javascript
 const people = [{ name: "Anjali" }, { name: "Priya" }];
-console.log(people);
 const copyOfPeople = [...people];
-console.log(copyOfPeople);
 copyOfPeople[0].name = "Pooja";
 console.log(copyOfPeople);
 console.log(people);
 ```
-##### 2. JSON.parse(JSON.stringify())
+
+<details>
+<summary>Show Answer</summary>
 
 ```
-const copyOfPeople2 = JSON.parse(JSON.stringify(people))
-copyOfPeople2[0].name = "Rohit"
-console.log(copyOfPeople2)
+[{ name: "Pooja" }, { name: "Priya" }]
+[{ name: "Pooja" }, { name: "Priya" }]
+```
+
+**Problem:** Both arrays changed! Spread operator only does shallow copy - it copies the array but not the nested objects.
+
+</details>
+### 2. JSON.parse(JSON.stringify()) - Deep Copy
+
+```javascript
+const copyOfPeople2 = JSON.parse(JSON.stringify(people));
+copyOfPeople2[0].name = "Rohit";
+console.log(copyOfPeople2);
 console.log(people);
 ```
 
-##### 3. Lodash
+<details>
+<summary>Show Answer</summary>
+
 ```
-const copyOfPeople3 = _.cloneDeep(people)
-copyOfPeople3[0].name = "Satakshi"
+[{ name: "Rohit" }, { name: "Priya" }]
+[{ name: "Anjali" }, { name: "Priya" }]
+```
+
+**Success!** True deep copy - changes don't affect the original.
+
+</details>
+
+### 3. Lodash _.cloneDeep() - Deep Copy
+
+```javascript
+const copyOfPeople3 = _.cloneDeep(people);
+copyOfPeople3[0].name = "Satakshi";
 console.log(copyOfPeople3);
 console.log(people);
 ```
 
-##### 4. Structure clone
+<details>
+<summary>Show Answer</summary>
+
 ```
-const copyOfPeople3 = structuredClone(people)
-copyOfPeople3[0].name = "Richa"
-console.log(copyOfPeople3);
+[{ name: "Satakshi" }, { name: "Priya" }]
+[{ name: "Anjali" }, { name: "Priya" }]
+```
+
+**Success!** Lodash provides robust deep cloning.
+
+</details>
+
+### 4. structuredClone() - Deep Copy
+
+```javascript
+const copyOfPeople4 = structuredClone(people);
+copyOfPeople4[0].name = "Richa";
+console.log(copyOfPeople4);
 console.log(people);
 ```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+[{ name: "Richa" }, { name: "Priya" }]
+[{ name: "Anjali" }, { name: "Priya" }]
+```
+
+**Success!** Modern native deep cloning method.
+
+</details>
 
 ##### Which to choose?
 

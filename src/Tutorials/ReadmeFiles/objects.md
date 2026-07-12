@@ -248,7 +248,7 @@ UserCreator.prototype.increment = function(){
 UserCreator.prototype.login = function(){
  console.log("login");
 };
-const user1 = new UserCreator(“Eva”, 9)
+const user1 = new UserCreator("Eva", 9)
 user1.increment()
 ```
 
@@ -279,7 +279,7 @@ UserCreator.prototype.increment = function(){
 UserCreator.prototype.login = function(){
  console.log("login");
 };
-const user1 = new UserCreator(“Eva”, 9)
+const user1 = new UserCreator("Eva", 9)
 user1.increment()
 ```
 ![GEC for above snippet](../../Assests/arrow-fn-GEC.png)
@@ -393,8 +393,8 @@ paidUser1.sayName() // "I'm Alyssa"
 class userCreator {
   constructor (name, score) {
     this.name = name;
+    this.score = score;
   }
-  this.score = score;
   sayName () {
     console.log("I am " + this.name);
   }

@@ -90,10 +90,10 @@ functions/constructor functions/arrow functions/generator/currying
 Optional Chaining (?.) operator
 order of precedence -> not necessary
 
-Hoisting ---> covered in Function&Hoisting.js file
+Hoisting ---> covered in Hoisting.md file
 closure ---> covered in mischeleaneous.js file
 IIFE
-call, apply, bind ---> covered in callApplyBind.js file
+call, apply, bind ---> covered in CallApplyBind.md file
 Prototype Inheritance
 
 

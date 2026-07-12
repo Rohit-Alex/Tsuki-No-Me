@@ -14,6 +14,8 @@ A closure is:
 
 ### Question 1
 
+What will be the output when we call `outer()`?
+
 ```javascript
 function outer () {
     const Amane = 'hi'
@@ -22,11 +24,23 @@ function outer () {
     }
     inner()
 }
-outer() 
-// Output: Log: hi
+outer()
 ```
 
+<details>
+<summary>Show Answer</summary>
+
+```
+Log: hi
+```
+
+**Explanation:** The inner function has access to the outer function's variable `Amane` due to closure.
+
+</details>
+
 ### Question 2
+
+What will be the output when we call the returned function?
 
 ```javascript
 function outer () {
@@ -38,41 +52,81 @@ function outer () {
 const returnedFn = outer()
 returnedFn()
 
-outer()() // Equivalent to above 2 lines
-// Output: Log: hi
+// Alternative way:
+outer()()
 ```
 
-3. 
+<details>
+<summary>Show Answer</summary>
+
 ```
-    function outer () {
-        let Amane = 'bye'
-        function inner() {
-            console.log(`Log: Amane ${Amane}`)
-        }
-        Amane = 'hi again!'
-        return inner
+Log: hi
+```
+
+**Explanation:** Even after `outer()` finishes executing, the returned `inner` function still remembers the `Amane` variable from its lexical scope. This is closure in action.
+
+</details>
+
+### Question 3
+
+What will be the output? Notice that `Amane` is modified before returning the function.
+
+```javascript
+function outer () {
+    let Amane = 'bye'
+    function inner() {
+        console.log(`Log: Amane ${Amane}`)
     }
+    Amane = 'hi again!'
+    return inner
+}
 
-    outer()()
-   // Log: Amane hi again!
+outer()()
 ```
 
-4.
+<details>
+<summary>Show Answer</summary>
+
 ```
-    function outer () {
-        function inner() {
-            console.log(`Log: ${Amane}`)
-        }
-        const Amane = 'hi'
-        return inner
+Log: Amane hi again!
+```
+
+**Explanation:** Closures capture variables by reference, not by value. When `inner` is executed, it sees the latest value of `Amane`, which was changed to 'hi again!' before the function was returned.
+
+</details>
+
+### Question 4
+
+What will be the output? Notice that `Amane` is declared after the `inner` function.
+
+```javascript
+function outer () {
+    function inner() {
+        console.log(`Log: ${Amane}`)
     }
-    const returnVal = outer()
-    returnVal()
-    // Log: hi
+    const Amane = 'hi'
+    return inner
+}
+const returnVal = outer()
+returnVal()
 ```
 
-5.
+<details>
+<summary>Show Answer</summary>
+
 ```
+Log: hi
+```
+
+**Explanation:** Due to hoisting and closure, the `inner` function can access the `Amane` variable even though it was declared after the function definition.
+
+</details>
+
+### Question 5
+
+What will be the output? Pay attention to which `word1` and `word3` are used.
+
+```javascript
 function outest() {
     const word1 = 'kya bol rha hai '
     function outer() {
@@ -87,107 +141,214 @@ function outest() {
 const word1 = 'Akshay Saini ka video dekhna hoga!'
 const word3 = 'Phir se bata'
 outest()
-// Log: kya bol rha hai , kuch samajh nhi aa rha. Phir se bata
 ```
 
-> Explanation: Every function forms a closure with the reference to it's lexical environment.
-> Lexical environment comprises of the variables and parameters inside of a function.
-> Matlab, sabse pehle function apne scope mein doondhta variable ko, agar nhi milta toh apne upar dekhta means outer function, jab tak wo window level mein na aa jaaye ya usko mil na jaaye. Jo sabse pehle mila, niche se upar aane mein, wo use karega
+<details>
+<summary>Show Answer</summary>
 
-Interview Question: Print 1,2,3 after 1,2,3 seconds respectively.
-
-> First thing that most would think of using is:
 ```
-for (var i = 0; i < 3; i++) {
+Log: kya bol rha hai , kuch samajh nhi aa rha. Phir se bata
+```
+
+**Explanation:** 
+- Every function forms a closure with the reference to its lexical environment
+- Lexical environment comprises of the variables and parameters inside of a function
+- The function first searches for the variable in its own scope, if not found then looks in the outer function, until it reaches window level or finds the variable
+- `word1`: Found in `outest` function scope
+- `word2`: Found in `outer` function scope  
+- `word3`: Found in global scope
+
+</details>
+
+## Interview Question: setTimeout with Closures
+
+**Problem:** Print 1, 2, 3 after 1, 2, 3 seconds respectively.
+
+### Approach 1: Common Wrong Attempt
+
+What will be the output of this code?
+
+```javascript
+for (var i = 1; i <= 3; i++) {
     setTimeout(() => {
-        console.log(i) // 3 3 3
+        console.log(i)
     }, i * 1000)
 }
 ```
-> However, above code doesn't work. The reason being var is functional scope, and callback function of setTimeout forms a closure with variable 'i' and as it is async, when the callback function is called the variable i has got a value of 3. And as in closure the reference if bound with the function not variable, we see 3.
+
+<details>
+<summary>Show Answer</summary>
 
 ```
-for (let i = 0; i < 3; i++) {
+4
+4  
+4
+```
+
+**Why it doesn't work:** 
+- `var` is function scoped, so all setTimeout callbacks share the same `i` variable
+- By the time the callbacks execute, the loop has finished and `i` is 4
+- All callbacks reference the same `i` variable, not separate copies
+
+</details>
+
+### Approach 2: Using `let` instead of `var`
+
+What will be the output of this corrected version?
+
+```javascript
+for (let i = 1; i <= 3; i++) {
     setTimeout(() => {
-        console.log(i) // 0 1 2
+        console.log(i)
     }, i * 1000)
 }
 ```
-> This, works as let has block scoped and in each iteration a fresh variable is made with incremented value.
 
-But, what if interviewer asks to do it using var only?
+<details>
+<summary>Show Answer</summary>
 
 ```
-for (var j = 0; j < 3; j++) {
+1 (after 1 second)
+2 (after 2 seconds)
+3 (after 3 seconds)
+```
+
+**Why it works:** `let` is block scoped, so in each iteration a fresh variable `i` is created with the current value.
+
+</details>
+
+### Approach 3: Using `var` with Closure (Function Parameter)
+
+**Challenge:** What if interviewer asks to solve it using `var` only?
+
+```javascript
+for (var j = 1; j <= 3; j++) {
     const print = (x) => {
         setTimeout(() => {
-            console.log(x) // 0 1 2
+            console.log(x)
         }, x * 1000)
     }
     print(j)
 }
 ```
-##### data hiding and encapsulation using closure
 
+<details>
+<summary>Show Answer</summary>
 
-    let count = 0
-    function increaseCounter() {
+```
+1 (after 1 second)
+2 (after 2 seconds) 
+3 (after 3 seconds)
+```
+
+**Why it works:** By passing `j` as a parameter `x` to the `print` function, we create a new scope for each iteration where `x` holds the current value of `j`.
+
+</details>
+## Data Hiding and Encapsulation using Closure
+
+### Problem with Global Variables
+
+```javascript
+let count = 0
+function increaseCounter() {
+    count++;
+}
+```
+
+**Issue:** Anyone can modify `count` directly (`count++` or `count = 5`), which breaks encapsulation.
+
+### Solution: Using Closure for Privacy
+
+```javascript
+function counter() {
+    let count = 0;
+    return function incrementCount() {
         count++;
+        console.log(count);
     }
+}
+const counter1 = counter()
+counter1()
+counter1()
 
-Now we can increase count by calling increaseCount() but anyone else can also do so by directly changing it to count++ or count = 5
+const counter2 = counter()
+counter2()
+counter2()
+```
 
-To hide this variable and also allow it to change through method, we can form closure
+<details>
+<summary>Show Answer</summary>
 
-    function counter() {
-        let count = 0;
-        return function incrementCount() {
-            count++;
-        }
-    }
-    const counter1 = counter()
-    counter1()
-    counter1()
+```
+1
+2
+1
+2
+```
 
-    const counter2 = counter()
-    counter2()
-    counter2()
+**Explanation:** 
+- Each call to `counter()` creates a new closure with its own `count` variable
+- The `count` variable is private and can only be accessed through the returned function
+- `counter1` and `counter2` are independent instances
+
+</details>
     
-Now no one can access count directly and is hidden from other part of code.
-    
-Now suppose we want to make a decrementCount() as well then is this above method scalable.
+### Scalable Solution: Multiple Methods
 
-It's not scalable but we can change the existing code to this for this implementation.
+**Challenge:** What if we want both `incrementCount()` and `decrementCount()` methods?
 
-    function counter() {
-        let count = 0;
+```javascript
+function counter() {
+    let count = 0;
 
-        const incrementCount = () => {
-            count++;
-        };
+    const incrementCount = () => {
+        count++;
+        console.log(count);
+    };
 
-        const decrementCount = () => {
-            count--;
-        };
+    const decrementCount = () => {
+        count--;
+        console.log(count);
+    };
 
-        return {
-            incrementCount,
-            decrementCount
-        };
-    }
+    return {
+        incrementCount,
+        decrementCount
+    };
+}
 
-    const counter1 = counter();
-    counter1.incrementCount();
-    counter1.incrementCount();
+const counter1 = counter();
+counter1.incrementCount();
+counter1.incrementCount();
+counter1.decrementCount();
 
-    const counter2 = counter();
-    counter2.incrementCount();
-    counter2.incrementCount();
+const counter2 = counter();
+counter2.incrementCount();
+counter2.decrementCount();
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+1
+2
+1
+1
+0
+```
+
+**Explanation:** We return an object with multiple methods, each having access to the same private `count` variable through closure.
+
+</details>
    
 
 
-**A scalable solution for above problem**
-```
+### Constructor Function Approach
+
+**Most Scalable Solution:** Using constructor function with closures
+
+```javascript
 function Counter() {
     let count = 0
     this.increment = function () {
@@ -218,6 +379,23 @@ counter2.decrement()
 counter2.decrement()
 console.log(counter2.print())
 ```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+3
+1
+2
+0
+```
+
+**Explanation:** 
+- Each instance created with `new Counter()` has its own private `count` variable
+- The methods are attached to each instance and have access to their respective `count` via closure
+- This provides true data encapsulation and multiple instances
+
+</details>
 
 ##### Memoization using closure
 ```
