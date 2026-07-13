@@ -167,4 +167,14 @@ function foo1() {
     console.log('New value is: ' + myVar);
 })();
 
+var a = "Rohit"
+if(true) {
+    console.log(a, 'first')
+    a = "Sachin";
+    console.log(a, '2nd')
+    function a() {}
+    a = "Nikhil"
+    console.log(a, 'last')
+}
+console.log(a, 'lasteest')
 
