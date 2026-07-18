@@ -357,38 +357,73 @@ function globalFunction() {
 globalFunction(); // Output: "I am in global scope"
 ```
 
-**Functional scope:**
-A variable is only available inside the function where it's declared and is not accessible outside of it.
+**Function scope:**
+A variable is only available inside the function where it's declared and is not accessible outside of it. Variables declared with `var`, `let`, or `const` inside a function are all function-scoped (at minimum).
 
 ```javascript
 function name() {
     var myAge = 22;
     console.log(myAge);
 }
-name(); // output => 22
-console.log(myAge); // output => ReferenceError
-```
-
-**Local scope:**
-Variables declared inside a function. Accessible only within that block, not outside of it.
-
-```javascript
-function localFunction() {
-  let localVariable = "I am in local scope";
-  console.log(localVariable);
-}
-localFunction(); // Output: "I am in local scope"
-console.log(localVariable); // Output: Uncaught ReferenceError: localVariable is not defined
+name();              // Output: 22
+console.log(myAge);  // ReferenceError: myAge is not defined
 ```
 
 **Block scope:**
-Variables declared inside curly braces `{}` are block-scoped. They can't be accessed outside of that block.
+Variables declared with `let` or `const` inside curly braces `{}` (if-blocks, loops, or bare blocks) are block-scoped — they can't be accessed outside that block. Note: `var` is NOT block-scoped; it leaks out to the enclosing function/global scope.
 
 ```javascript
 {
   let x = 2;
+  const y = 3;
+  var z = 4;
 }
-// x can NOT be used here
+// console.log(x); // ReferenceError — let is block-scoped
+// console.log(y); // ReferenceError — const is block-scoped
+console.log(z);    // 4 — var ignores the block!
+```
+
+Classic gotcha with `var` in loops:
+
+```javascript
+for (var i = 0; i < 3; i++) {}
+console.log(i); // 3 — var leaked out of the loop
+
+for (let j = 0; j < 3; j++) {}
+console.log(j); // ReferenceError — let stayed in the loop
+```
+
+**Are functions block-scoped?**
+- **Function declarations** (`function foo() {}`) are hoisted and are function-scoped. In strict mode (ES6+), they become block-scoped when declared inside a block.
+- **Function expressions / arrow functions** follow the scope of their variable: `let`/`const` → block-scoped, `var` → function-scoped.
+
+```javascript
+{
+  const sayHi = () => "hi";  // block-scoped because of const
+  console.log(sayHi());       // "hi"
+}
+// console.log(sayHi());      // ReferenceError
+
+"use strict";
+if (true) {
+  function greet() { return "hello"; }
+  console.log(greet());       // "hello" — works inside the block
+}
+// console.log(greet());      // ReferenceError in strict mode
+```
+
+**Lexical scope (bonus):**
+Inner scopes can access variables from their outer (enclosing) scopes, but not vice versa. Scope is determined by where code is *written*, not where it's called.
+
+```javascript
+function outer() {
+  let outerVar = "I'm outside";
+  function inner() {
+    console.log(outerVar); // Accessible — inner sees outer's variables
+  }
+  inner();
+}
+outer(); // Output: "I'm outside"
 ```
 
 ### 18. `var`, `let` and `const`?
@@ -509,9 +544,103 @@ Object.is(obj, obj)     // true
 
 ### 27. How would you compare two non-primitive data types?
 
+```
+function deepEqual(a, b) {
+  // Handles primitives, NaN, -0/+0 and same object reference
+  if (Object.is(a, b)) {
+    return true;
+  }
+
+// Primitives that aren't equal immediately return false.
+// null is handled safely because typeof null === "object".
+// The recursive call should happen only for objects/arrays.
+  if (
+    a === null ||
+    b === null ||
+    typeof a !== "object" ||
+    typeof b !== "object"
+  ) {
+    return false;
+  }
+
+  // Different object types (Array vs Object, Date vs Object, etc.)
+  if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
+    return false;
+  }
+
+ // 4. Special cases: Date and RegExp compare by value
+  if (a instanceof Date)   return a.getTime() === b.getTime();
+  if (a instanceof RegExp) return a.toString() === b.toString();
+
+  // Keys
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  for (const key of keysA) {
+    if (!Object.hasOwn(b, key)) {
+      return false;
+    }
+
+    if (!deepEqual(a[key], b[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+```
+
+#### Test case:
+
+// Primitives
+deepEqual(1, 1);            // true
+deepEqual(1, "1");          // false
+deepEqual(NaN, NaN);        // true
+deepEqual(-0, +0);          // false
+deepEqual(+0, +0);          // true
+deepEqual(null, null);      // true
+deepEqual(null, undefined); // false
+
+// Flat objects
+deepEqual({ x: 1, y: 2 }, { y: 2, x: 1 }); // true
+
+// Nested
+deepEqual({ a: { x: 1 } }, { a: { x: 1 } }); // true
+deepEqual([1, [2, 3]], [1, [2, 3]]);         // true
+deepEqual({ a: 1 }, { a: 1, b: 2 });         // false
+
+// NaN inside object
+deepEqual({ v: NaN }, { v: NaN }); // true
+
+// Array vs Object
+deepEqual([1, 2], { 0: 1, 1: 2 }); // false
+
+// Dates
+deepEqual(new Date(0), new Date(0)); // true
+
+// RegExp
+deepEqual(/abc/g, /abc/g); // true
+deepEqual(/abc/g, /abc/i); // false
+
+#### This implementation intentionally does not handle:
+
+- Circular references
+- Map
+- Set
+- WeakMap / WeakSet
+- ArrayBuffer / TypedArrays
+- Symbol-keyed properties
+- Non-enumerable properties
+- Property descriptors (writable, configurable, getters/setters)
+- Function equality (functions are compared only by reference)
+
 ### 28. Functions, arrow functions (without `this`), function expressions, callbacks, IIFE
 
-[Click to open](src/Tutorials/Functions.js)
+[Click to open](src/Tutorials/ReadmeFiles/Functions.md)
 
 ### 29. String methods
 
@@ -546,15 +675,20 @@ Object.is(obj, obj)     // true
 
 - Different ways to create an object — `Object.assign`, object literal, `new` keyword, classes, constructor function
 - Constructor functions for creating objects
-- `Object.freeze` vs `Object.seal`
+- `Object.freeze` vs `Object.seal` vs `Object.preventExtensions`
 - `Object.freeze` only performs a shallow freeze — how would you make it a deep freeze?
 - ES6 shorthand syntax
+- Dot vs. bracket notation for accessing properties — [see here](src/Tutorials/ReadmeFiles/Object.md#dot-vs-bracket-notation)
 
-[Click to open](src/Tutorials/Object.js)
+[Click to open](src/Tutorials/ReadmeFiles/Object.md)
 
-**Iterator methods:** [click to open](src/Tutorials/Iterators.js)
+**Iterator methods:** [click to open](src/Tutorials/ReadmeFiles/Iterators.md)
 
-### 31. Array methods
+### 31. Proxy and Reflect — traps, use cases (validation, logging, negative indexing), and gotchas
+
+[Click to open](src/Tutorials/ReadmeFiles/Proxy.md)
+
+### 32. Array methods
 
 - **`push()`** — adds to the end. Returns the new length. Mutates the original array.
 - **`pop()`** — removes the last element. Returns the removed element. Mutates the original array.
@@ -566,10 +700,14 @@ Object.is(obj, obj)     // true
 - **`splice()`** — can add, delete, or modify the array. Returns the removed elements as an array. Mutates the original array.
 - **`sort()`** — sorts the array in a specific order. Mutates the original array.
 - **`reverse()`** — reverses the array and returns a reference to the original array. Mutates the original array.
+- **`fill(value, start?, end?)`** — overwrites elements in `[start, end)` (defaults to the whole array) with `value`. Mutates the original array.
 - **`at(index)`** — returns the element at the given index; accepts negative values.
 - **`concat()`** — appends an element or array to the operational array.
-- **`flat()`** — returns a new array with sub-array elements concatenated recursively, up to the specified depth.
+- **`flat(depth?)`** — returns a new array with sub-array elements concatenated recursively, up to the specified depth (default `1`).
+- **`flatMap(fn)`** — maps each element, then flattens the result by one level — equivalent to (but more efficient than) `arr.map(fn).flat()`.
+- **`join(separator?)`** — joins all elements into a string, separated by `separator` (defaults to `,`).
 - **`slice()`** — same behavior as the string method.
+- **`with(index, value)`** — the non-mutating counterpart of `arr[index] = value`; returns a **new** array with that one index replaced, leaving the original untouched.
 - **`indexOf(element)`** — returns the first index of `element`, or `-1` if not found.
 - **`lastIndexOf(element)`** — returns the first index of `element` from the end, or `-1` if not found.
 - **`includes(searchVal)`** — returns `true` if `searchVal` is found in the array, else `false`.
@@ -613,6 +751,24 @@ If you want *all* matches, use `filter()`.
 | `splice()` | `arr.toSpliced()` |
 | `reverse()` | `arr.toReversed()` |
 | `sort()` | `arr.toSorted()` |
+| `arr[i] = value` | `arr.with(i, value)` |
+
+**Static `Array` methods** (called on `Array` itself, not on an array instance):
+
+- **`Array.isArray(value)`** — the correct, reliable way to check whether `value` is an array. Prefer this over `value instanceof Array`, which can give a wrong answer for arrays created in a different realm (e.g. passed in from an `<iframe>`), since each realm has its own separate `Array` constructor.
+- **`Array.from(arrayLikeOrIterable, mapFn?)`** — builds a real array from an iterable (a string, a `Set`, a `Map`, ...) or an array-*like* object (something with a `.length` but no array methods, like `arguments`), optionally mapping each element along the way.
+- **`Array.of(...items)`** — builds an array from its arguments directly. Exists to avoid a gotcha with the `Array` constructor: `Array(7)` creates a sparse array of length `7` (no elements), while `Array.of(7)` creates `[7]`, a 1-element array actually containing the value `7`.
+
+```javascript
+console.log(Array.isArray([1, 2, 3]));   // true
+console.log([1, 2, 3] instanceof Array); // true (in the same realm — see note above)
+
+console.log(Array.from('hello'));                          // ['h', 'e', 'l', 'l', 'o']
+console.log(Array.from({ length: 3 }, (_, i) => i * 2));    // [0, 2, 4]
+
+console.log(Array(7).length);      // 7  — sparse, no actual elements
+console.log(Array.of(7));          // [7] — one real element
+```
 
 ```javascript
 (function() {
@@ -634,20 +790,15 @@ If you want *all* matches, use `filter()`.
     // now arr = ["I", , "home"];
     console.log(arr.length);  // 3
 })();
-
-// different case letters have different codes
-console.log("Z".codePointAt(0)); // 90
-console.log("z".codePointAt(0)); // 122
-console.log("z".codePointAt(0).toString(16));
 ```
 
-Dedicated file for arrays with the methods above: [click to open](src/Tutorials/Arrays.js)
+Dedicated file for arrays with the methods above: [click to open](src/Tutorials/ReadmeFiles/Arrays.md)
 
-`Array.reduce()`: [click to open](src/Tutorials/Reduce.js)
+`Array.reduce()`: [click to open](src/Tutorials/ReadmeFiles/Reduce.md)
 
 Refer to [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) for more info.
 
-### 32. `delete` operator
+### 33. `delete` operator
 
 Returns `true` if the object property was deleted, else `false`.
 
@@ -677,20 +828,16 @@ console.log(delete age);  // true — here we're deleting window.age
 
 > **Note:** variables declared with `var`, `let`, or `const` cannot be deleted with the `delete` operator.
 
-### 33. `sort` method on arrays and strings
+### 34. `sort` method on arrays and strings
 
 - `Math.random()`
 - `Math.ceil()`
 - `Math.floor()`
 - `Math.abs()`
 
-[Click to open](src/Tutorials/sortMethod.js)
+[Click to open](src/Tutorials/ReadmeFiles/SortMethod.md)
 
 > *Note: give some scenarios and ask which data type would be chosen.*
-
-### 34. Dot vs. bracket notation in JS
-
-[Explained here — search for "dot" and "bracket" in the file](src/Tutorials/Object.js)
 
 ### 35. Map and Set
 
@@ -721,7 +868,7 @@ console.log(delete age);  // true — here we're deleting window.age
   - Inheritance
   - Polymorphism
 
-[Click to open](src/Tutorials/ReadmeFiles/objects.md) · [click to open](src/Tutorials/OopsConcept.js)
+[Click to open](src/Tutorials/ReadmeFiles/objects.md) · [click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
 
 ### 41. Constructor property of an object
 
@@ -745,6 +892,8 @@ n.constructor === Number; // true
 ```
 
 ### 42. How would you check if a given argument is an array?
+
+Use `Array.isArray(value)` — see the [Static `Array` methods](#32-array-methods) note under Array methods above for why this is preferred over `value instanceof Array` or `typeof value === 'object'` (the latter can't distinguish an array from any other object at all).
 
 *Also, explain semicolons.*
 
@@ -778,19 +927,19 @@ alert("Hi")
 
 ## Phase 2: Advanced JavaScript
 
-### 45. Hoisting
+### 43. Hoisting
 
 [Click to open](src/Tutorials/ReadmeFiles/Hoisting.md)
 
-### 46. `call`, `apply`, `bind`
+### 44. `call`, `apply`, `bind`
 
 [Click to open](src/Tutorials/ReadmeFiles/CallApplyBind.md)
 
-### 47. Prototype inheritance
+### 45. Prototype inheritance
 
 [Click to open](src/Tutorials/prototypeChain&pollyfills.js)
 
-### 48. What does the `instanceof` operator do?
+### 46. What does the `instanceof` operator do?
 
 The `instanceof` operator checks whether the prototype property of a constructor appears anywhere in the prototype chain of an object. It returns a boolean.
 
@@ -833,19 +982,19 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
 
 > **Note:** `instanceof` walks the prototype chain at the time it runs, checking against whatever `constructor.prototype` currently *is* — not what it was when the object was created. That's why reassigning `Bar.prototype` after `b` was constructed makes `b instanceof Bar` return `false`.
 
-### 49. The `this` keyword
+### 47. The `this` keyword
 
 [Click to open](src/Tutorials/ReadmeFiles/thisExample.md)
 
-### 50. Closures
+### 48. Closures
 
 [Click to open](src/Tutorials/ReadmeFiles/closure.md)
 
-### 51. Currying
+### 49. Currying
 
 [Click to open](src/Tutorials/ReadmeFiles/currying.md)
 
-### 52. Asynchronous behavior
+### 50. Asynchronous behavior
 
 - Event loop — [click to open](src/Tutorials/ReadmeFiles/eventLoop.md)
 - Async behavior and why we need promises — [click to open](src/Tutorials/ReadmeFiles/Asynchronous.md)
