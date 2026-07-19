@@ -4,8 +4,6 @@
 
 These methods are used for **function borrowing** - they allow us to change the context of the invoking function. In short, we can change the reference of **`this`** value inside the function.
 
-The function is called with **`this`** being referred to the first argument being passed to it.
-
 ## Sample Objects
 
 ```javascript
@@ -175,9 +173,101 @@ My name is undefined undefined
 
 </details>
 
+### Question 5 — But `bind` on an Arrow Function *Can* Still Preset Arguments
+
+```javascript
+const arrowAdd = (a, b) => a + b;
+const boundArrowAdd = arrowAdd.bind(null, 5);
+console.log(boundArrowAdd(3));
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+8
+```
+
+**Explanation:** `.bind()` does two independent jobs: fixing `this`, and pre-filling leading arguments (partial application). On an arrow function, only the *first* job is a no-op — `null` here has no effect on `this` since arrow functions never look at it. But the *argument*-presetting half still works completely normally: `boundArrowAdd(3)` calls `arrowAdd(5, 3)`, giving `8`.
+
+</details>
+
+## Gotchas
+
+### Question 6 — Double `bind()`
+
+```javascript
+function whoAmI() {
+  return this.name;
+}
+
+const boundToA = whoAmI.bind({ name: 'A' });
+const boundToB = boundToA.bind({ name: 'B' });
+
+console.log(boundToB());
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+A
+```
+
+**Explanation:** ⚠️ Once a function has been bound, its `this` is **permanently locked in** — calling `.bind()` again on an already-bound function has no effect on `this` at all. `boundToA` is a new function whose `this` is hard-wired to `{ name: 'A' }`; `.bind({ name: 'B' })` on it just wraps it in *another* bound function that still, underneath, calls the original `whoAmI` with `this` fixed to `{ name: 'A' }`. The second `bind`'s context is silently ignored. (Extra arguments from a second `bind`, by contrast, *do* still accumulate — only the `this` value is locked.)
+
+</details>
+
+### Question 7 — `bind` vs. `new`
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+const BoundPerson = Person.bind({ name: 'ShouldBeIgnored' }, 'PresetName');
+const p = new BoundPerson();
+
+console.log(p.name);
+console.log(p instanceof Person);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+PresetName
+true
+```
+
+**Explanation:** `new` **overrides** a bound `this` entirely — when `BoundPerson` is called with `new`, JS creates a fresh object and uses *that* as `this` inside `Person`, completely ignoring `{ name: 'ShouldBeIgnored' }`. What **does** survive from the `bind` call are the pre-filled arguments (`'PresetName'`), which is why `p.name` is `'PresetName'`, not `undefined`. `p instanceof Person` is also `true` — a bound function still respects the original function's prototype chain for `new`.
+
+</details>
+
+### Question 8 — `call`/`apply` with `null`/`undefined` as `this`
+
+```javascript
+function showThis() {
+  console.log(this === globalThis);
+}
+
+showThis.call(null);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+true
+```
+
+**Explanation:** In non-strict (sloppy) mode — the default for a plain script — passing `null`/`undefined` as the `this` argument doesn't leave `this` as `null`; JS silently substitutes the global object (`globalThis`/`window`) instead. In **strict mode** (`'use strict'`, ES modules, class bodies), this substitution doesn't happen — `this` really would be `null` inside the function, exactly as passed. This is one of the reasons strict mode exists: sloppy mode's automatic substitution can quietly mask bugs where you meant to pass a real object but passed `null` by mistake.
+
+</details>
+
 ## Practical Examples
 
-### Question 5
+### Question 9
 
 What will be the output?
 
@@ -218,7 +308,7 @@ Greetings, I'm Bob!!!
 
 </details>
 
-### Question 6
+### Question 10
 
 What happens in this function borrowing example?
 
@@ -281,20 +371,27 @@ function example() {
 }
 ```
 
+## Implementing `call`, `apply`, and `bind` Yourself
+
+A very common interview follow-up: *"implement `call`/`apply`/`bind` from scratch, without using the built-in versions."* This is covered in its own dedicated file — see [Polyfills.md](Polyfills.md#question-1--mycall) for the `myCall`/`myApply`/`myBind` implementations (including the `new`-aware fix for `bind`), verified in Node.
+
 ## Key Takeaways
 
 1. **Call**: Immediate execution, individual arguments
-2. **Apply**: Immediate execution, array arguments  
+2. **Apply**: Immediate execution, array arguments
 3. **Bind**: Returns new function, individual arguments
 4. **All three** allow changing the `this` context
-5. **Arrow functions** cannot be bound - they ignore call/apply/bind for `this`
-6. **Use cases** include function borrowing and context control
-7. **Modern alternative**: Use spread operator with apply: `func(...args)`
+5. **Arrow functions** cannot be bound for `this` — they ignore call/apply/bind for that purpose, but `bind` can still preset their arguments (Question 5)
+6. **Binding twice locks in the *first* bind's `this`** — a second `.bind()` call cannot override it (Question 6)
+7. **`new` overrides a bound `this`**, but pre-filled `bind` arguments still apply (Question 7)
+8. **`null`/`undefined` as `this`** silently becomes the global object in sloppy mode, but stays `null`/`undefined` in strict mode (Question 8)
+9. **Use cases** include function borrowing and context control
+10. **Modern alternative**: Use spread operator with apply: `func(...args)`
 
 ## Best Practices
 
 1. **Use call** when you have individual arguments and want immediate execution
 2. **Use apply** when you have arguments in an array and want immediate execution
 3. **Use bind** when you want to create a reusable function with fixed context
-4. **Avoid with arrow functions** - they won't behave as expected
+4. **Avoid with arrow functions** - they won't behave as expected for `this`
 5. **Consider modern alternatives** like spread operator for cleaner syntax

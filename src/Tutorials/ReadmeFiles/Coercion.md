@@ -949,7 +949,7 @@ console.log(Object.is(trendRate, 0));
 false
 ```
 
-**Explanation:** Contrast with Question 69 — `Object.is()` tells `-0` and `0` apart, which is also why a hand-rolled `Object.is` polyfill needs to special-case `-0` (see [prototypeChain&pollyfills.js](../prototypeChain&pollyfills.js)).
+**Explanation:** Contrast with Question 69 — `Object.is()` tells `-0` and `0` apart, which is also why a hand-rolled `Object.is` polyfill needs to special-case `-0` (see [Polyfills.md](Polyfills.md#question-5)).
 
 </details>
 

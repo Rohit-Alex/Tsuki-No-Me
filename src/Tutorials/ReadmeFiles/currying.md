@@ -1,125 +1,221 @@
-
 # Currying
 
 ## Definition
 
-- Currying in JavaScript transforms a function with multiple arguments into a nested series of functions, each taking a single argument.
-- Currying helps you avoid passing the same variable multiple times, and it helps you create a higher order function.
-- Function callable as *f(a, b, c)* into callable as *f(a)(b)(c)*.
+- Currying transforms a function that takes multiple arguments into a nested sequence of functions, each taking a single argument.
+- A function callable as `f(a, b, c)` becomes callable as `f(a)(b)(c)`.
+- It lets you build up arguments incrementally, and makes it easy to derive specialized, reusable functions from a general one by pre-supplying some arguments (see the practical use case below).
+- Mechanically, currying is really just nested closures — see [closure.md](closure.md#question-8) for the closure fundamentals this relies on.
+
+### Currying vs. Partial Application
+
+These two are commonly confused in interviews:
+
+- **Currying** always transforms a function into a chain of functions that each take **exactly one argument** — `f(a)(b)(c)`.
+- **Partial application** pre-fills *some* arguments and returns a function that still accepts the **rest all at once** — e.g. `f(a)(b, c)` or `f(a, b)(c)`.
+
+`.bind()` performs partial application, not currying:
+
+```javascript
+function volume(l, w, h) { return l * w * h; }
+const baseVolume = volume.bind(null, 10); // pre-fills l = 10 only
+console.log(baseVolume(2, 3)); // still takes w and h together, not one at a time
+```
+
+```
+60
+```
 
 ## Basic Example
 
 ```javascript
 function add(num1, num2) {
-    console.log(num1 + num2)
+    return num1 + num2;
 }
 
 function addCurried(num1) {
     return function (num2) {
-        console.log(num1 + num2)
-    }
+        return num1 + num2;
+    };
 }
-add(3,7)
-addCurried(3)(7); // same as above
+
+console.log(add(3, 7));
+console.log(addCurried(3)(7)); // same result, curried form
 ```
+
+<details><summary>Show Answer</summary>
+
+```
+10
+10
+```
+
+**Explanation:** `addCurried(3)` returns a new function that closes over `num1 = 3`; calling that returned function with `7` computes `3 + 7`. Same result as `add(3, 7)`, just split across two calls.
+
+</details>
 
 ### In Arrow Functions
 
 ```javascript
-const addCurriedArrow = num1 => num2 => num1 + num2
-console.log(addCurriedArrow(3)(7))
+const addCurriedArrow = num1 => num2 => num1 + num2;
+console.log(addCurriedArrow(3)(7));
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 10
 ```
 
+**Explanation:** The arrow-function form is the same nested-closure mechanism as `addCurried` above, just written more tersely — `num1 => (num2 => num1 + num2)`.
+
 </details>
+
+---
+
 ## Interview Question: Infinite Currying
 
-**Challenge:** Implement a function which takes n arguments and returns the sum. Something like `sum(1)(2)(3)(4)...()`
+**Challenge:** implement a function that takes `n` arguments across separate calls and returns their sum — something like `sum(1)(2)(3)(4)...()`, where a call with no arguments signals "stop and total it up."
 
-<details>
-<summary>Show Answer</summary>
+### Using — Regular Function
 
-**Solution 1: Regular Function**
 ```javascript
+console.log(sum(1)(2)(3)(4)()); // 10
+```
+
+<details><summary>Show Answer</summary>
+
+```
 function sum(a) {
     return function (b) {
-        if (b) return sum(a+b)
-        return a
-    }
+        if (b) return sum(a + b);
+        return a;
+    };
 }
 ```
 
-**Solution 2: ES6 Arrow Functions**
-```javascript
-const sum = a => b => b ? sum(a+b) : a
-console.log(sum(1)(2)(3)(4)());
-```
+**Explanation:** Each call either receives another argument (`b` is truthy) and recurses with the running total (`sum(a + b)`), or receives nothing (`b` is falsy — no argument passed, or `undefined`) and returns the accumulated `a`. The chain keeps returning new functions until the empty `()` call short-circuits it.
 
-**Output:**
-```
-10
-```
-
-**Explanation:** The function keeps returning itself with accumulated sum until no argument is passed.
+**Gotcha:** since this checks truthiness of `b`, calling it with an explicit `0` (e.g. `sum(1)(0)(3)()`) would stop early too, since `0` is falsy — a genuine edge case worth mentioning if asked to harden this.
 
 </details>
 
-
-## Basic Curry Function
-
-**Challenge:** Create a curry function that takes 1 argument at a time in each call.
+### Using — ES6 Arrow Function
 
 ```javascript
-function curry(f) {
-  return function(a) {
-    return function(b) {
-      return f(a, b);
-    };
-  };
-}
+console.log(sum(1)(2)(3)(4)()); // 10
+```
 
+<details><summary>Show Answer</summary>
+
+```
+const sum = a => b => (b ? sum(a + b) : a);
+```
+
+**Explanation:** Same logic as Question 1, written as a one-line nested arrow chain.
+
+</details>
+
+---
+
+## A Generic `curry()` Helper
+
+**Challenge:** write a `curry(fn)` that takes any two-argument function and returns its curried version.
+
+### Question 3
+
+```javascript
 function sum1(a, b) {
-  return a + b;
+    return a + b;
 }
 
 const curriedSum1 = curry(sum1);
-console.log(curriedSum1(1)(2));
+console.log(curriedSum1(1)(2)); // 3
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
-3
+function curry(f) {
+    return function (a) {
+        return function (b) {
+            return f(a, b);
+        };
+    };
+}
 ```
 
-**Explanation:** The curry function transforms a regular function into a curried version that accepts one argument at a time.
+**Explanation:** `curry` wraps any two-argument function so it can be called one argument at a time instead of both at once. This version is hardcoded to exactly two arguments — the next section generalizes it to work for any number of arguments.
 
 </details>
 
-<-----------------Start---------------------->
+---
 
-**Task:** Make a function which takes any no of arguments i.e. all or one by one or any combination of arguments can be passed to it.
+## A Generic Curry Function for Any Arity
+
+**Challenge:** make a `curry()` that works for a function of *any* number of arguments, and accepts them in any combination — all at once, one at a time, or grouped.
+
+### Question 4 — Using `func.length` and `===`
+
+```javascript
+function product(a, b, c) {
+    return a * b * c;
+}
+
+const curriedProduct = curryAdvanced(product);
+console.log(curriedProduct(1, 2, 3)); // 6
+console.log(curriedProduct(1)(2, 3)); // 6
+console.log(curriedProduct(1)(2)(3)); // 6
+console.log(curriedProduct(1, 2)(3)); // 6
+```
+
+<details><summary>Show Answer</summary>
 
 ```
 const curryAdvanced = (func) => {
     return function curry(...args) {
         if (args.length === func.length) {
-            return func(...args)
+            return func(...args);
         } else {
             return (...args2) => {
-                return curry(...(args.concat(args2)))
-            }
+                return curry(...args.concat(args2));
+            };
         }
-    }
+    };
+};
+```
+
+**Explanation:** `func.length` gives the number of *named, non-default, non-rest* parameters a function was declared with — for `product(a, b, c)`, that's `3`. On every call, `curry` accumulates arguments into `args`; once `args.length` reaches exactly `func.length`, it calls the original function. Until then, it returns another function that keeps collecting more arguments.
+
+**Gotcha — this version breaks on extra arguments:**
+</details>
+
+```javascript
+console.log(curriedProduct(1, 2, 3, 4)); // called with 4 args, product only expects 3
+```
+
+```
+[Function (anonymous)]
+```
+
+Because the check is `args.length === func.length` (strict equality), 4 args never equals 3, so it just keeps returning a new function forever instead of calling `product`. Question 5 fixes this with `>=`.
+
+### Using `>=` Instead of `===` to solve this issue
+
+```javascript
+function product(a, b, c) {
+    return a * b * c;
 }
 
+const curriedProduct = curryAdvanced(product);
+console.log(curriedProduct(1, 2, 3));
+console.log(curriedProduct(1)(2, 3));
+console.log(curriedProduct(1, 2, 3, 4)); // extra argument, now handled
+```
+
+<details><summary>Show Answer</summary>
+
+```
 const curryAdvanced = (func) => {
     const curried = (...args1) => {
         if (args1.length >= func.length) {
@@ -129,37 +225,28 @@ const curryAdvanced = (func) => {
         }
     };
     return curried;
-}
-
-function product(a, b, c) {
-  return a * b * c;
-}
-
-let curriedSum = curryAdvanced(product);
-
-console.log(curriedSum(1, 2, 3));
-console.log(curriedSum(1)(2,3));
-console.log(curriedSum(1)(2)(3));
+};
 ```
 
-<details>
-<summary>Show Answer</summary>
-
-```
-6
-6
-6
-```
-
-**Explanation:** The advanced curry function can handle any combination of arguments until it receives enough parameters to call the original function.
+**Explanation:** Swapping `===` for `>=` fixes Question 4's gotcha — as soon as *enough* arguments have accumulated (even more than needed), the original function is called immediately with all of them; `product` simply ignores the extra 4th argument since it only declared three parameters. This is the more robust version, and the one worth reaching for in an actual interview unless the interviewer specifically wants strict arity matching.
 
 </details>
-<-----------------End---------------------->
 
+---
 
+## Curry with a Terminating Empty Call
 
-<-----------------Start---------------------->
+**Challenge:** support a curry chain that sums an arbitrary number of arguments across an arbitrary number of calls, terminated by an empty `()` call — similar to infinite currying (Question 1), but accepting multiple arguments per call instead of just one.
 
+### Question 6
+
+```javascript
+console.log(curryOp(10)(11)(1, 2, 34)(12)());
+```
+
+<details><summary>Show Answer</summary>
+
+```
 function curryOp(...args) {
     return function curried(...nextArgs) {
         if (nextArgs.length === 0) {
@@ -167,15 +254,23 @@ function curryOp(...args) {
         }
         args = [...args, ...nextArgs];
         return curried;
-    }
+    };
 }
+```
 
+**Explanation:** Each call either adds more arguments to the running `args` array (via closure — `args` is captured and mutated across calls) or, if called with zero arguments, reduces the accumulated `args` down to a sum. `10 + 11 + 1 + 2 + 34 + 12 = 70`.
 
-console.log(curryOp(10)(11)(1, 2, 34)(12)()); // Output: 70
+</details>
 
-<-----------------End---------------------->
+### Question 7 — The Same Idea Without a Trailing `()`, via `toString`
 
-<----------------Start--------------------->
+```javascript
+console.log(+curryOp(10)(11)(1, 2, 34)(12));
+```
+
+<details><summary>Show Answer</summary>
+
+```
 function curryOp(...args) {
     function curried(...newArgs) {
         args = [...args, ...newArgs];
@@ -185,7 +280,52 @@ function curryOp(...args) {
     return curried;
 }
 
-// Example usage:
-console.log(+curryOp(10)(11)(1, 2, 34)(12)); // Output: 70
+```
 
-<-----------------End---------------------->
+**Explanation:** Instead of requiring a final empty `()` call to signal "stop and total," this version overrides `curried.toString()` so that coercing the function to a primitive (via the unary `+`, template-literal interpolation, or string concatenation) triggers the sum. `+curryOp(...)` forces numeric coercion, which calls `toString()` under the hood — same mechanism as `Symbol.toPrimitive`/`valueOf` coercion covered in [Coercion.md](Coercion.md). A neat trick, but the explicit `()` terminator from Question 6 is more explicit and readable in real code.
+
+</details>
+
+---
+
+## Practical Use Case: Deriving Specialized Functions
+
+### Question 8
+
+```javascript
+const multiply = a => b => a * b;
+
+const double = multiply(2);
+const triple = multiply(3);
+
+console.log(double(5));
+console.log(triple(5));
+```
+
+<details><summary>Show Answer</summary>
+
+```
+10
+15
+```
+
+**Explanation:** `multiply(2)` returns a new function permanently closed over `a = 2` — calling it later with different `b` values reuses that same specialized function. This is the real payoff of currying in practice: instead of writing `double`/`triple` as separate hand-written functions, they're derived on demand from one general `multiply`, each remembering its own preset argument via closure.
+
+A similar pattern shows up in event-handling / logging code, where a family of related functions share a common "prefix" argument:
+
+```javascript
+const logEvent = category => action => label => `[${category}] ${action}: ${label}`;
+
+const logClick = logEvent('UI')('click');
+console.log(logClick('submit-button'));
+console.log(logClick('cancel-button'));
+```
+
+```
+[UI] click: submit-button
+[UI] click: cancel-button
+```
+
+`logClick` is a reusable, specialized function derived from the general `logEvent` — useful for building a family of related loggers/handlers (`logClick`, `logHover`, `logSubmit`, ...) without repeating the `category`/`action` arguments every time.
+
+</details>

@@ -5,7 +5,7 @@
 1. **Object literal** — e.g. `const obj = {key: 'value'}`
 2. **Using `new Object()`** — e.g. `const obj = new Object({ key: 'value' })`
 3. **Using a constructor function** — see the [Constructor Functions](#constructor-functions) section below.
-4. **Using classes** — covered in depth in [objects.md](objects.md) (OOP notes).
+4. **Using classes** — covered in depth in [PrototypalInheritance.md](PrototypalInheritance.md) (OOP notes).
 5. **Using `Object.create()`** — see below.
 
 **Values can be of any type:**

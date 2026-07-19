@@ -22,11 +22,11 @@ Before diving into hoisting puzzles, it helps to trace a plain execution context
 - **`var` declarations**: Assigned value `undefined`
 - **Function declarations**: Entire function code is stored in memory
 - **`let` and `const`**: Hoisted but left uninitialized (Temporal Dead Zone)
+- **`class` declarations**: ⚠️ Also hoisted into the Temporal Dead Zone, exactly like `let`/`const` — this is commonly misstated as "classes aren't hoisted," but `typeof MyClass` before the declaration throws the exact same `ReferenceError: Cannot access 'MyClass' before initialization` that a TDZ `let`/`const` does (see Question 18) — not "MyClass is not defined," which is what you'd get for something genuinely never hoisted at all.
 
 ### What Doesn't Get Hoisted:
 - **Function expressions**: Treated as variables
-- **Arrow functions**: Treated as variables  
-- **Classes**: Not hoisted
+- **Arrow functions**: Treated as variables
 - **Initializations**: Only declarations are hoisted, not assignments
 
 ## Temporal Dead Zone (TDZ)
@@ -457,27 +457,81 @@ New value is: bar
 
 </details>
 
-## Key Takeaways
+### Question 18 — `typeof` Isn't Always "Safe"
 
-1. **Function declarations** are fully hoisted (name + body)
-2. **`var` declarations** are hoisted and initialized with `undefined`  
-3. **`let`/`const` declarations** are hoisted but remain uninitialized (TDZ)
-4. **Function expressions** and **arrow functions** follow variable hoisting rules
-5. **Classes** are not hoisted
-6. Only **declarations** are hoisted, not **initializations**
-7. **Function declarations** take precedence over **variable declarations** with the same name
-8. **Variable assignments** can overwrite **hoisted functions**
+`typeof` is famously safe to use on a variable that was never declared at all — it returns `"undefined"` rather than throwing. Does that hold for a variable that *is* declared, but currently sitting in the TDZ?
 
-## Best Practices
+```javascript
+console.log(typeof totallyUndeclaredVar);
 
-1. **Declare variables at the top** of their scope
-2. **Use `const` by default**, `let` when reassignment is needed
-3. **Avoid `var`** to prevent confusion
-4. **Declare functions before using them** for clarity
-5. **Be aware of TDZ** when using `let`/`const`
+console.log(typeof tdzVar);
+let tdzVar = 5;
+```
 
+<details>
+<summary>Show Answer</summary>
+
+```
+undefined
+ReferenceError: Cannot access 'tdzVar' before initialization
+```
+
+**Explanation:** ⚠️ This is a genuinely common interview trap. `typeof` only avoids throwing for identifiers that are **truly undeclared anywhere in scope** — because in that case, there's no binding at all for it to conflict with. `tdzVar`, on the other hand, **is** declared (hoisted, per the `let` rules above) — it's just uninitialized. `typeof` still has to resolve the binding to know what to report on, and resolving a TDZ binding always throws, `typeof` included. The "typeof is always safe" rule of thumb only applies to genuinely undeclared variables, not to declared-but-not-yet-initialized ones.
+
+</details>
+
+### Question 19 — Class Declarations Are in the TDZ Too
+
+```javascript
+console.log(typeof MyClass);
+class MyClass {}
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+ReferenceError: Cannot access 'MyClass' before initialization
+```
+
+**Explanation:** If classes truly weren't hoisted at all, this would behave like `totallyUndeclaredVar` above and print `"undefined"` — instead it throws the exact same TDZ error `let`/`const` produce. This confirms `class` declarations follow the same hoisting rule as `let`/`const`: hoisted to the top of their scope, but left uninitialized until the declaration line actually executes.
+
+</details>
+
+### Question 20 — TDZ Spans the Entire `switch` Block
+
+```javascript
+function testSwitch(val) {
+  switch (val) {
+    case 1:
+      let x = 'case1';
+      console.log(x);
+      break;
+    case 2:
+      console.log(x);
+      break;
+  }
+}
+
+testSwitch(2);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+ReferenceError: Cannot access 'x' before initialization
+```
+
+**Explanation:** A `switch` statement's `{ }` is **one single block**, shared by every `case` inside it — it is *not* one block per case. `let x` declared inside `case 1` is hoisted to the top of the *entire switch block*, so `case 2` can see that `x` exists (unlike a truly separate scope, where `x` would be undeclared) — but since execution jumped straight to `case 2` without ever running `case 1`'s initialization, `x` is still sitting in the TDZ, and reading it throws. The general fix is to wrap each `case` body that declares a variable in its own `{ }` block, giving it a genuinely separate scope.
+
+</details>
+
+### Question 21 — The Hardest One: Function Declarations Inside a Block
+
+```javascript
 var a = "Rohit"
-if(true) {
+if (true) {
     console.log(a, 'first')
     a = "Sachin";
     console.log(a, '2nd')
@@ -486,3 +540,125 @@ if(true) {
     console.log(a, 'last')
 }
 console.log(a, 'lasteest')
+```
+
+<details>
+<summary>Show Answer</summary>
+
+**In a plain script / non-strict mode:**
+
+```
+[Function: a] first
+Sachin 2nd
+Nikhil last
+Sachin lasteest
+```
+
+**In strict mode (`'use strict'`, or inside an ES module, or inside a class body):**
+
+```
+[Function: a] first
+Sachin 2nd
+Nikhil last
+Rohit lasteest
+```
+
+**Explanation:** ⚠️ This is one of the most obscure corners of hoisting — legacy behavior formally specified in the spec's **Annex B**, kept only for compatibility with old websites.
+
+In **strict mode**, it's simple: `function a() {}` is block-scoped, exactly like `let`. Inside the `if` block, `a` refers to that block-scoped function/variable the whole way through, completely independent of the outer `var a`. The outer `var a` is never touched by anything inside the block, so the final `console.log` outside it still shows the original `"Rohit"`.
+
+**In non-strict (sloppy) mode**, the easiest way to think about it is that `function a() {}` inside a block quietly behaves as if it were **two separate declarations at once**:
+
+```javascript
+var a;        // 1. an invisible `var` in the enclosing function/global scope
+{
+    let a = function () {};  // 2. a block-scoped binding, hoisted to the top of the block
+    // ...and right here, at the function declaration's own textual position,
+    // an invisible assignment happens: (var) a = (let) a;
+}
+```
+
+So there are genuinely **two different `a` bindings** alive at once inside the block — call them `(var) a` (the outer one, matching what the code literally calls `a` outside the block) and `(let) a` (the block-scoped one) — and they only get synced up **once**, at the exact line where `function a() {}` sits in the source. Walking through it line by line:
+
+**Step 1 — the block is entered**
+```javascript
+if (true) {
+```
+`function a() {}` is hoisted to the top of the block immediately, so `(let) a` exists and already holds the function before any other line inside the block runs:
+- `(var) a` → `"Rohit"` (untouched)
+- `(let) a` → `function a() {}`
+
+**Step 2**
+```javascript
+console.log(a, 'first')
+```
+Inside the block, `a` always resolves to `(let) a` (it shadows the outer one). Logs **`[Function: a] first`**.
+
+**Step 3**
+```javascript
+a = "Sachin";
+```
+Writes `(let) a` only:
+- `(var) a` → `"Rohit"` (still untouched)
+- `(let) a` → `"Sachin"`
+
+**Step 4**
+```javascript
+console.log(a, '2nd')
+```
+Reads `(let) a`. Logs **`Sachin 2nd`**.
+
+**Step 5 — the sync point**
+```javascript
+function a() {}
+```
+This line was already hoisted (Step 1), so it doesn't re-create the function here — but this is exactly where the one-time Annex B sync happens: `(var) a = (let) a`.
+- `(var) a` → `"Sachin"` ← just synced
+- `(let) a` → `"Sachin"` (unchanged)
+
+**Step 6**
+```javascript
+a = "Nikhil"
+```
+The sync already happened in Step 5 — the two bindings are now independent. This only writes `(let) a`:
+- `(var) a` → `"Sachin"` (frozen — never touched again)
+- `(let) a` → `"Nikhil"`
+
+**Step 7**
+```javascript
+console.log(a, 'last')
+```
+Reads `(let) a`. Logs **`Nikhil last`**.
+
+**Step 8 — outside the block**
+```javascript
+console.log(a, 'lasteest')
+```
+`(let) a` no longer exists once the block has exited — only `(var) a` is reachable here, still frozen at the value it was synced to back in Step 5. Logs **`Sachin lasteest`**.
+
+**Practical takeaway:** avoid declaring functions directly inside `if`/`for`/block bodies in code that might run in non-strict mode — having two bindings with the same name, synced only once at an easy-to-miss moment, is confusing even to experienced developers. Use a function expression or arrow function assigned to a `let`/`const` instead, which behaves consistently and predictably in both modes.
+
+_Blog_: https://dev.to/rkirsling/tales-from-ecma-s-crypt-annex-b-3-3-56go
+</details>
+
+## Key Takeaways
+
+1. **Function declarations** are fully hoisted (name + body)
+2. **`var` declarations** are hoisted and initialized with `undefined`
+3. **`let`/`const`/`class` declarations** are all hoisted but remain uninitialized (TDZ) — `class` follows the exact same rule as `let`/`const`, despite the common misconception that it "isn't hoisted" at all
+4. **Function expressions** and **arrow functions** follow variable hoisting rules
+5. Only **declarations** are hoisted, not **initializations**
+6. **Function declarations** take precedence over **variable declarations** with the same name
+7. **Variable assignments** can overwrite **hoisted functions**
+8. **`typeof` is only "safe" on genuinely undeclared variables** — on a variable that's declared but still in the TDZ, `typeof` throws the same `ReferenceError` as reading it directly
+9. A `switch` statement's `{ }` is **one shared block** — a `let`/`const` declared in one `case` is in the TDZ (or already initialized) for every other `case` in the same `switch`, not scoped per-case
+10. **Function declarations inside a block behave differently in strict vs. non-strict mode** — strict mode block-scopes them cleanly; non-strict mode additionally syncs their value out to an enclosing `var` of the same name exactly once (Annex B legacy behavior), then the two bindings diverge
+
+## Best Practices
+
+1. **Declare variables at the top** of their scope
+2. **Use `const` by default**, `let` when reassignment is needed
+3. **Avoid `var`** to prevent confusion
+4. **Declare functions before using them** for clarity
+5. **Be aware of TDZ** when using `let`/`const`/`class`
+6. **Avoid declaring functions directly inside blocks** (`if`/`for`/`while` bodies) — the sloppy-mode Annex B behavior is confusing even for experienced developers; use a `let`/`const` function expression or arrow function instead

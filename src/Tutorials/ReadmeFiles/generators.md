@@ -2,45 +2,45 @@
 
 ## Iterators
 
-We regularly have lists or collections or data where we want to grab each element one by one
+We regularly have lists or collections where we want to grab each element one by one:
 
-```
-const numbers = [4,5,6]
-for (let i = 0; i < numbers.length; i++){
- console.log(numbers[i])
-} 
-```
-
-Now suppose we want to access each element, perform some actions without using loops.
-
-**Using closure**
-
-```
-function createFunction(array){
- let i = 0
- function inner(){
- const element = array[i]
- i++
- return element
- }
- return inner
+```javascript
+const numbers = [4, 5, 6]
+for (let i = 0; i < numbers.length; i++) {
+    console.log(numbers[i])
 }
-const returnNextElement = createFunction([4,5,6])
+```
+
+Now suppose we want to access each element and perform some action, without an explicit loop.
+
+**Using closure:**
+
+```javascript
+function createFunction(array) {
+    let i = 0
+    function inner() {
+        const element = array[i]
+        i++
+        return element
+    }
+    return inner
+}
+const returnNextElement = createFunction([4, 5, 6])
 const element1 = returnNextElement()
 const element2 = returnNextElement()
 ```
 
 ---
-> **Note:** JavaScript’s built in iterators are actually objects with a next method that when called
-> returns the next element from the ‘stream’, so let’s restructure slightly
 
-An iterator is an object with a 'next' method that, when called, returns an object containing a 'value' and a 'done' property. The 'value' is the current element, and 'done' indicates whether the iteration is complete.
+> **Note:** JavaScript's built-in iterators are actually objects with a `next` method that, when called, returns the next element from the "stream" — so let's restructure slightly to match that shape.
 
-```
-function createFlow(array){
+An **iterator** is an object with a `next` method that, when called, returns an object containing a `value` and a `done` property. `value` is the current element, and `done` indicates whether the iteration is complete.
+
+```javascript
+function createFlow(array) {
     let i = 0
     const inner = {
-        next : function() {
+        next: function () {
             const element = array[i]
             i++
             return element
@@ -48,31 +48,29 @@ function createFlow(array){
     }
     return inner
 }
-const returnNextElement = createFlow([4,5,6])
+const returnNextElement = createFlow([4, 5, 6])
 const element1 = returnNextElement.next()
 const element2 = returnNextElement.next()
 ```
 
-**Generator Fn**: A special type of function that creates a flow of data, returns a generator object with a next method, and allows dynamic control over data generation by using the 'yield' keyword to suspend and resume function execution.
+**Generator function:** a special type of function that produces a flow of data — it returns a *generator object* with a `next` method, and lets you dynamically control data generation using the `yield` keyword to suspend and resume execution.
 
-The 'yield' keyword suspends the execution context of a function, returns a value, and allows the function to be resumed later, preserving its local state and position in the code.
+`yield` suspends a function's execution, returns a value, and allows the function to be resumed later — preserving its local state and position in the code exactly where it left off.
 
-A generator object has a 'next' method that can be called repeatedly to generate values, allows passing values back into the function, and maintains the function's execution context between calls.
+A generator object's `next()` method can be called repeatedly to generate values, can pass values back into the function, and maintains the function's execution context between calls.
 
-Regular functions return only one, single value (or nothing).
+- **Regular functions** return only a single value (or nothing) and then they're done.
+- **Generators** can "yield" multiple values, one at a time, on demand. They pair naturally with iterables, making it easy to build data streams.
 
-Generators can return (“yield”) multiple values, one after another, on-demand. They work great with iterables, allowing to create data streams with ease.
+**Why generators exist:**
+- A normal function: starts, runs to completion, returns once, finishes.
+- A generator: starts, pauses at each `yield`, resumes from that same point later, and can produce multiple values over time.
 
-_Why generators exist_
-**Normally, a function:**  starts, runs fully, returns once,finishes
-**A generator can:** start ,pause at yield, resume from the same place later ,produce multiple values over time
-So generators exist to support lazy value generation and step-by-step execution.
+So generators exist to support **lazy value generation** and **step-by-step execution** — computing only what's actually needed, only when it's needed.
 
-_Special syntax_ `function*`
+Special syntax: `function*`.
 
 ### Question 1
-
-What will be the output of this generator?
 
 ```javascript
 function* generateSequence() {
@@ -90,8 +88,7 @@ console.log(gen.next());
 console.log(gen.next());
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 { value: 1, done: false }
@@ -101,27 +98,19 @@ console.log(gen.next());
 { value: undefined, done: true }
 ```
 
-**Explanation:** Each `yield` pauses execution and returns a value. The last `yield` without a value returns `undefined`.
+**Explanation:** each `yield` pauses execution and returns a value; a bare `yield` (no value) yields `undefined`. The 5th call has nothing left to yield, so `value` is `undefined` and `done` flips to `true`, signaling the generator has finished.
+
+**Note:** calling `generateSequence()` doesn't run any of the function's code immediately — it returns a special **generator object** that manages execution. The main method on that object is `next()`: each call runs the function until the nearest `yield <value>` (value optional, defaults to `undefined`), pauses there, and returns `{ value, done }` to the caller.
 
 </details>
 
-when called, it doesn’t run its code. Instead it returns a special object, called “generator object”, to manage the execution.
-
-The main method of a generator is next(). When called, it runs the execution until the nearest yield <value> statement (value can be omitted, then it’s undefined). Then the function execution pauses, and the yielded value is returned to the outer code.
-
-The result of next() is always an object with two properties:
-
-value: the yielded value.
-done: `true` if the function code has finished, otherwise `false`
 ---
 
-## Generators are Iterable
+## Generators Are Iterable
 
-Generators can be used with `for...of` loops and spread operator.
+Generators can be used directly with `for...of` loops and the spread operator.
 
 ### Question 2
-
-What will be the output when iterating over a generator?
 
 ```javascript
 function* numberGen() {
@@ -131,13 +120,12 @@ function* numberGen() {
 }
 
 const gen = numberGen();
-for(let value of gen) {
+for (let value of gen) {
   console.log(value);
 }
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 1
@@ -145,13 +133,11 @@ for(let value of gen) {
 3
 ```
 
-**Explanation:** `for...of` automatically calls `next()` and extracts values until `done` is true. It ignores the final `undefined` value when the generator is done.
+**Explanation:** `for...of` automatically calls `next()` repeatedly and extracts each `value`, stopping as soon as `done` becomes `true` — it never sees or logs that final `{ value: undefined, done: true }` result.
 
 </details>
 
-### Question 3
-
-What will be the output when a generator has a `return` statement?
+### Question 3 — `return` Inside a Generator
 
 ```javascript
 function* myGenerator() {
@@ -161,26 +147,23 @@ function* myGenerator() {
 }
 
 const g = myGenerator();
-for(const value of g) {
+for (const value of g) {
   console.log(value);
 }
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 A
 B
 ```
 
-**Explanation:** `for...of` ignores the return value. It only iterates over yielded values, not the final returned value.
+**Explanation:** `for...of` only iterates over *yielded* values — a `return` inside a generator sets `done: true` with that value, but `for...of` treats that as the termination signal and never logs it. Compare with manually calling `.next()` (Question 4), where the returned value **is** directly visible.
 
 </details>
 
-### Question 4
-
-What happens if we call `next()` before the loop?
+### Question 4 — Calling `next()` Before Entering a `for...of` Loop
 
 ```javascript
 function* myGenerator() {
@@ -191,60 +174,62 @@ function* myGenerator() {
 
 const g = myGenerator();
 console.log('called using next', g.next());
-for(const value of g) {
+for (const value of g) {
   console.log(value);
 }
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 called using next { value: 'A', done: false }
 B
 ```
 
-**Explanation:** The first `next()` call consumes "A", so the loop only gets "B".
+**Explanation:** the manual `g.next()` call already consumed `"A"` before the loop started. `for...of` continues from wherever the generator's internal position currently is — it doesn't restart from the beginning — so the loop only ever sees `"B"`.
 
 </details>
 
-```
-function* generateSequence() {
-  yield 1;
-  yield 2;
-  yield 3;
-}
+### `yield` vs. `return`
 
-let generator = generateSequence();
+- `yield` pauses execution and hands back a value — the generator can still be resumed afterward.
+- `return` ends the generator completely — any code (including further `yield`s) after it never runs.
 
-for(let value of generator) {
-  console.log(value); // 1, then 2, then 3
-}
-
-console.log([0, ...generateSequence()]); // 0, 1, 2, 3
-```
-
----
-##### yield vs return
-
-1. yield pauses and gives a value
-2. return ends the generator completely
-
-```
+```javascript
 function* demo() {
   yield 10;
   return 20;
   yield 30; // never reached
 }
+
+const d = demo();
+console.log(d.next()); // { value: 10, done: false }
+console.log(d.next()); // { value: 20, done: true }
+console.log(d.next()); // { value: undefined, done: true } — already finished
 ```
 
-## Passing Values into Generators
+Also works with the spread operator (which internally uses `for...of`):
 
-We can call `generator.next(arg)` with an argument. That argument becomes the result of `yield`.
+```javascript
+function* generateSequence() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+console.log([0, ...generateSequence()]);
+```
+
+```
+[ 0, 1, 2, 3 ]
+```
+
+---
+
+## Passing Values Into Generators
+
+Calling `generator.next(arg)` with an argument makes `arg` become the *result* of the `yield` expression that's currently paused.
 
 ### Question 5
-
-What will be the output when passing values to a generator?
 
 ```javascript
 function* greet() {
@@ -257,25 +242,24 @@ console.log(g.next());
 console.log(g.next("Rohit"));
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
-{ value: "What is your name?", done: false }
-{ value: "Hello Rohit", done: false }
+{ value: 'What is your name?', done: false }
+{ value: 'Hello Rohit', done: false }
 ```
 
-**Explanation:** The first `next()` starts the generator and gets the first yield. The second `next("Rohit")` passes "Rohit" as the result of the first yield, which is assigned to `name`.
+**Explanation:** the first `next()` (called with no argument) starts the generator and runs it up to the first `yield`, returning `"What is your name?"` — at this point, `name` hasn't been assigned yet, since the assignment only completes once this `yield` expression *resolves*. The second call, `next("Rohit")`, supplies `"Rohit"` as that resolved value, which is what gets assigned to `name` before the function continues to the next `yield`.
 
 </details>
 
-##### usecase of generator functions
+### Use Cases for Generator Functions
 
-- values are large or infinite
-- we do not want to create everything upfront
-- we want lazy computation
+- Values are large or effectively infinite.
+- We don't want to (or can't) compute everything upfront.
+- We want lazy, on-demand computation.
 
-```
+```javascript
 function* infiniteNumbers() {
   let i = 1;
   while (true) {
@@ -284,19 +268,15 @@ function* infiniteNumbers() {
 }
 ```
 
+`infiniteNumbers()` never actually loops forever in practice — each call to `.next()` only computes *one* more value, so you can safely pull as many or as few values as you want (`gen.next().value`, `gen.next().value`, ...) without ever trying to materialize an infinite array.
+
 ---
 
-##### Generator methods
+## Generator Methods: `.next()`, `.return()`, `.throw()`
 
-The iterator returned by a generator has:
+### `generator.return(value)` — Finishes the Generator Early
 
-- .next()
-- .return()
-- .throw()
-
-**generator.return** : finishes the generator execution and return the given value
-
-```
+```javascript
 function* gen() {
   yield 1;
   yield 2;
@@ -305,35 +285,39 @@ function* gen() {
 
 const g = gen();
 
-g.next();                // { value: 1, done: false }
-g.return('Stop now');    // { value: "Stop now", done: true }
-g.next();                // { value: undefined, done: true }
+console.log(g.next());            // { value: 1, done: false }
+console.log(g.return('Stop now')); // { value: "Stop now", done: true }
+console.log(g.next());            // { value: undefined, done: true }
 ```
-_Note_: If we again use generator.return() in a completed generator, it will return that value again
 
-**.throw()** : Throws an error inside the generator.
+**Note:** if you call `.return()` again on an already-completed generator, it returns that same value again:
 
-To pass an error into a yield, we should call generator.throw(err). In that case, the err is thrown in the line with that yield.
-
+```javascript
+console.log(g.return('again')); // { value: 'again', done: true }
 ```
+
+### `generator.throw(err)` — Throws an Error Inside the Generator
+
+Throwing into a generator raises `err` at the exact line where the generator is currently paused (at its most recent `yield`), letting the generator's own `try/catch` handle it.
+
+```javascript
 function* gen() {
   try {
     yield 1;
-    alert("Never reached here, went to catch")
+    console.log("Never reached here, went to catch");
   } catch (e) {
     console.log("caught", e);
   }
 }
 
 const g = gen();
-console.log(g.next());    // { value: 1, done: false }
-g.throw("error");         // caught error
+console.log(g.next()); // { value: 1, done: false }
+g.throw("error");      // logs: caught error
 ```
 
-###### yield*
-yield* delegates to another iterable or generator
+### `yield*` — Delegating to Another Generator/Iterable
 
-```
+```javascript
 function* a() {
   yield 1;
   yield 2;
@@ -344,19 +328,27 @@ function* b() {
   yield 3;
 }
 
-console.log([...b()]); // [1, 2, 3]
+console.log([...b()]);
 ```
 
-##### Data fetching using yield
-
 ```
-function doWhenDataReceived (value){
- returnNextElement.next(value)
+[ 1, 2, 3 ]
+```
+
+`yield*` transparently forwards every value from the inner generator (or any iterable) out through the outer one, as if the inner generator's `yield`s were written directly inside `b`.
+
+---
+
+## Practical Example: Driving a Generator With a Promise
+
+```javascript
+function doWhenDataReceived(value) {
+    returnNextElement.next(value)
 }
-function* createFlow(){
- console.log('inside gen')
- const data = yield Promise.resolve("hi")
- console.log(data)
+function* createFlow() {
+    console.log('inside gen')
+    const data = yield Promise.resolve("hi")
+    console.log(data)
 }
 
 const returnNextElement = createFlow()
@@ -367,128 +359,156 @@ futureData.value.then(doWhenDataReceived)
 console.log('2')
 ```
 
-We get to control when we return back to createFlow and continue
-executing - by setting up the trigger to do so
-(returnNextElement.next()) to be run by our function that
-was triggered by the promise resolution (when the value returned)
+<details><summary>Show Answer</summary>
 
+```
+1
+inside gen
+11
+2
+hi
+```
 
-## Async/await Simplifies All This
+**Explanation:** `createFlow()` doesn't run any code yet (generators are lazy). `returnNextElement.next()` starts it, running until the `yield Promise.resolve("hi")` — logging `'inside gen'` synchronously, then pausing with `futureData.value` holding the *unresolved* promise itself (not yet `"hi"`). We manually attach `.then(doWhenDataReceived)` to that promise, and once it resolves, `doWhenDataReceived` calls `returnNextElement.next("hi")` — feeding `"hi"` back in as the result of the paused `yield` expression, resuming the generator and letting `console.log(data)` finally run, printing `hi`.
+
+**Why this matters historically:** we're manually building the "resume the generator once the promise resolves" wiring here — deciding exactly when to call `.next()` in response to a promise settling. `async`/`await` (next section) automates this *exact* pattern natively, which is why `async` functions are sometimes described as "generators with an automatic promise-driven runner built in."
+
+</details>
+
+---
+
+## `async`/`await` Simplifies All This
 
 ### Question 6
 
-What will be the execution order with async/await?
-
 ```javascript
-async function createFlow(){
- console.log("Me first")
- const data = await Promise.resolve("HI")
- console.log(data)
+async function createFlow() {
+    console.log("Me first")
+    const data = await Promise.resolve("HI")
+    console.log(data)
 }
 createFlow()
 console.log("Me second")
 ```
 
-<details>
-<summary>Show Answer</summary>
+<details><summary>Show Answer</summary>
 
 ```
 Me first
-Me second  
+Me second
 HI
 ```
 
-**Explanation:** The async function starts immediately, pauses at `await`, allows other synchronous code to run, then resumes when the promise resolves.
+**Explanation:** the async function starts running immediately and synchronously, up to its first `await` — logging `"Me first"`. `await` then pauses it and hands control back to the caller, letting the rest of the synchronous code (`"Me second"`) run first. Once the awaited promise resolves, the rest of `createFlow` resumes as a microtask, logging `"HI"` last. Full mechanics of this ordering (and how it fits alongside `setTimeout`) are covered in [eventLoop.md](eventLoop.md#question-6--asyncawait-in-the-ordering).
 
 </details>
 
-> **Note**: No need for a triggered function on the promise
-> resolution, instead we auto trigger the resumption of the createFlow execution 
+> **Note:** unlike the manual generator example above, there's no need to write a "resume when the promise resolves" trigger function ourselves — `await` automatically schedules that resumption for us.
 
-##### What happens when an async function encounters an await expression?
+### What Happens When an `async` Function Hits an `await`?
 
-When an async function encounters an await expression, it exits the function's execution context, allows other code to run, and automatically resumes when the promise resolves, storing the resolved value in the designated variable
+- The `async` function starts running immediately, synchronously, just like any normal function call.
+- At `await`, the function's execution pauses.
+- The rest of the function (everything after that `await`) is scheduled to resume as a **microtask**, once the awaited promise settles.
+- Control returns to the caller immediately — any remaining synchronous code after the call keeps running first.
+- Only once all synchronous code has finished does the event loop process the microtask queue, resuming the paused `async` function.
 
-- async function starts running immediately.
-- await pauses the function.
-- The rest of the function is scheduled as a microtask.
-- Current synchronous code continues first.
-- After sync code finishes, microtasks run.
+### Step-by-Step With the Call Stack
 
-##### Step-by-step with call stack
+1. **Global code starts running.** Call stack: `[Global]`.
+2. `createFlow()` is called — pushed onto the stack: `[createFlow, Global]`. Inside it, `console.log("Me first")` runs immediately. Output so far: `Me first`.
+3. JS reaches `const data = await Promise.resolve("HI")`. `Promise.resolve("HI")` creates an already-resolved promise, but `await` doesn't let execution continue past it synchronously. Instead:
+   - `createFlow` pauses right there.
+   - The remainder of the function (`console.log(data)`) is scheduled as a microtask, to run once the awaited promise settles.
+   - Control returns to wherever `createFlow()` was called from. Call stack shrinks back to `[Global]`.
+4. Global code continues with `console.log("Me second")`. Output so far: `Me first`, `Me second`.
+5. Synchronous global code has now finished — the call stack is empty. The event loop checks the microtask queue and finds the scheduled continuation of `createFlow`, resumes it with `data = "HI"`, and runs `console.log(data)`. Final output: `Me first`, `Me second`, `HI`.
 
-1. Global code starts running.
-  - JS code
-    ```
-    createFlow()
-    console.log("Me second")
-    ```
+---
 
-  - Call Stack
-    ```
-    Global
-    ```
+## Custom Iterables With `Symbol.iterator`
 
-2. createFlow() is called.
-  - Call stack:
-    ```
-    createFlow
-    Global
-    ```
-  
-  - Inside createFlow: `console.log("Me first")`
+Generators aren't the only way to make something work with `for...of` or the spread operator — any object can opt in by implementing a method keyed by the well-known symbol `Symbol.iterator`, which must return an iterator (an object with a `next()` method).
 
-  - Output : `Me first`
+### Question 7 — Making a Plain Object Iterable
 
+```javascript
+const range = {
+    from: 1,
+    to: 5,
+    [Symbol.iterator]() {
+        let current = this.from;
+        const last = this.to;
+        return {
+            next() {
+                if (current <= last) {
+                    return { value: current++, done: false };
+                }
+                return { value: undefined, done: true };
+            }
+        };
+    }
+};
 
-3. Now JS sees:
-   ```
-   const data = await Promise.resolve("HI")
-   ```
+console.log([...range]);
+console.log(Array.from(range));
+for (const num of range) console.log(num);
+```
 
-   First, Promise.resolve("HI")
-   But await does not continue immediately.
+<details><summary>Show Answer</summary>
 
-  What await does:
+```
+[ 1, 2, 3, 4, 5 ]
+[ 1, 2, 3, 4, 5 ]
+1
+2
+3
+4
+5
+```
 
-  - pauses createFlow
-  - exits the function for now
-  - schedules the remaining part of the function to resume later
-  - The remaining part is roughly: `console.log(data)`
-  - This continuation is placed in the microtask queue.
+**Explanation:** `range` is a plain object — it has no `length`, no numeric indices, nothing array-like about it. But because it implements `[Symbol.iterator]()` returning a valid iterator, every construct that expects an iterable (`for...of`, spread `...`, `Array.from`, destructuring) works on it automatically. This is exactly the mechanism arrays, strings, `Map`s, and `Set`s use under the hood to support `for...of` themselves.
 
-So now:
+</details>
 
-  - createFlow is paused
-  - control returns back to global code
+### Question 8 — Using a Generator as a Shortcut for `Symbol.iterator`
 
-Call stack becomes:
-    Global
+```javascript
+const range2 = {
+    from: 1,
+    to: 3,
+    *[Symbol.iterator]() {
+        for (let i = this.from; i <= this.to; i++) yield i;
+    }
+};
 
-Microtask queue has something like: resume createFlow with value "HI"
+console.log([...range2]);
+```
 
-4. Global code continues: `console.log("Me second")`
-  - output now becomes:
-    ```
-    Me first
-    Me second
-    ```
+<details><summary>Show Answer</summary>
 
-5. Synchronous global code is finished. Now event loop checks microtasks. The queued continuation of createFlow runs.
-   ```
-    data = "HI"
-    console.log(data)
-    ```
-  
-  Final output:
-  ```
-  Me first
-  Me second
-  HI
-  ```
+```
+[ 1, 2, 3 ]
+```
 
+**Explanation:** manually implementing `next()`/`{value, done}` bookkeeping by hand (Question 7) is tedious — a generator method does it automatically. `*[Symbol.iterator]()` is a **generator method** (combining a computed method name with `function*` syntax); calling it returns a generator object, which already satisfies the iterator protocol. This is the far more common way to make a custom object iterable in real code.
 
+</details>
 
+### Question 9 — Are Generators Their Own Iterator?
 
+```javascript
+function* gen() { yield 1; yield 2; }
+const g = gen();
+console.log(g[Symbol.iterator]() === g);
+```
 
+<details><summary>Show Answer</summary>
 
+```
+true
+```
+
+**Explanation:** a generator object is simultaneously both an **iterator** (it has `next()`) and an **iterable** (it has `[Symbol.iterator]()`) — and its own `[Symbol.iterator]()` method just returns itself. This is exactly why a generator object can be passed directly to `for...of` or spread without any extra wrapping — it already satisfies both protocols at once.
+
+</details>

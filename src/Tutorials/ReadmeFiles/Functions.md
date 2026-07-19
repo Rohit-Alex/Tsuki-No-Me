@@ -9,6 +9,7 @@ function fun(parameter1, parameter2) {
   // body
 }
 ```
+>Note: Function `parameters` behave like `let`
 
 This is a **function invocation**:
 
