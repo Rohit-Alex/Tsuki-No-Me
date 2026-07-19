@@ -534,8 +534,6 @@ Object.is(obj, obj)     // true
 
 ### 25. Defining our own `Object.is` polyfill — should handle the `-0` and `NaN` cases
 
-[Click to open](src/Tutorials/prototypeChain&pollyfills.js)
-
 > Builds on Q26 above — the two cases a correct polyfill must special-case are exactly `NaN` and `-0`. See also the [Special Value -0](src/Tutorials/ReadmeFiles/Coercion.md#special-value--0) section in the Coercion notes for why `-0` needs special handling.
 
 ### 26. Coercion
@@ -859,18 +857,7 @@ console.log(delete age);  // true — here we're deleting window.age
 
 [Click to open](src/Tutorials/ReadmeFiles/shallow&DeepCopy.md)
 
-### 40. OOP in JS
-
-- Classes are used for making scalable objects.
-- Makes use of:
-  - Encapsulation
-  - Abstraction
-  - Inheritance
-  - Polymorphism
-
-[Click to open](src/Tutorials/ReadmeFiles/objects.md) · [click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
-
-### 41. Constructor property of an object
+### 40. Constructor property of an object
 
 Returns a reference to the constructor function that created the instance. This property holds a reference to the function itself, not a string containing its name.
 
@@ -891,7 +878,7 @@ const n = 3;
 n.constructor === Number; // true
 ```
 
-### 42. How would you check if a given argument is an array?
+### 41. How would you check if a given argument is an array?
 
 Use `Array.isArray(value)` — see the [Static `Array` methods](#32-array-methods) note under Array methods above for why this is preferred over `value instanceof Array` or `typeof value === 'object'` (the latter can't distinguish an array from any other object at all).
 
@@ -927,21 +914,30 @@ alert("Hi")
 
 ## Phase 2: Advanced JavaScript
 
-### 43. Hoisting
+### 42. Hoisting
 
 [Click to open](src/Tutorials/ReadmeFiles/Hoisting.md)
 
-### 44. `call`, `apply`, `bind`
+### 43. `call`, `apply`, `bind`
 
 [Click to open](src/Tutorials/ReadmeFiles/CallApplyBind.md)
 
-### 45. Prototype inheritance
+### 44. Prototype inheritance & OOP in JS
 
-[Click to open](src/Tutorials/prototypeChain&pollyfills.js)
+- Classes are used for making scalable objects.
+- Makes use of:
+  - Encapsulation
+  - Abstraction
+  - Inheritance
+  - Polymorphism
 
-### 46. What does the `instanceof` operator do?
+[click to open](src/Tutorials/ReadmeFiles/PrototypalInheritance.md) · 
+[click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
+[Click to open](src/Tutorials/ReadmeFiles/PrototypeChain.md) · 
 
-The `instanceof` operator checks whether the prototype property of a constructor appears anywhere in the prototype chain of an object. It returns a boolean.
+### 45. What does the `instanceof` operator do?
+
+The `instanceof` operator checks whether the `constructor.prototype` appears anywhere in the prototype chain of an object. It returns a boolean.
 
 ```javascript
 object instanceof constructor
@@ -982,30 +978,33 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
 
 > **Note:** `instanceof` walks the prototype chain at the time it runs, checking against whatever `constructor.prototype` currently *is* — not what it was when the object was created. That's why reassigning `Bar.prototype` after `b` was constructed makes `b instanceof Bar` return `false`.
 
-### 47. The `this` keyword
+### 46. The `this` keyword
 
 [Click to open](src/Tutorials/ReadmeFiles/thisExample.md)
 
-### 48. Closures
+### 47. Closures
 
 [Click to open](src/Tutorials/ReadmeFiles/closure.md)
 
-### 49. Currying
+### 48. Currying
 
 [Click to open](src/Tutorials/ReadmeFiles/currying.md)
 
-### 50. Asynchronous behavior
+### 49. Asynchronous behavior
 
 - Event loop — [click to open](src/Tutorials/ReadmeFiles/eventLoop.md)
 - Async behavior and why we need promises — [click to open](src/Tutorials/ReadmeFiles/Asynchronous.md)
-  - Promise variants — [click to open](src/Tutorials/PromiseVariant.js)
-    - `Promise.all`
-    - `Promise.allSettled`
-    - `Promise.any`
-    - `Promise.race`
-  - Generator functions — [click to open](src/Tutorials/ReadmeFiles/generators.md)
-  - `async`/`await` & error handling — [click to open](src/Tutorials/ReadmeFiles/AsyncAwait.md)
+- `async`/`await` & error handling — [click to open](src/Tutorials/ReadmeFiles/AsyncAwait.md)
+- Promise variants — [click to open](src/Tutorials/ReadmeFiles/PromiseVariant.md)
+  - `Promise.all`
+  - `Promise.allSettled`
+  - `Promise.any`
+  - `Promise.race`
+- Generator functions — [click to open](src/Tutorials/ReadmeFiles/generators.md)
 
+### 50. Polyfills
+
+[Click to open](src/Tutorials/ReadmeFiles/Polyfills.md)
 ---
 
 <a id="phase-3"></a>
