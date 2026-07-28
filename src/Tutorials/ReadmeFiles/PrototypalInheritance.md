@@ -616,4 +616,4 @@ paidUser1.sayName();
 
 </details>
 
-For the `Object.create()` and `new` polyfill implementations, see [Polyfills.md](Polyfills.md#question-14--myobjectcreate).
+For the `Object.create()` and `new` polyfill implementations, see [Polyfills.md](Polyfills.md#question-19--myobjectcreate).

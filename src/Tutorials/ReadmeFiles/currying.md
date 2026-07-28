@@ -246,6 +246,21 @@ console.log(curryOp(10)(11)(1, 2, 34)(12)());
 
 <details><summary>Show Answer</summary>
 
+
+**using recursion**
+```
+function curryOp(...args1) {
+    return function curried(...args2) {
+        if(args2.length === 0) {
+            return args1.reduce((acc, curr) => acc + curr)
+        } else {
+            return curryOp(...args1, ...args2)
+        }
+    }
+}
+```
+
+**Uses Closure**
 ```
 function curryOp(...args) {
     return function curried(...nextArgs) {
@@ -272,6 +287,21 @@ console.log(+curryOp(10)(11)(1, 2, 34)(12));
 
 ```
 function curryOp(...args) {
+    function inner(...next) {
+        return curryOp(...args, ...next);
+    }
+
+    inner.valueOf = () =>
+        args.reduce((a, b) => a + b, 0);
+
+    return inner;
+}
+```
+
+**OR**
+
+```
+function curryOp(...args) {
     function curried(...newArgs) {
         args = [...args, ...newArgs];
         return curried;
@@ -279,7 +309,6 @@ function curryOp(...args) {
     curried.toString = () => args.reduce((acc, num) => acc + num, 0);
     return curried;
 }
-
 ```
 
 **Explanation:** Instead of requiring a final empty `()` call to signal "stop and total," this version overrides `curried.toString()` so that coercing the function to a primitive (via the unary `+`, template-literal interpolation, or string concatenation) triggers the sum. `+curryOp(...)` forces numeric coercion, which calls `toString()` under the hood — same mechanism as `Symbol.toPrimitive`/`valueOf` coercion covered in [Coercion.md](Coercion.md). A neat trick, but the explicit `()` terminator from Question 6 is more explicit and readable in real code.

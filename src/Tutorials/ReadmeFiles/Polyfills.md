@@ -2,6 +2,8 @@
 
 A polyfill re-implements a native method's behavior in plain JavaScript. Writing them is a common interview exercise because it tests whether you actually understand what the built-in does under the hood, not just how to call it.
 
+> This file covers `Promise.all`/`allSettled`/`race`/`any` (see below), `Object.is`, and array method polyfills. For implementing the `Promise` constructor itself — `then`/`catch`/`finally`/`resolve`/`reject`, built up incrementally with each gap and fix — see the dedicated [PromisePolyfill.md](PromisePolyfill.md).
+
 ## `Function.prototype.call` / `apply` / `bind`
 
 > These are covered conceptually (with all their `this`-binding gotchas) in [CallApplyBind.md](CallApplyBind.md). This section only holds the polyfill implementations.
@@ -294,9 +296,315 @@ console.log([1, [2, [3, [4]]]].myFlat(Infinity));
 
 ---
 
+## Timers: `setInterval` on Top of `setTimeout`
+
+`setTimeout` and `setInterval` are both native browser/Node APIs, not something you'd normally "polyfill" for missing-feature reasons — but implementing one in terms of the other is a common interview exercise, because it tests whether you understand what each one actually guarantees.
+
+### Question 10 — `setInterval` Implemented via Recursive `setTimeout`
+
+```javascript
+function mySetInterval(cb, delay, ...args) {
+    let cancelled = false;
+    const timerId = {};
+
+    function tick() {
+        if (cancelled) return;
+        cb(...args);
+        timerId.id = setTimeout(tick, delay);
+    }
+    timerId.id = setTimeout(tick, delay);
+
+    timerId.clear = () => {
+        cancelled = true;
+        clearTimeout(timerId.id);
+    };
+    return timerId;
+}
+
+let count = 0;
+const t = mySetInterval((label) => {
+    count++;
+    console.log(label, count);
+    if (count === 3) t.clear();
+}, 20, 'tick');
+```
+
+<details><summary>Show Answer</summary>
+
+```
+tick 1
+tick 2
+tick 3
+```
+</details>
+
+### Question 11 — An Alternative Approach: a Timer Registry Polled via `requestAnimationFrame`
+
+Question 10's recursive-`setTimeout` approach is the simplest way to build `setInterval`, but it's not the only one. Browsers also expose `requestAnimationFrame` (rAF) — a callback that fires roughly once per screen repaint (~60 times a second). Another valid approach: keep a registry of "due times," and check it on every animation frame.
+
+```javascript
+let intervalIdTracker = 10000;
+const intervals = {};
+
+function mySetInterval(cb, interval, ...args) {
+    const intervalId = intervalIdTracker++;
+
+    function execute() {
+        cb(...args);
+
+        // The interval might have been cleared from inside the callback itself
+        if (!intervals[intervalId]) return;
+
+        intervals[intervalId].executeAt += interval;
+    }
+
+    intervals[intervalId] = {
+        callback: execute,
+        executeAt: Date.now() + interval,
+    };
+
+    // Only need one polling loop running at a time, no matter how many intervals exist
+    if (Object.keys(intervals).length === 1) {
+        requestAnimationFrame(processIntervals);
+    }
+
+    return intervalId;
+}
+
+function processIntervals() {
+    const now = Date.now();
+
+    for (const id of Object.keys(intervals)) {
+        const timer = intervals[id];
+        if (now >= timer.executeAt) {
+            timer.callback();
+        }
+    }
+
+    if (Object.keys(intervals).length > 0) {
+        requestAnimationFrame(processIntervals);
+    }
+}
+
+function myClearInterval(id) {
+    delete intervals[id];
+}
+
+let count = 0;
+const id = mySetInterval(() => {
+    count++;
+    console.log("Rohit", count);
+    if (count === 3) myClearInterval(id);
+}, 200);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+Rohit 1
+Rohit 2
+Rohit 3
+```
+
+(then nothing further — `myClearInterval` removes the entry from `intervals`, and `processIntervals` stops rescheduling itself once the registry is empty)
+
+**How it works:** rather than chaining individual `setTimeout` calls (Question 10), this keeps every active interval's "next due time" (`executeAt`) in a shared `intervals` registry, and drives everything from a **single** repeating `requestAnimationFrame` loop (`processIntervals`) that checks, on every frame, which timers are due to fire. `execute()` wraps the real callback so that after firing, it just bumps `executeAt` forward by `interval` — rescheduling by *updating a timestamp* rather than creating a brand-new timer each time.
+
+**Why check `Object.keys(intervals).length === 1` before starting the loop?** So that calling `mySetInterval` multiple times doesn't spawn multiple competing `requestAnimationFrame` loops — the very first interval registered kicks off the single shared polling loop, and every interval after that just adds another entry to the same registry that the already-running loop will pick up.
+
+**Trade-offs versus Question 10's recursive `setTimeout` version:**
+- Since `requestAnimationFrame` only fires when the page is actually rendering (throttled or fully paused in a backgrounded/hidden browser tab), this version's timing is tied to the rendering pipeline — appropriate for animation-related work, but not a general-purpose timer replacement outside a browser (`requestAnimationFrame` doesn't exist in Node at all, unlike `setTimeout`).
+- A single shared poll loop scales better with many concurrent intervals than Question 10's one-`setTimeout`-per-interval approach, at the cost of only checking due times on whatever cadence rAF happens to fire (not necessarily exactly on time).
+
+</details>
+
+### Question 12 — The Same Registry Pattern for `setTimeout`
+
+```javascript
+let timerIdGlobal = 1;
+const timers = {};
+
+function mySetTimeout(callback, delay, ...args) {
+    const id = timerIdGlobal++;
+
+    timers[id] = {
+        callback,
+        args,
+        executeAt: Date.now() + delay,
+    };
+
+    if (Object.keys(timers).length === 1) {
+        requestAnimationFrame(processTimers);
+    }
+
+    return id;
+}
+
+function processTimers() {
+    const now = Date.now();
+
+    for (const id of Object.keys(timers)) {
+        const timer = timers[id];
+        if (now >= timer.executeAt) {
+            try {
+                timer.callback(...timer.args);
+            } finally {
+                delete timers[id]; // unlike setInterval, a timeout only fires once
+            }
+        }
+    }
+
+    if (Object.keys(timers).length > 0) {
+        requestAnimationFrame(processTimers);
+    }
+}
+
+function myClearTimeout(id) {
+    delete timers[id];
+}
+
+mySetTimeout(() => console.log("hi-1"), 200);
+mySetTimeout(() => console.log("hi-2"), 400);
+mySetTimeout(() => console.log("hi-3"), 600);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+hi-1
+hi-2
+hi-3
+```
+
+(each roughly `200`/`400`/`600`ms after being scheduled, in that order)
+
+**Explanation:** structurally identical to Question 11's `mySetInterval`, with one key difference: `processTimers` `delete`s the registry entry (inside a `finally`, so it's removed even if `callback` throws) right after firing it, instead of rescheduling it — a timeout should only ever fire once, never repeat. This is the same registry + single-shared-poll-loop pattern, just without the "bump `executeAt` forward and keep going" step that made Question 11's version behave like `setInterval`.
+
+</details>
+
+---
+
+## Debounce and Throttle
+
+Both **debounce** and **throttle** solve the same underlying problem — a function is being called far more often than needed (every keystroke, every scroll/resize/mousemove event) — but they solve it with different trade-offs, and mixing them up is a very common interview stumble.
+
+- **Debounce**: wait until the calls *stop* for `delay` ms, then run the callback exactly once, with the arguments from the **last** call. Every new call resets the wait. Good for: search-as-you-type, resizing recalculations, form validation-on-pause — cases where only the *final* state matters.
+- **Throttle**: run the callback immediately on the first call, then ignore (or queue) further calls until `delay` ms have passed, guaranteeing the callback runs **at most once** per window. Good for: scroll/mousemove handlers, rate-limiting API calls, button-mash prevention — cases where you want steady, periodic execution the whole time activity is happening, not just at the end.
+
+### Question 13 — `debounce`
+
+```javascript
+function debounce(fn, delay) {
+    let timerId;
+
+    return function (...args) {
+        clearTimeout(timerId);
+
+        timerId = setTimeout(() => {
+            fn.apply(this, args);
+        }, delay);
+    };
+}
+
+const search = debounce((text) => {
+    console.log("Searching:", text);
+}, 500);
+
+search("R");
+search("Ro");
+search("Roh");
+search("Rohi");
+search("Rohit");
+```
+
+<details><summary>Show Answer</summary>
+
+```
+Searching: Rohit
+```
+
+(logged once, ~500ms after the *last* call — `"R"`, `"Ro"`, `"Roh"`, `"Rohi"` never fire at all)
+
+**How it works:** every call to the debounced function immediately `clearTimeout`s whatever timer is currently pending, then starts a fresh one. Since all five calls in this example happen synchronously, back-to-back, each one cancels the timer the previous call had just started — only the very last call's timer ever survives long enough to actually fire, `delay` ms after *it* was scheduled. That's why only `"Rohit"` gets logged, and why the wait is measured from the *last* call, not the first.
+
+**`this` preservation:** the outer function is a plain `function`, not an arrow function, so `this` inside it is whatever it's called as a method of (e.g. `obj.debouncedFn()` gives `this === obj`). The inner arrow function passed to `setTimeout` doesn't have its own `this`, so it captures that outer `this` lexically — `fn.apply(this, args)` correctly forwards the original caller's `this`, not the global object `setTimeout`'s callback would otherwise get (see [thisExample.md](thisExample.md#question-6--settimeout-loses-this) for that exact gotcha in isolation).
+
+</details>
+
+### Question 14 — `throttle` (Leading Call, Trailing Call With Only the Latest Args)
+
+```javascript
+function throttle(cb, delay = 1000) {
+    let shouldWait = false;
+
+    let waitingArgs = null;
+    let waitingThis = null;
+
+    const timeoutFunc = () => {
+        if (waitingArgs === null) {
+            shouldWait = false;
+            return;
+        }
+
+        cb.apply(waitingThis, waitingArgs);
+
+        waitingArgs = null;
+        waitingThis = null;
+
+        setTimeout(timeoutFunc, delay);
+    };
+
+    return function (...args) {
+        if (shouldWait) {
+            waitingArgs = args;
+            waitingThis = this;
+            return;
+        }
+
+        cb.apply(this, args);
+
+        shouldWait = true;
+
+        setTimeout(timeoutFunc, delay);
+    };
+}
+
+const person = {
+    name: "Rohit",
+
+    greet(message) {
+        console.log(message, this.name);
+    }
+};
+person.throttledGreet = throttle(person.greet, 1000);
+person.throttledGreet("Hello");
+```
+
+<details><summary>Show Answer</summary>
+
+```
+Hello Rohit
+```
+
+**How it works — walk through a busier example to see the full behavior** (`throttledGreet` called at `t=0`, `t=20ms`, and `t=40ms`, with `delay=100`):
+
+1. **`t=0` call:** `shouldWait` is `false`, so `cb.apply(this, args)` runs *immediately* — this is the **leading-edge** execution. `shouldWait` flips to `true`, and a `setTimeout` starts a `delay`-ms window via `timeoutFunc`.
+2. **`t=20ms` call:** `shouldWait` is `true`, so this call doesn't run `cb` at all — instead it just records its `args`/`this` into `waitingArgs`/`waitingThis`, overwriting whatever (nothing, yet) was there before.
+3. **`t=40ms` call:** same as above — `waitingArgs`/`waitingThis` get overwritten *again*, discarding the `t=20ms` call's arguments entirely. Only the **most recent** call's data survives.
+4. **`t=100ms`, `timeoutFunc` fires:** `waitingArgs` is not `null` (the `t=40ms` call set it), so `cb.apply(waitingThis, waitingArgs)` runs now — this is the **trailing-edge** execution, using only the *latest* queued call's arguments. `waitingArgs`/`waitingThis` are cleared, and a fresh `delay`-ms window starts.
+5. If nothing calls the throttled function again before the next window's `timeoutFunc` fires, `waitingArgs` is still `null` at that point, so `shouldWait` simply resets to `false` and no extra trailing call happens — the *next* call after that goes straight back to the immediate leading-edge path.
+
+**Why this shape and not a simpler "just ignore calls during the window" version?** A naive throttle that only keeps the leading-edge call and *drops* everything else during the window would silently lose the most recent state — e.g. a scroll handler would never see where scrolling actually *stopped*, only where it *started* each window. Queuing the latest call's args and firing them at the end of the window (this implementation) guarantees the callback eventually sees the most up-to-date state, without letting intermediate calls flood the callback faster than `delay` allows.
+
+**`this` preservation:** same mechanism as debounce — `cb.apply(this, args)`/`cb.apply(waitingThis, waitingArgs)` explicitly forward whatever `this` was at each call site, which is why `person.throttledGreet("Hello")` correctly logs `Rohit` and not `undefined`.
+
+</details>
+
+---
+
 ## Promise Methods
 
-### Question 10 — `myPromiseAll`
+### Question 15 — `myPromiseAll`
 
 ```javascript
 function myPromiseAll(promiseArr) {
@@ -330,7 +638,7 @@ resolved: [ 1, 2, 3 ]
 
 </details>
 
-### Question 11 — `Promise.allSettled` Polyfill
+### Question 16 — `Promise.allSettled` Polyfill
 
 ```javascript
 if (!Promise.allSettled) {
@@ -373,7 +681,7 @@ Promise.allSettled([delay(1, 30), failing, 3]).then(r => console.log(r));
 
 </details>
 
-### Question 12 — `myRace`
+### Question 17 — `myRace`
 
 ```javascript
 function myRace(promiseArr) {
@@ -397,12 +705,12 @@ console.log(await myRace([delay(1, 30), delay(2, 10)]));
 
 </details>
 
-### Question 13 — `myAny`
+### Question 18 — `myAny`
 
 ```javascript
 function myAny(promiseArr) {
     return new Promise((resolve, reject) => {
-        if (promiseArr.length === 0) return reject(new Error("All promises were rejected"));
+        if (promiseArr.length === 0) return reject(new AggregateError("All promises were rejected"));
         let rejectedCount = 0;
         const rejectedVals = [];
         promiseArr.forEach((prms, idx) => {
@@ -410,7 +718,7 @@ function myAny(promiseArr) {
                 rejectedVals[idx] = err;
                 rejectedCount++;
                 if (rejectedCount === promiseArr.length) {
-                    reject(new Error("AggregateError: All promises were rejected"));
+                    reject(new AggregateError("AggregateError: All promises were rejected"));
                 }
             });
         });
@@ -437,7 +745,7 @@ console.log(await myAny([rejecting('a', 30), delay(2, 10)]));
 
 > The conceptual walkthrough of how `Object.create` and `new` build the prototype chain lives in [PrototypalInheritance.md](PrototypalInheritance.md). This section only holds the polyfill implementations.
 
-### Question 14 — `myObjectCreate`
+### Question 19 — `myObjectCreate`
 
 ```javascript
 function MyObjectCreate(source) {
@@ -469,7 +777,7 @@ true
 
 </details>
 
-### Question 15 — `myNew`
+### Question 20 — `myNew`
 
 ```javascript
 function myNew(Constructor, ...args) {

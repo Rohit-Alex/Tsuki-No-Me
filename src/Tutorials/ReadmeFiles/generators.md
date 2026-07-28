@@ -512,3 +512,159 @@ true
 **Explanation:** a generator object is simultaneously both an **iterator** (it has `next()`) and an **iterable** (it has `[Symbol.iterator]()`) — and its own `[Symbol.iterator]()` method just returns itself. This is exactly why a generator object can be passed directly to `for...of` or spread without any extra wrapping — it already satisfies both protocols at once.
 
 </details>
+
+---
+
+## Generator Syntax Forms
+
+### Question 10 — Generator Method Shorthand and Generators in Classes
+
+```javascript
+const obj = {
+    *genMethod() {
+        yield 'a';
+        yield 'b';
+    }
+};
+console.log([...obj.genMethod()]);
+
+class Range {
+    constructor(start, end) {
+        this.start = start;
+        this.end = end;
+    }
+    *[Symbol.iterator]() {
+        for (let i = this.start; i <= this.end; i++) yield i;
+    }
+}
+console.log([...new Range(1, 4)]);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+[ 'a', 'b' ]
+[ 1, 2, 3, 4 ]
+```
+
+**Explanation:** `*methodName() { ... }` is the generator method shorthand for object literals and classes — it's exactly equivalent to writing `genMethod: function*() { ... }`, just terser. This is the same shorthand used earlier for `*[Symbol.iterator]()` (Question 8), just with a plain name instead of a computed one. Note that `this` inside a generator method works exactly like `this` in a regular method — see Question 11.
+
+**Not allowed:** arrow functions cannot be generators — there's no such thing as `const gen = *() => {}`; it's a syntax error. If you need a generator, it has to be a `function*` declaration/expression or a method shorthand.
+
+</details>
+
+### Question 11 — `this` Inside a Generator
+
+```javascript
+const account = {
+    balance: 100,
+    *transactions() {
+        yield this.balance;
+        yield this.balance - 50;
+    }
+};
+console.log([...account.transactions()]);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+[ 100, 50 ]
+```
+
+**Explanation:** `this` inside a generator method follows the exact same rules as `this` in any regular method (see [thisExample.md](thisExample.md)) — it's determined by how the generator function is *called*, not by anything generator-specific. Here `account.transactions()` is called as a method, so `this` is `account` throughout the generator's body, across every `yield`, exactly as it would be in a non-generator method.
+
+</details>
+
+---
+
+## Cleanup: `for...of` and Early `break`
+
+### Question 12 — Breaking Out of a `for...of` Loop Early Triggers `.return()`
+
+```javascript
+function* gen() {
+    try {
+        yield 1;
+        yield 2;
+        yield 3;
+    } finally {
+        console.log('cleanup ran');
+    }
+}
+
+for (const v of gen()) {
+    console.log(v);
+    if (v === 2) break;
+}
+```
+
+<details><summary>Show Answer</summary>
+
+```
+1
+2
+cleanup ran
+```
+
+**Explanation:** `3` never logs — the loop `break`s after `v === 2`. But notice `'cleanup ran'` still logs, even though the generator was never allowed to run to completion or hit its `return`. `for...of` (and the spread operator) automatically call `.return()` on a generator whenever they stop consuming it early — whether that's a `break`, a `return` inside the loop body, or an exception thrown out of the loop. `.return()` behaves like forcing a `return` statement at the generator's current paused position, which is why the `finally` block still runs: it's the same guarantee a normal `try/finally` gives on any early `return`.
+
+**Why this matters in practice:** this is exactly the mechanism that makes generators safe to use for resource cleanup (closing a file handle, a DB cursor, a network stream) even when a consumer stops iterating partway through — as long as the cleanup logic lives in a `finally` block wrapped around the `yield`s.
+
+</details>
+
+---
+
+## Practical Use Cases
+
+### Question 13 — Lazy Infinite Sequences
+
+```javascript
+function* idGenerator() {
+    let id = 1;
+    while (true) {
+        yield id++;
+    }
+}
+
+const ids = idGenerator();
+console.log(ids.next().value, ids.next().value, ids.next().value);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+1 2 3
+```
+
+**Explanation:** `idGenerator` describes an infinite sequence, but nothing about that is dangerous here — unlike a `while (true)` loop written outside a generator (which would hang forever), each `.next()` call only computes exactly one more value and then pauses again. This is a genuinely common real-world pattern for unique ID generation, cursor/pagination tokens, or any "give me the next one, on demand" sequence where materializing the whole thing upfront isn't possible or desirable.
+
+</details>
+
+### Question 14 — `yield*` Can Also Capture the Delegated Generator's Return Value
+
+```javascript
+function* inner() {
+    yield 1;
+    yield 2;
+    return 'inner done';
+}
+
+function* outer() {
+    const result = yield* inner();
+    console.log('delegated return value:', result);
+}
+
+console.log([...outer()]);
+```
+
+<details><summary>Show Answer</summary>
+
+```
+delegated return value: inner done
+[ 1, 2 ]
+```
+
+**Explanation:** `yield*` doesn't just forward every *yielded* value from `inner` out through `outer` (already covered in the `yield*` section above) — as an *expression*, `yield* inner()` also evaluates to whatever `inner` eventually `return`s, once `inner` is fully exhausted. That's why `result` captures `'inner done'`, not `undefined`. This is easy to miss since `return`ed values are otherwise invisible to `for...of`/spread (see Question 3) — but `yield*` specifically exposes it to the delegating generator, even though it's still hidden from anything consuming `outer()` itself from the outside.
+
+</details>
