@@ -1,5 +1,7 @@
 # Objects in JavaScript
 
+> **Looking for "deep" object operations?** Deep clone/deep copy live in [shallow&DeepCopy.md](shallow&DeepCopy.md#implementing-your-own-deep-clone). Deep freeze ([Question 31](#question-31)) and deep seal ([Question 32](#question-32)) are covered further down in this file.
+
 ## Different Ways to Create Objects
 
 1. **Object literal** — e.g. `const obj = {key: 'value'}`
@@ -906,6 +908,47 @@ true true
 ```
 
 **Explanation:** `deepFreeze` recursively walks every property, and if a property's value is itself an object, freezes *that* too before finally freezing the top-level object. Now both `nested` and `nested.address` report `true` for `Object.isFrozen()`, and the nested mutation attempt silently fails — contrast with Question 19, where the plain (shallow) `Object.freeze()` let the nested mutation through.
+
+</details>
+
+### Question 32
+
+`Object.seal()` also only seals *shallowly* — how would you make it a *deep* seal, and how does the result differ from a deep freeze?
+
+```javascript
+const deepSeal = (obj) => {
+  for (const key in obj) {
+      if (typeof obj[key] === "object") deepSeal(obj[key]);
+  }
+  Object.seal(obj);
+};
+
+const nested = { name: 'Amane', address: { city: 'Vadodara' } };
+deepSeal(nested);
+
+nested.address.city = 'Las Vegas';           // modifying an existing nested property
+nested.address.zip = '400001';               // adding a new nested property
+const deleted = delete nested.address.city;  // deleting a nested property
+
+console.log(nested);
+console.log('deleted:', deleted);
+console.log(Object.isSealed(nested), Object.isSealed(nested.address));
+console.log(Object.isFrozen(nested));
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+{ name: 'Amane', address: { city: 'Las Vegas' } }
+deleted: false
+true true
+false
+```
+
+**Explanation:** identical shape to `deepFreeze` above — recursively seal every nested object before sealing the top-level one. But sealing is strictly weaker than freezing: **existing** properties stay writable, so `nested.address.city = 'Las Vegas'` succeeds and the object shows `city: 'Las Vegas'` in the output. What sealing *does* block is adding new properties (`zip` never gets added) and deleting/reconfiguring existing ones (`delete nested.address.city` returns `false` and does nothing). `Object.isSealed()` is `true` at both levels, but `Object.isFrozen()` is `false` — sealed objects are never frozen unless every property also happens to be individually non-writable.
+
+**When to reach for `deepSeal` over `deepFreeze`:** when you want to lock an object's *shape* (its structure won't change — no properties added or removed, ever) while still allowing its existing values to be updated in place — e.g. a config object with a fixed, known set of fields that legitimately need their values updated at runtime, but should never accidentally gain a typo'd new field or lose a required one.
 
 </details>
 

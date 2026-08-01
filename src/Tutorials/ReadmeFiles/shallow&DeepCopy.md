@@ -2,6 +2,8 @@
 
 > Objects/Arrays interact by reference when assigned to each other. When you assign a reference from one variable to another, you copy the *reference itself*, not the underlying data — note the two variables don't share the same variable, but they do share the same object in memory.
 
+> **Looking for `deepFreeze`/`deepSeal`?** Those are covered in [Object.md](Object.md#question-31) alongside `Object.freeze`/`Object.seal`, right next to this file's deep clone/copy content.
+
 ## Initial Data
 
 ```javascript
