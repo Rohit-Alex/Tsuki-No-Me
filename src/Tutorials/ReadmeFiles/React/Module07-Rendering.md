@@ -364,19 +364,69 @@ Static pages that regenerate in the background after a revalidation window. User
 ### Senior
 
 **Q: Are Server Components just SSR?**
-No. SSR renders on the server *and* ships the component JS so it can hydrate. Server Components render on the server and ship **only their output** — the code never reaches the browser, there's nothing to hydrate, and they can't use state, effects, or event handlers. The win is bundle size: server-only libraries become 0KB on the client.
+No — they solve different problems and the distinction hinges on what actually crosses the network. SSR runs your component on the server, but the point is still to produce an interactive client component: it ships the HTML *and* the component's JS, so `hydrateRoot` can re-run it in the browser and attach the handlers that HTML can't carry (§3). The component genuinely runs twice — once on the server, once on the client during hydration.
+
+```
+SSR:               server runs component → HTML + JS both ship → client re-runs it (hydrate)
+Server Component:  server runs component → only the OUTPUT ships → client never runs it
+```
+
+A Server Component runs on the server exactly **once**, and only its rendered output crosses the wire — the component's own code, and any library it imports, never reach the browser at all. That's why it can't use `useState`, effects, or event handlers: there's no second run on the client to attach them to.
+
+Concretely: a markdown renderer plus sanitizer might be ~75KB gzipped as a client dependency. Written as a Server Component, that 75KB never leaves the server — the client receives finished `<li>` elements, not the library that produced them. SSR would still ship that 75KB, because the whole point of SSR is that the same code runs again on the client. The practical test worth stating out loud: if removing "server-only" would make a piece of code able to run in the browser unmodified, it was never a Server Component question, it was an SSR one.
 
 **Q: Islands vs progressive hydration?**
-Progressive hydration still has one component tree and just orders which branches hydrate first. Islands never form a unified tree — the page is static HTML and each interactive zone hydrates independently, so static regions carry no hydration payload at all.
+Both aim at the same symptom — "the page can't respond until everything is hydrated" — but they disagree about whether there's one tree or many, and that difference is the whole interview answer.
+
+Progressive hydration keeps React's normal model: one component tree, built and understood as a single unit, where React just decides *the order* to hydrate its branches in (§6 — a click reprioritizes which subtree hydrates next). Every part of the page, hydrated or not, is still a node in that one tree; the static-looking parts are just nodes React hasn't gotten to yet.
+
+```
+Progressive hydration:  ONE tree, unhydrated parts are "not yet processed" nodes in it
+Islands:                MANY separate trees; static HTML was never a tree at all
+```
+
+Islands reject the single-tree model from the start. The page is plain static HTML by default — the parts that aren't islands were never compiled into a React component tree, so there's no hydration payload to even schedule for them. Each island (`🏝 Search`, `🏝 Cart`) is its own tiny, independent React root with its own bundle, mounted separately.
+
+The concrete consequence: in progressive hydration, adding one more interactive widget grows the *same* tree and its shared bundle. In Islands, adding one more widget adds a wholly separate chunk that ships and hydrates on its own — which is why Islands sites can hit 80%+ less JS on content-heavy pages (§8), at the cost that islands talking to each other (shared state across two independent roots) is awkward, because there was never a shared tree to carry that state through in the first place.
 
 **Q: How does selective hydration relate to Fiber?**
-It's lanes applied to hydration. A click is a high-priority lane, so if a user interacts with a not-yet-hydrated boundary, React reprioritises and hydrates that subtree first. Only possible because rendering is interruptible (Module 3).
+It's the lanes system (Module 3 §6) pointed at a new kind of work: hydration instead of a normal render. The mechanism is identical — every fiber can carry a priority, `shouldYield()` lets React pause between units, and a higher-priority lane can interrupt lower-priority work already in flight. Selective hydration just applies that machinery to "attaching event handlers to server-rendered DOM" instead of "computing a new tree."
+
+```
+    Streaming in:  [Header ✓hydrated] [Sidebar ✓hydrated] [Comments …not yet]
+                                                  ↑
+                       user clicks here → React interrupts its hydration queue,
+                                           bumps Comments to a high-priority lane,
+                                           hydrates it before anything else queued
+```
+
+Without lanes, hydration would have to be one blocking pass, top to bottom, exactly like the old stack reconciler couldn't be interrupted before Fiber (Module 3 §2) — a click on a not-yet-reached component would just do nothing until hydration caught up to it in order. With lanes, the click itself is the signal: React marks that subtree's hydration work with a high-priority lane, the scheduler picks it up next regardless of where it sits in the normal top-down order, and the rest of the page keeps hydrating around it.
+
+The deeper point worth making explicit: streaming SSR, Suspense, transitions, and selective hydration all read as unrelated React 18 features until you see they're four applications of the same one thing — an update (or unit of work) tagged with a lane, competing for the scheduler's attention. Fiber didn't just fix a performance problem in 2017; it built the substrate every concurrent feature since has been implemented on top of.
 
 **Q: When would you argue against SSR?**
-When there's no SEO or first-paint requirement — an internal dashboard behind a login. SSR adds server cost, a hydration step, and a class of mismatch bugs, for benefits nobody collects. Also when your content is fully static: SSG is strictly better.
+SSR's benefits are specific — faster first paint and content real crawlers can index — and both stop mattering the moment there's no first-time visitor and no SEO surface, which describes most internal tools. An internal dashboard sits behind a login wall: nobody unauthenticated ever sees it, so there's no SEO benefit to buy, and the user who does see it typically stays for an hour, so the one-time first-paint win is trivial against the total session length (§2's CSR case: "the slow start is paid once, then every interaction is instant").
+
+```
+Dashboard, one hour session:
+  SSR:  faster first paint (saves ~1s) + server cost every load + hydration + mismatch bugs
+  CSR:  slower first paint (costs ~1s) + zero server render cost + no hydration step at all
+```
+
+Against that near-zero benefit, SSR's costs are concrete and ongoing: real server compute on every request, a hydration pass that can produce the uncanny-valley window (§5, content visible but unresponsive), and an entire bug class — hydration mismatches from `Date.now()`, `window` access, or locale formatting during render — that CSR simply cannot have, because there's no server render to disagree with.
+
+The other clean case against SSR is the opposite direction: if the content is genuinely static — a blog, docs, marketing pages with no per-request personalization — SSR is strictly worse than SSG. SSR pays server compute on every single request to regenerate HTML that would be byte-identical to what a build-time render already produced once. That's server cost bought for zero freshness benefit, which is the entire case for §4's build-time tier instead.
 
 **Q: What's the uncanny valley of SSR?**
-The window where content is visible but not interactive — the HTML has arrived, hydration hasn't finished, and clicks do nothing. Users perceive it as broken. Streaming plus selective hydration narrows it; Server Components and Islands shrink the JS that has to run at all.
+It's the gap between "looks done" and "is done" — the window where the server-rendered HTML has arrived and looks like a finished, working page, but no event handlers are attached yet, so clicking anything does nothing (§3's photograph analogy: it looks like a working control panel, but it's a picture until the electrician finishes wiring it). The name fits because it's worse than an honest loading state — a blank screen or spinner reads as "not ready," but a fully-rendered, unresponsive button reads as *broken*, which is a worse user experience for the same underlying wait.
+
+```
+HTML arrives → looks interactive → [gap: JS downloads + parses + hydrates] → actually interactive
+                    ↑                                                              ↑
+              user tries to click here                              nothing happened until here
+```
+
+Three techniques attack this gap from different angles, and naming which attacks what is the senior-level part of this answer. **Streaming SSR** (§5) doesn't shrink the gap itself, but it lets the shell — the parts that need no interactivity, like layout and static text — arrive and become visually complete sooner, so less of the page sits in the valley at once. **Selective hydration** (§6) shrinks the *effective* wait for the part the user actually touches, by reprioritizing hydration to whatever they clicked, even if it wasn't first in the tree. **Server Components and Islands** (§7, §8) are the more radical fix — they reduce how much of the page needs hydration *at all*, so there's simply less surface area where the valley can exist. Streaming changes when things arrive; selective hydration changes the order of what gets wired up; Server Components and Islands change how much wiring is needed in the first place.
 
 ---
 

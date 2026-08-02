@@ -259,16 +259,53 @@ Hundreds of rows or more, where the DOM node count itself is the cost. No memoiz
 ### Senior
 
 **Q: Someone wraps every component in `memo`. What do you tell them?**
-That it's a net loss without measuring. Every `memo` adds a props comparison on every render, and the benefit only lands when props are referentially stable — which inline objects and arrow functions break by default. Measured, memo with changing props did exactly as much work plus the comparisons. Profile first, then memo the few expensive components with stable props.
+That it's very likely making things slower, not faster, and here's how to prove it rather than argue about it. `memo` isn't free — it adds a props comparison on *every* render, win or lose, and only pays off when that comparison actually succeeds (§2, "memo is a bouncer checking IDs"). It succeeds only when props are referentially stable, which most everyday React code breaks constantly:
+
+```jsx
+<Row onClick={() => handleClick(id)} style={{ color }} />   // new fn + new object, every render
+```
+
+Measured directly (§2, 50 rows over 10 updates): `memo` with changing props gave **500 child renders — identical to no memo at all** — plus 500 wasted prop comparisons on top. The team paid a real cost and captured zero benefit. Only when props were made referentially stable did the same test drop to **0** renders.
+
+So the fix isn't "remove all the memos" or "trust that memo helps" — it's to measure. Open the Profiler, record an interaction, and check which components are actually expensive to render and whether their props are actually stable across their parent's re-renders. `memo` earns its keep only when all three hold at once: the component does real work per render, its props don't change identity on unrelated parent updates, and the parent re-renders often enough for that to matter (§2, "When memo is worth it"). Most components fail at least one of those, which is why "memo everything" reads as diligence but measures as net loss — and why the React Compiler (2025) exists to do this specific analysis automatically instead of by hand (§2).
 
 **Q: How do you decide between `useTransition` and fixing the render cost?**
-They solve different problems. `useTransition` doesn't make work faster — it reprioritises it so urgent updates paint first, which fixes *perceived* lag. If the work is genuinely too expensive (filtering 100k rows on every keystroke), fix the algorithm or virtualize; transitions just hide it behind a smoother frame.
+Ask what's actually slow: the *total* work, or just *when the browser gets to show it*. `useTransition` changes nothing about the amount of work React does — it uses the lanes system (Module 3 §6) to mark that work low-priority, so the browser paints the urgent update (your keystroke) first and the expensive one (filtering 100k rows) after. It fixes *perceived* lag by reordering, not real cost by reducing it.
+
+```
+Without transition:  keystroke waits behind the filter    →  input feels frozen
+With transition:      keystroke paints first, filter after →  input feels instant,
+                       but the filter still takes just as long to finish
+```
+
+If the filter genuinely takes 300ms no matter what, wrapping it in `startTransition` doesn't make it take 150ms — it just stops that 300ms from blocking the character you just typed. That's the right fix when the *total* time is acceptable and the only problem is *which* update the browser draws first.
+
+It's the wrong fix when the total work itself is the problem — filtering 100,000 rows on every keystroke is expensive regardless of priority, and no amount of scheduling changes that it's O(n) work repeated on every character. There the actual fix is reducing the work: a cheaper algorithm, `useMemo` on the genuinely expensive computation (§3), debouncing so the filter runs once per pause instead of once per keystroke, or virtualizing so only visible rows render at all (§5). The diagnostic test: if the Profiler shows the slow render itself shrinking when you fix it, you fixed the real cost; if the render time is unchanged but input finally feels responsive, you fixed perception with a transition. Both are legitimate — they just answer different questions, and reaching for the wrong one leaves the real problem in place.
 
 **Q: What would you look at first on a slow React app?**
-Which kind of slow. First load → bundle analysis and code splitting. Late content → network tab for waterfalls. Laggy interaction → Profiler flamegraph with "why did this render" on. The wrong instinct is to start adding `memo` before knowing which of the three it is.
+Not a tool — a question: *which* kind of slow is this, because the three kinds have almost no fix in common, and guessing wrong wastes real effort (§8's table). "Slow" said by a user could mean the page took a while to appear, content showed up late, or typing/clicking felt laggy — and each one points somewhere completely different.
+
+```
+"Slow to appear at all"    →  bundle size, blocking JS       →  bundle analyzer, code splitting (§6)
+"Content shows up late"    →  sequential fetches              →  Network tab, hunt for a waterfall (§4)
+"Interaction feels laggy"  →  expensive render per keystroke  →  Profiler flamegraph, "why did this render" (§8)
+```
+
+Concretely: open the Network tab first, in every case, because it's the fastest way to rule two of the three out. If the JS bundle itself takes a long time to arrive, that's the first problem — no amount of React optimization touches time spent downloading and parsing before React has even started (§6). If the bundle is fine but data arrives late in stages, check for the classic `useEffect`-waterfall shape (Module 4 §5, Module 9 §4) — a child fetch that couldn't start until the parent's had already resolved. Only once both of those are ruled out does the React DevTools Profiler come in, recording the actual interaction and reading the flamegraph with "record why each component rendered" on, to find the specific component doing unnecessary work.
+
+The failure mode worth naming explicitly: reaching for `memo` as step one. It only addresses the third category, and even there only sometimes (§9's earlier answer) — applied to a bundle-size or waterfall problem, it does nothing but add comparison overhead to a page that was never render-bound in the first place.
 
 **Q: Why might the React Compiler make this module obsolete?**
-Manual memoization is a static analysis problem — working out which values are stable and which components are expensive. The compiler does it at build time and inserts memoization automatically, without the human error of stale dep arrays or inline objects silently defeating `memo`. It's React's bet that the mental model should stay simple and the optimisation should be a tooling concern.
+Almost everything in this module is really the same problem stated three ways: *is this value referentially stable, and does this component's output actually depend on its inputs changing?* That's a question about your code's structure, answerable by reading it — a static analysis problem, not something that inherently needs a human deciding case by case at write-time.
+
+```jsx
+<Row onClick={() => handleClick(id)} />   // human: "should I useCallback this?"
+                                           // compiler: sees handleClick(id) doesn't change → memoizes automatically
+```
+
+Manual memoization fails in exactly the ways a human forgets things: a `useMemo` dependency array missing a value, an inline object silently defeating a `memo` comparison nobody noticed (§2's core finding — 500 renders either way), or `memo` added to a component that was never expensive enough to be worth the comparison cost in the first place. None of these are hard problems in the abstract — they're bookkeeping problems, and bookkeeping is exactly what compilers are reliable at and humans aren't, especially across a codebase nobody holds fully in their head.
+
+The React Compiler (v1.0, 2025) does this analysis at build time and inserts the equivalent of `memo`/`useMemo`/`useCallback` automatically, wherever the static analysis proves it's safe and beneficial — without ever getting a stale dependency array wrong, because it isn't relying on a developer to keep one updated by hand. This connects to the same bet Module 1 §10 raises about Svelte and Solid: React could have moved to fine-grained reactivity to get this performance, but chose instead to keep "components are plain functions, re-run and diffed" as the mental model, and offload the optimization work to a compiler instead of the developer. If it works as intended, most of this module becomes a historical explanation of what the compiler is doing for you, not a checklist you execute by hand.
 
 ---
 

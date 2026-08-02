@@ -340,19 +340,53 @@ Separating markup from logic by *file type* separates technologies, not concerns
 ### Senior
 
 **Q: Why one-way data flow when two-way is more convenient?**
-Convenience at small scale vs debuggability at large scale. One-way makes every change explicit — more typing, but the trace from wrong pixel to responsible `setState` stays finite and local. Facebook optimized for large, long-lived codebases.
+Because two-way binding scales badly once more than one component needs the same value. It's genuinely convenient for a single form field — `ng-model` syncs the input and the variable with no extra code. The trouble starts when several components can all write to the same shared state: now any of them might be the one that set it wrong, and there's no single place to look. React picks a single source of truth instead — data flows down from state to UI, and the only way to change state is an explicit `setState` call — trading a little extra typing for a trace that always terminates.
+
+Take a user's name shown in five places — `Header`, `Sidebar`, `Profile`, `Settings`, `Chat`:
+
+```
+One-way:                          Two-way:
+      State                       Header   ↔
+        │                         Profile  ↔
+        ▼                         Settings ↔  State
+Header Sidebar Profile ...        Chat     ↔
+```
+
+One-way: every component reads the same state; nothing but `setState` can change it. If the name is wrong, there's exactly one place it could have come from. Two-way: any of the five can write back into state. If it becomes `undefined`, "which component did it?" has five suspects and no log of who acted.
+
+The deeper reason goes past debugging, though. One-way flow means *every* update is forced through React: `setState → Update Queue → Scheduler → Fiber → Commit → DOM` (§4 above, Module 3 §5, Module 4 §4). That single choke point is what lets React batch several updates into one render, assign them priorities via lanes, and interrupt low-priority work for high-priority work — the entire foundation under Fiber, transitions, and Suspense. True two-way binding means state can change *outside* that pipeline, from inside a component, mid-render — and React would lose the ability to schedule around it. One-way data flow isn't just a debugging convenience; it's the precondition for React controlling *when* rendering happens at all.
 
 **Q: "React is fast." Attack that statement.**
-Imprecise. React is *slower* than optimal hand-written DOM code. What it provides is a well-optimized default path (batching, minimal writes, no accidental thrashing) and graceful degradation as the app grows — rather than relying on universal developer discipline.
+The claim conflates two different comparisons. Against the DOM operations you'd write by hand if you already knew exactly which node to touch, React is *slower* — it runs your component, allocates element objects, and diffs them before making the same write you could have made directly. Against realistic hand-written apps — the kind that grow past one developer and stop touching only the minimal set of nodes — React usually wins, because it never depends on someone remembering every place a value is displayed.
+
+Concretely, updating one row in a 1,000-row table:
+
+```
+Optimal hand-written write   →  fastest — you already know the node
+React (diff + patch)         →  slower — extra work, but still one DOM write
+Naive innerHTML rebuild      →  slowest — recreates all 1,000 rows
+```
+
+React sits in the middle on purpose. It never claims to beat the first row; it claims to reliably avoid the third, without a human keeping every code path in sync (§8, Module 4 §3).
+
+The deeper reason this trade is worth it: React's real product isn't the diff — it's that rendering became something React fully controls (§3, "Scheduling"). Every update passes through `setState → Update Queue → Scheduler → Fiber → Commit`, which is what lets React batch several updates into one render and skip work with no pending changes. A hand-tuned direct-DOM app can be faster on one update, but it has no equivalent mechanism to stay fast automatically as the app grows — every new feature is another place discipline can lapse. React's "fast enough" is a floor that doesn't erode; hand-written "fast" is a ceiling that does.
 
 **Q: React ships no router or data layer. Defend that.**
-*Common abstraction* (absorb a feature only once its shape is proven) and *interoperability* (must drop into existing apps). Bundling a router would force decisions on every adopter and block incremental adoption. Cost: fragmentation.
+Two of React's own design principles justify it directly (§3). *Common abstraction* says: don't standardize a pattern until the community has tried several and one shape has clearly won. Routing and data-fetching were nowhere near settled in 2013 — bundling one team's opinion would have meant every app either used it or fought it. *Interoperability* says: React must be adoptable one component at a time inside an existing app. A router or data layer is a whole-app decision — it wants to own navigation and caching everywhere — so bundling one would break the "drop into a page" story that let React spread through Facebook and beyond.
+
+Concretely, imagine React had shipped `react-router` as core in 2013. Any team already using Backbone's router, or building an app with no client-side routing at all, would either fight React's opinion or avoid React entirely. Leaving it out let the ecosystem answer the question instead — and multiple good answers exist today (React Router, TanStack Router, Next.js's file-based router) suited to different apps.
+
+The cost is real: fragmentation, decision fatigue for new teams, and duplicated effort across libraries solving the same problem slightly differently — which is exactly the gap Next.js and Remix now fill by opinionated bundling on *top* of React. That's the trade made visible: React optimizes for "correct for the most teams, slower to standardize"; a framework optimizes for "fast to start, one opinion." Neither is free — React chose to keep the core narrow and let convergence happen in userland once patterns actually proved out, the same way hooks and Suspense did (§3, Common Abstraction).
 
 **Q: The "scheduling" principle predated Fiber by years. Trace its consequences.**
 Because components return descriptions rather than mutating the DOM, React controls when they run — so rendering becomes deferrable. Everything follows: Fiber made work interruptible, lanes gave updates priorities, concurrent rendering let urgent work preempt background work, `useTransition` exposed it as API, Suspense used it for async boundaries. None of it is possible if calling a component immediately mutates the DOM — which is also why render must be pure.
 
 **Q: If Svelte and Solid are faster, why is React still dominant?**
-Ecosystem, hiring, and production-tested stability outweigh constant-factor performance for most teams. Technically, React bets "re-run the function" is simpler and more debuggable, and that the gap is solvable by a compiler.
+Because "faster" is a constant-factor difference in a place most apps aren't bottlenecked, while ecosystem size, hiring pool, and production-proven stability are compounding advantages that show up everywhere, every day. A team choosing React today isn't choosing worse rendering speed — they're choosing a library with more Stack Overflow answers, more hires who already know it, more battle-tested libraries for every problem (forms, data-fetching, animation), and years of production use finding the edge cases before you do (§10, "Direction of travel").
+
+Concretely: Solid has no Virtual DOM at all — signals update exactly the DOM nodes that depend on them, with no re-running of components and no diffing. That's a real architectural advantage. But it also means a much smaller hiring pool, fewer production war-stories, and a different mental model every new hire has to learn. For a startup optimizing for shipping speed with a team that already knows React, that trade isn't close.
+
+The deeper technical bet, though, is what §10 already covers: React chose to keep "re-run the function, let React figure out what changed" as the mental model, because it's simpler to reason about and debug than fine-grained reactivity's dependency graphs. Rather than concede the performance gap permanently, React's answer is the **React Compiler** — automate the memoization a human would hand-write, keeping the simple model while closing the speed gap. It's a bet that developer experience and debuggability age better than raw throughput, and that the performance gap is a solvable tooling problem, not a permanent architectural one.
 
 ---
 

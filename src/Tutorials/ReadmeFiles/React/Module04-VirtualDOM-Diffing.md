@@ -575,7 +575,7 @@ You can, and it's faster if done optimally. The problem is that doing it optimal
 React comparing the newly returned React Elements against the current fiber tree, to build the next fiber tree and work out the minimum set of DOM operations. Rules in Module 2 §6.
 
 **Q: Is Fiber the Virtual DOM?**
-No — different layers. React Elements describe **what** the UI should look like; Fiber describes **how** React renders it (work units carrying state, effects, and priority). "Virtual DOM" is the overall strategy of using in-memory representations to compute minimal DOM updates; Fiber is the architecture that implements it, and replaced the old stack reconciler in React 16 without changing the element model.
+See §1 above — Elements describe **what**, Fiber describes **how**; "Virtual DOM" names the strategy, Fiber is the architecture that implements it. The follow-up interviewers actually want: this distinction is why "the VDOM re-rendered" is a category error. Fiber can redo *how* it builds a tree (interrupt, restart, run twice) without that ever being visible as extra *what* — your component output is the same either way, so the only symptom of Fiber's internal churn is timing, never incorrect UI.
 
 ### Intermediate
 
@@ -597,16 +597,60 @@ Yes, by default — verified. React doesn't compare child props first; it calls 
 setState → enqueue update on fiber → mark lanes, bubble to root → schedule (batching happens here) → **render phase**: build workInProgress tree, call components, reconcile, tag effect flags (interruptible, no DOM writes) → **commit phase**: mutate DOM, swap `current` pointer, run refs, fire `useLayoutEffect` (synchronous, uninterruptible) → browser paints → `useEffect` fires.
 
 **Q: Why must the render phase be pure?**
-Because it's interruptible — React may discard partially-completed work and redo it when a higher-priority update arrives. Side effects during render would run an unpredictable number of times, possibly for a tree that's never committed. StrictMode double-invokes to surface violations in dev.
+Render is the phase React is allowed to discard and redo (§4, the eight steps). If a higher-priority update arrives mid-render, React abandons the workInProgress tree and starts over — the component function you wrote may run once, twice, or for a screen the user never sees. A side effect in that function fires exactly as many times as React *decided* to call your component, not once per meaningful update. That number is an implementation detail, not something you control.
+
+Concretely:
+
+```jsx
+function Checkout({ cart }) {
+  fetch('/api/reserve', { method: 'POST', body: JSON.stringify({ cart }) }); // ❌
+  return <Summary items={cart} />;
+}
+```
+
+You expect one reservation per checkout. But render can run twice for one commit (StrictMode simulates this on purpose, and real concurrent rendering does it for real when a more urgent update interrupts). Nothing throws — you just get two orders. Move the `fetch` into a click handler, which React guarantees runs exactly once per click, and the bug is structurally gone.
+
+This is the same guarantee that makes double buffering safe (Module 3 §4): React can build the workInProgress tree off-screen, throw it away, and rebuild it, only because nothing observable happened while building it. Purity in render and "current is never touched mid-build" are the same promise seen from two sides — one about your code, one about React's tree. Break purity and you've quietly broken the assumption every concurrent feature (transitions, Suspense, interruption) relies on.
 
 **Q: Why does `useLayoutEffect` block paint but `useEffect` doesn't?**
-`useLayoutEffect` runs inside the commit phase, before the browser paints, so DOM measurements and corrections happen before the user sees anything — preventing visual flicker. `useEffect` is deferred until after paint so it can't delay it. The cost is that slow layout effects directly delay paint.
+It's purely about where each one sits in the pipeline (§4, "the whole pipeline in one picture"). `useLayoutEffect` fires inside the commit phase — after the DOM is mutated, but before the browser has painted the frame. `useEffect` is a *passive* effect, deliberately scheduled after paint. The browser can only draw once nothing synchronous is left to run, so anything still running before that point necessarily delays what the user sees.
+
+The tooltip case makes it concrete. A tooltip needs to know its own height to position itself above a button — but it can't know that until it's a real DOM node:
+
+```jsx
+useLayoutEffect(() => {
+  const height = ref.current.offsetHeight;   // measure the real, just-committed DOM
+  setTop(targetRect.top - height);           // correct position before paint
+}, [targetRect]);
+```
+
+With `useLayoutEffect`, the measure-then-correct happens before the browser draws — the user only ever sees the tooltip in its final position. Swap it for `useEffect` and the browser paints the *wrong* position first (default `top`), then the effect fires, `setTop` schedules another render, and the tooltip visibly jumps a frame later.
+
+The trade is exactly what you'd expect from "blocks paint": whatever runs inside `useLayoutEffect` delays the frame directly, so slow work there is much more costly than the same work in `useEffect`. That's why the rule is "default to `useEffect`, reach for `useLayoutEffect` only when skipping it would cause a visible flicker" — you're trading a small, guaranteed delay for avoiding a worse, visible glitch, not getting a delay for free.
 
 **Q: Argue that the VDOM is a cost, not a benefit.**
 Fair. Building and diffing a tree every render is pure overhead versus Solid/Svelte, which know at compile time which node a value maps to. React accepts it to buy a runtime-agnostic, fully dynamic description — components are ordinary functions, the same elements target DOM/Native/terminal, and rendering stays interruptible (impossible once you've mutated the DOM). The React Compiler is an attempt to reclaim the constant factor without giving up that model.
 
 **Q: Why is fetching in `useEffect` a waterfall, and what fixes it?**
-Effects run after paint, so a child's fetch can't start until the parent has rendered and committed — each nesting level serializes a round trip. Fixes: hoist fetching to a route loader or Server Component, start requests during render via a Suspense-integrated cache, or prefetch on navigation intent.
+The cause is timing, not React being slow. `useEffect` is a passive effect — it's scheduled to run *after* the browser paints (§4, "the whole pipeline"). So a child component's fetch literally cannot begin until: the parent has rendered, committed, and painted. If the parent is also fetching in an effect, its own data has to arrive and trigger a re-render *before* the child even mounts and gets a chance to start its request.
+
+```
+  5ms  Parent starts fetching
+ 56ms  parent data arrives, Parent re-renders, Child mounts
+ 59ms  Child starts fetching        ← only now — three levels deep, this repeats
+110ms  Child data arrives
+```
+
+Two 50ms requests took 110ms because they ran one after another instead of together — the child's request didn't even *exist* yet while the parent's was in flight. Add a third nested level and the total keeps climbing the same way (Module 9 §4 measures this directly).
+
+The fix in every case is the same idea: stop discovering what to fetch by rendering, and start every independent request as early as possible instead.
+
+1. **Route loaders** — fetch everything a page needs before rendering it, in parallel.
+2. **Hoist the fetch** — request in the parent, pass data down as props instead of letting the child discover its own need.
+3. **`Promise.all`** for requests that don't depend on each other.
+4. **Server Components** — data fetching moves to the server, before any client-side render loop is even involved (Module 7 §7).
+
+All four remove the same dependency: "render must finish before the next fetch can start."
 
 ---
 

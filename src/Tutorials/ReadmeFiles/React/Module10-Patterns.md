@@ -336,16 +336,84 @@ Components or hooks that provide behaviour, state, and accessibility without mar
 ### Senior
 
 **Q: Design a `<Select>` for a design system. What patterns?**
-Compound components for structure (`<Select.Option>`), context for shared state, controlled *and* uncontrolled support (`value` vs `defaultValue`), headless prop getters so consumers style everything, and possibly a state reducer for behaviour you can't anticipate. The goal is that nobody has to fork it.
+A design-system `<Select>` has to survive requirements you haven't heard yet — a new icon system next quarter, a team that wants completely different markup, a one-off behavior tweak nobody anticipated. Each pattern in this module exists to defer a different kind of lock-in, and a real component combines several:
+
+```jsx
+<Select value={id} onChange={setId}>          {/* controlled/uncontrolled (§7) */}
+  <Select.Option value="a">{icon} A</Select.Option>   {/* compound components (§3) */}
+  <Select.Group label="Fruit">
+    <Select.Option value="b">B</Select.Option>
+  </Select.Group>
+</Select>
+```
+
+**Compound components with context** (§3) give structure without a rigid `options` array — a new requirement like icons or nested groups is just more JSX, not a new prop, and it works at any nesting depth because it's context, not `cloneElement` (§3's verified failure mode: `cloneElement` only reaches direct children).
+
+**Controlled and uncontrolled support** (§7) means the design system doesn't force every consumer into wiring `value`/`onChange` — `<Select defaultValue="a">` works standalone, `<Select value={x} onChange={setX}>` hands control to a parent doing validation.
+
+**Headless prop getters** (§6) are what let *other* teams reskin the same behavior without forking — `getOptionProps()` ships the ARIA attributes, keyboard nav, and focus trap; the design system's own styled `<Select>` and a completely different team's unstyled version can share the identical logic.
+
+The state reducer (§7) is the rarest addition, reserved for behavior you genuinely can't predict — letting a caller veto or rewrite a state transition instead of forking the whole component. The unifying goal across all four: every predictable new requirement should be satisfiable by composing the existing API, so nobody's first instinct is to copy the source and modify it.
 
 **Q: Why is Container/Presentational no longer recommended?**
-It forced a component split to solve a code-organisation problem. Hooks extract the logic without the split, so you keep one component and one file. Dan Abramov, who popularised the pattern, retracted it for that reason. The underlying instinct — separate data from presentation — still applies.
+The pattern solved a real problem — mixing data-fetching and markup in one component makes both harder to test and reuse — but it solved it the only way available before hooks existed: by forcing a *file-level* split into two components, even when nothing else about the code needed one.
+
+```jsx
+// Before hooks — the split is mandatory even for one small piece of logic
+function UserListContainer() {
+  const { data } = useQuery(['users'], fetchUsers);
+  return <UserList users={data} />;         // extra component, extra file, extra prop-passing
+}
+function UserList({ users }) { return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>; }
+
+// After hooks — same separation of concerns, no forced component split
+function useUsers() { return useQuery(['users'], fetchUsers).data; }
+function UserList() {
+  const users = useUsers();
+  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+}
+```
+
+Both versions separate data-fetching from rendering — that underlying instinct was correct and still holds. What changed is that a hook can now carry the "smart" half without needing a second component and a second file to live in. The container/presentational split was solving "how do I extract logic" with the only lever available at the time — components — when the real unit of reuse should have been logic itself.
+
+Dan Abramov, who wrote the original post that popularized the pattern, later added a retraction note to the top of it once hooks shipped, saying essentially this: the pattern was a workaround for a missing primitive, not a design principle worth preserving for its own sake. It's a useful case study in reading advice for the *problem* it solves rather than the specific mechanism — the mechanism aged out, the problem it addressed didn't.
 
 **Q: When would you accept an HOC in a new codebase?**
-When you must wrap something you don't control at the component level — error boundaries (still class-only), or an integration whose API is a wrapper. Otherwise the hook version is strictly better.
+Almost only when the thing you need to inject can't be expressed as a value a hook returns — it has to be a *component wrapping a component*, because the behavior operates at the render-tree level, not the data level.
+
+The clean example is error boundaries (Module 5 §8): catching a render error requires `componentDidCatch` / `getDerivedStateFromError`, which only exist on classes, and which need to wrap *children*, not receive props from a caller. A hook returns values; it can't intercept a child throwing during render. So:
+
+```jsx
+function withErrorBoundary(Component, fallback) {
+  return function Wrapped(props) {
+    return (
+      <ErrorBoundary fallback={fallback}>
+        <Component {...props} />
+      </ErrorBoundary>
+    );
+  };
+}
+```
+
+This is a legitimate HOC in 2026 for exactly one reason: there is no hook-shaped alternative, because "catch a render error in my children" isn't a value, it's structural wrapping. Contrast with the classic `withAuth` (§5) — checking `useUser()` and conditionally rendering — which is pure data plus a conditional, expressible entirely as a hook with zero need for a wrapper component.
+
+The other case worth naming: integrating a third-party library whose own public API is HOC-shaped (an older Redux `connect()`, some legacy chart library). There you're not *choosing* an HOC, you're stuck with one at the boundary — the right move is usually to wrap it once at the integration point and expose a hook-based API to the rest of your app, so the HOC pattern doesn't spread past that one seam.
 
 **Q: How do you decide between a custom hook and a compound component?**
-What's shared. If it's only *logic*, use a hook — no tree changes. If components must also share *structure* and implicit state across sibling parts, that's compound components. Many good libraries ship both: a hook for full control, compound components for convenience.
+Ask what's actually being shared: values, or a tree shape. A hook shares *logic* — it returns state and functions, and the caller decides entirely how to render them (§2's `useDisclosure`, returning `{ isOpen, open, close, toggle }` with zero opinions about markup). A compound component shares *logic and structure together* — the parent owns state, but the caller still writes real JSX with a specific shape the parent expects (`<Tabs.List>` containing `<Tabs.Tab>`s, coordinated through context).
+
+```jsx
+// Hook: caller builds everything from returned values
+const { isOpen, toggle } = useDisclosure();
+return isOpen && <div onClick={toggle}>...</div>;   // 100% caller's markup
+
+// Compound component: caller writes a specific tree shape, parent coordinates it
+<Tabs><Tabs.List><Tabs.Tab id="a">A</Tabs.Tab></Tabs.List></Tabs>
+```
+
+The test that decides it: if you can imagine two totally different UIs built from the same returned values, it's a hook — `useDisclosure` could back a modal, a dropdown, or an accordion, because it exposes nothing but booleans and functions. If the components genuinely need to coordinate with each other as siblings — a `Tab` needs to know which `Tab` is active, a `Panel` needs to know if it should render — that coordination has to live somewhere, and compound components with context (§3) are the shape that provides it without every sibling manually wiring props to every other sibling.
+
+The strongest libraries (Radix, Downshift, Headless UI) ship both, layered: a hook for consumers who want total control of markup, and a compound-component or headless wrapper on top of the same hook for consumers who want a batteries-included version. That's not redundancy — it's offering the logic at two different levels of structural commitment.
 
 ---
 

@@ -685,16 +685,61 @@ A 31-bit priority bitmask on each fiber. Bitwise ops make "is there urgent work?
 ### Senior
 
 **Q: Walk through one unit of work.**
-`performUnitOfWork` calls `beginWork` — run the component, reconcile its returned elements against current child fibers, produce child fibers. Descend to the child. At a leaf, `completeWork` creates the host DOM node off-screen and bubbles effect flags to the parent, then moves to the sibling or back up via `return`. Between units the loop checks `shouldYield()` and may hand control back to the browser.
+One "unit" is one fiber, processed in two halves. `beginWork` runs the component (or, for a host fiber, does the reconciliation math), reconciles its returned elements against the current child fibers (§4's element-vs-fiber comparison), and produces the child fibers to descend into next. When there are no more children, `completeWork` runs on the way back up — it prepares the host instance for host fibers and bubbles effect flags to the parent, then the loop moves to a sibling or continues upward via `return`.
+
+```
+      App          1. begin App
+       │           2. begin div
+       ▼           3. begin Child
+      div          4. complete Child
+       │           5. complete div
+       ▼           6. complete App
+     Child         7. commit — insert everything at once
+```
+
+The part worth naming explicitly: between every single unit, the loop checks `shouldYield()` (§5) — "has the browser waited long enough for this frame?" If so, React stops mid-tree, hands control back to the browser to paint and handle input, and resumes later from the exact `workInProgress` pointer it left off at.
+
+This is the concrete mechanism behind "render is interruptible" (Module 4 §4, the eight-step trace). It isn't interruptible in some abstract sense — it's *literally* a loop that can stop after any fiber, because the position lives in a variable React owns (`workInProgress`) rather than on the JS call stack. That's the exact property the old stack reconciler (§2) didn't have, and it's why a fiber tree, not smarter recursion, was the fix.
 
 **Q: Why can the render phase run twice but the commit phase can't?**
-Render only builds an in-memory tree — discarding it costs nothing, because `current` still describes the screen. Commit mutates the real DOM, which is observable and not transactional. Once you've inserted a node you can't un-insert it without the user potentially seeing it. So commit is synchronous and uninterruptible.
+It comes down to what's observable. Render only writes to the workInProgress tree — a plain JS object graph nobody but React can see (§4). Throwing it away and starting over costs some CPU time and nothing else, because `current`, the tree the user is actually looking at, was never touched.
+
+Commit is different in kind, not just degree: it writes to the real DOM, which the user's eyes and the browser's rendering pipeline observe immediately. There's no "undo" for a DOM mutation the way there is for discarding an object — once a node is inserted, style is recalculated, and something might already be painted. You can't half-apply a set of DOM writes and cleanly back out if a higher-priority update shows up.
+
+```
+Render:  build workInProgress  →  (if interrupted) throw it away  →  current still correct
+Commit:  fiberRoot.current = workInProgress                       →  irreversible, one line
+```
+
+That asymmetry is why the two-tree design (§4) exists at all — it's not an optimization bolted on, it's what makes interruption *safe*. Everything risky (running your component, maybe multiple times, maybe for a tree nobody sees) happens in the phase with no observable side effects. Everything observable (DOM writes, layout effects, ref attachment) happens in one uninterrupted synchronous pass, atomically swapped in with a single pointer assignment. If commit could also be interrupted, users would see a UI that's half old, half new — precisely the bug two-tree buffering was built to make impossible (§4, "Why do we need two trees?").
 
 **Q: How does `childLanes` improve performance?**
-Without it, React would walk every fiber to find pending work. `childLanes` aggregates descendants' priorities, so at any fiber React can test one bitmask and skip the whole subtree. It turns "find the work" from O(tree) into a check per branch.
+Without it, "does anything below this fiber need work?" has only one honest answer: walk the whole subtree and check. For a large app that's expensive to repeat on every render pass, and most of the tree usually has nothing pending.
+
+`childLanes` turns that walk into a lookup. Every fiber carries `lanes` (its own pending work) and `childLanes` (the OR of every lane pending anywhere below it) — so a parent fiber's `childLanes` is precomputed the moment its children got their updates, via `mergeLanes` bubbling up the tree during the update. At render time React tests one bitmask per fiber: `childLanes & renderLanes`. Zero means "nothing in this entire subtree needs this render" — skip it, don't even descend.
+
+```
+App        childLanes: SyncLane | DefaultLane   ← something below needs work
+ ├─ Header  childLanes: 0                        ← skip entirely, no descent
+ └─ List    childLanes: DefaultLane              ← descend, List itself may bail
+```
+
+Concretely: a large static sidebar that never receives updates has `childLanes: 0` forever. Every re-render of `App`, React checks that one field and moves straight past the whole sidebar subtree without calling a single component inside it. This is the mechanism behind "children re-render by default, unless something opts out" *not* being as expensive as it sounds (Module 4 §4, "Children re-render by default") — `childLanes` prunes the parts of the tree that provably have nothing to do, before React ever gets to the point of deciding whether to bail via `memo`.
 
 **Q: What happens if a high-priority update arrives mid-render?**
-React abandons the workInProgress tree, restarts rendering at the higher priority, then revisits the lower-priority work. Safe because `current` was never touched — but it means your component may run several times for a single visible update, which is exactly why render must be pure.
+React abandons whatever it was building in the workInProgress tree, throws that partial work away completely, and restarts the render loop at the new, higher-priority lane. Once that urgent work commits, React comes back and redoes the lower-priority work from scratch — it doesn't resume where it left off, because the abandoned tree might be based on stale assumptions the interrupting update invalidated.
+
+```
+Filtering 10,000 rows (low priority)  ─┐
+                                        ├─ user types a character (SyncLane, high)
+     [abandoned, restarted later]  ◄───┘
+Keystroke renders and commits first
+Filter work restarts from scratch afterward
+```
+
+This is only safe because of double buffering (§4): the abandoned tree was the *workInProgress* copy, never the one on screen. `current` sat untouched the entire time, so the user never saw a flicker or a half-filtered list — they saw their keystroke land instantly, then the filtered results catch up a moment later.
+
+The cost lands on your component code, not the user: a component involved in the abandoned render may run two, three, or more times for what is, from the user's perspective, a single logical update. That's not a bug to work around — it's the concrete reason render must be pure (Module 2 §5.1, Module 4 §9). A `fetch` or a mutated module-level variable in that component would fire once per discarded attempt, not once per meaningful change, and there'd be no error to tell you it happened.
 
 ---
 

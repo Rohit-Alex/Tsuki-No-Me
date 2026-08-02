@@ -467,16 +467,71 @@ Yes — through the **React** tree, not the DOM tree. Verified: a button portall
 ### Senior
 
 **Q: When is Context the wrong tool?**
-When the data changes often. Every consumer re-renders on every change, and `memo` can't stop it. Context is for global, slow-moving data — theme, user, locale. For fast-changing shared state, use a store with selectors so components only re-render for the slice they read.
+When the value changes often and only a fraction of the tree cares about each change. The mechanism (§6, verified) is unforgiving: **every** consumer of a context re-renders whenever the value changes, full stop — there's no selector, no partial subscription, and `React.memo` cannot help, because context isn't a prop and a memo comparison never sees it.
+
+```jsx
+<Ctx.Provider value={{ n }}>   {/* n changes 60 times a second */}
+  <Reader />        {/* uses context → re-renders every tick */}
+  <MemoSibling />   {/* memo, no context → correctly skips every tick */}
+```
+
+Verified in §6: `Reader` re-rendered on every update; `MemoSibling`, wrapped in `memo` and not touching context, never did. That gap is the whole answer — `memo` protects components that don't read the context, and does nothing for the ones that do.
+
+For slow-moving, genuinely global data — theme, current user, locale — this is fine: those change rarely, so "every consumer re-renders" costs almost nothing. The tool breaks down for fast-changing shared state: a mouse position, a live filter query, a websocket feed. There, you want components to re-render only for the *slice* of state they actually read, which requires a store with selectors (Zustand, Redux with `useSelector`, Jotai) — Module 8 covers the trade-offs. The pattern to recognize: **Context broadcasts to everyone listening; a store lets each listener choose what to hear.** Reach for Context when broadcast is what you want, not as a default replacement for prop drilling on data that updates often.
 
 **Q: Why were the `componentWill*` lifecycles marked UNSAFE?**
-They ran during the render phase, which Fiber made interruptible. React can start rendering, abandon it, and restart — so those methods could fire multiple times for one update. Anything with side effects in them became unreliable, so they were renamed with `UNSAFE_` and replaced by `getDerivedStateFromProps` and `getSnapshotBeforeUpdate`.
+They were written assuming render happens exactly once per update — a safe assumption before React 16. Fiber made the render phase interruptible (Module 3 §2): React can start building a tree, abandon it because something more urgent arrived, and restart later (Module 3 §8). `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` all ran *during* that interruptible phase, so any one of them could now fire two or three times for what the user experiences as a single update.
+
+```jsx
+componentWillReceiveProps(nextProps) {
+  fetchDataFor(nextProps.id);   // ❌ may now fire once per abandoned render attempt
+}
+```
+
+Before Fiber this was safe — one call per real update. After Fiber, a duplicate or stale-looking network call could fire for a render the user never even saw, and there was no error to point at why. This is the exact same hazard as an impure function component (Module 2 §11, Module 4 §9) — these lifecycle methods effectively *were* the render phase for class components, so the purity rule applies to them too.
+
+React couldn't remove them outright without breaking every existing class component, so it renamed them with the `UNSAFE_` prefix — a visible warning without an instant break — and added `getDerivedStateFromProps` (a pure, static alternative) and `getSnapshotBeforeUpdate` (which correctly runs in the commit phase, not render) as the safe replacements. The rename itself is a small case study in React's stability principle (Module 1 §3): deprecate loudly, keep working, give teams years to migrate.
 
 **Q: Are class components deprecated?**
-No — officially supported, and React recommends functions for new code. Error boundaries are still class-only; there's no hook for `componentDidCatch`.
+No — "deprecated" would mean scheduled for removal, and React has explicitly never done that. The official line (§8) is softer: *"we recommend defining components as functions instead of classes"* for new code, which is guidance, not a warning. React's stability principle (Module 1 §3) is why: breaking every class component in existing production apps would violate the promise that upgrades stay smooth, so classes keep working indefinitely.
+
+The concrete proof they're not going away: **error boundaries have no hook equivalent.**
+
+```jsx
+class ErrorBoundary extends React.Component {
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error, info) { logToService(error, info); }
+  render() {
+    return this.state.hasError ? <p>Something went wrong.</p> : this.props.children;
+  }
+}
+```
+
+If classes were truly on their way out, this gap would have been closed by now — `componentDidCatch` would have a hook version. It doesn't, years after hooks shipped, which tells you React's own team still relies on this pattern being available in class form. In practice most teams write function components everywhere and pull in a single, small `ErrorBoundary` class (often via `react-error-boundary`) purely as connective tissue — you can write an entire modern app in hooks and still have exactly one class in it, and that's a fully supported, idiomatic shape, not a compromise.
 
 **Q: How would you design a component API for a reusable dropdown?**
-Look for: composition over configuration (compound components like `<Select><Option/></Select>` rather than an `options` array prop), controlled *and* uncontrolled support (`value` vs `defaultValue`), and not leaking internal state. Patterns are Module 10.
+Start from the same one-way-data-flow discipline the whole course has been building toward (§2, Module 1): the API should make it obvious who owns what state, and never force the consumer to reach in and mutate internals.
+
+Prefer composition over one giant configuration prop:
+
+```jsx
+// ❌ configuration — every new need becomes another prop
+<Select options={[{value:'a',label:'A'}]} renderOption={...} groupBy={...} />
+
+// ✅ composition — the caller controls structure and content directly
+<Select>
+  <Select.Option value="a">A</Select.Option>
+  <Select.Group label="Fruit">
+    <Select.Option value="b">B</Select.Option>
+  </Select.Group>
+</Select>
+```
+
+The compound-component form (Module 10) scales to cases the options-array form can't express — custom rendering per item, nested groups, icons — without ever adding a new prop.
+
+Second, support **both** controlled and uncontrolled use the way native `<input>` does (§4): `value` + `onChange` for a parent that wants to own the selection (validation, syncing to a form library), `defaultValue` alone for a simple case that doesn't need to. Forcing controlled-only pushes boilerplate onto every consumer that doesn't care; forcing uncontrolled-only makes validation awkward.
+
+Third, never let the dropdown's open/closed state or internal focus tracking leak out as something the parent must manage — that's internal implementation, and exposing it invites the parent to get out of sync with it. The general shape: **expose the value as a controlled/uncontrolled pair, expose structure through children, and keep everything else private.** That's the same "own your state, communicate through explicit contracts" idea from §2, applied to API design instead of data flow.
 
 ---
 

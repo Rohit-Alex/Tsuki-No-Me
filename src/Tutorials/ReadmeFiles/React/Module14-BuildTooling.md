@@ -247,16 +247,63 @@ All transform code. Babel is JavaScript — slowest, but the richest plugin ecos
 ### Senior
 
 **Q: You inherit an app with a 3MB bundle. What do you do?**
-Measure first — run a bundle analyzer. Look for one oversized dependency, duplicate packages from mismatched peer deps, missing route-level splits, and server-only code leaking client-side. Fix the biggest item first; a single 200KB dependency usually outweighs every micro-optimisation.
+The wrong first move is guessing — trimming a few imports, adding `lazy()` here and there, and hoping. The right first move is the same instinct §9 already establishes: analyze before touching anything, because a bundle's size is almost never spread evenly across the code, and fixing the wrong 5% wastes effort while the real problem sits untouched.
+
+```bash
+npx vite-bundle-visualizer          # or webpack-bundle-analyzer
+```
+
+The visualizer turns "3MB, somewhere" into a treemap where the actual offenders are visually obvious. In order of how often each one turns out to be the real answer:
+
+1. **One unexpectedly huge dependency.** A moment.js bundled with every locale, an icon library imported as a whole rather than per-icon, a chart library pulled in for one page. This is almost always the single biggest line item — a 200KB dependency, once found, outweighs every `memo` or micro-optimization in the app combined (the same lesson as §3's lodash measurement: one import line was a 25x difference).
+2. **Duplicate packages.** Mismatched peer dependency versions can silently bundle two copies of the same library — the analyzer's treemap makes this visible as the same name appearing twice.
+3. **Server-only code leaking into the client bundle.** A database client or a server-only utility imported by a shared file that both server and client code touch.
+4. **Missing route-level splits.** One enormous chunk instead of several route-sized ones (§4) — everyone downloads the login page's bundle plus the entire rest of the app.
+
+Fix in that order — biggest line item first — because the ratio of effort to bundle-size reduction drops sharply as you go down the list. Chasing #4 before finding #1 is optimizing the smaller problem while the large one sits unaddressed in the treemap the whole time.
 
 **Q: What stops a package from being tree-shaken?**
-CommonJS format, side effects on import (the bundler must keep anything that does work at module load), a missing or wrong `"sideEffects"` field, and barrel files re-exporting everything.
+Every blocker traces back to one underlying requirement: the bundler must be able to prove, just by *reading* the code without running it, exactly which exports are actually used. Anything that breaks that static provability forces the bundler to keep code "just in case."
+
+**CommonJS format** is the biggest one, and it's structural, not a missing flag. `require(path)` is an ordinary function call, and `require(someVariable)` is completely legal JavaScript — so a bundler can't know at build time what a `require()` call will resolve to without actually running the program (§3's verified case: an ESM bundle dropped the unused function entirely at 49 bytes; the CommonJS version shipped both functions at 231 bytes, because `require()` gave the bundler nothing to statically analyze). ESM's `import` is declarative and static by design — always at the top of the file, always a literal string — which is exactly what makes analysis possible before execution.
+
+```js
+import './polyfill';          // side effect on import — bundler MUST keep this, nothing "used" it
+// package.json: "sideEffects": false   ← the package author's promise that nothing here does this
+```
+
+**Side effects on import** are the second blocker: if a module does real work just by being imported — polyfilling a global, registering something — deleting it because "nothing imports its exports" would silently break the app. The bundler has to assume any module *might* do this unless the package explicitly promises otherwise via `"sideEffects": false` in `package.json` — a missing or incorrect version of that field means the bundler defensively keeps code that was actually safe to drop.
+
+**Barrel files** (`export * from './everything'` in an `index.js`) are the subtle one: importing one named export from a barrel can still pull in the barrel's full dependency graph if the bundler can't prove the other re-exports are unused, especially combined with CommonJS dependencies inside the barrel — the tree-shaking failure isn't in your import line, it's hidden a layer downstream.
 
 **Q: How would you split a large app?**
-Routes first — biggest wins, and users expect a pause on navigation. Then genuinely heavy standalone features (a chart library, a rich text editor). Prefetch on hover so the click feels instant. Avoid over-splitting: many tiny chunks compress worse and cost extra requests.
+Split where the boundary already matches user expectation and code structure both — that's routes, and it's why they're the first move, not just a convention. A route change is a moment users already expect a brief pause at (a new page, a new URL), and route boundaries usually align naturally with the app's biggest independent chunks of code — the login page's code genuinely doesn't share much with the settings page's.
+
+```jsx
+const Dashboard = lazy(() => import('./Dashboard'));   // route-level split
+<Suspense fallback={<Spinner />}><Dashboard /></Suspense>
+```
+
+After routes, look for genuinely heavy **standalone features** that most users won't touch on a given visit — a rich text editor, a charting library, a PDF viewer. These are worth their own split specifically because they're large *and* conditional: someone who never opens the editor should never pay for its bundle.
+
+**Prefetching removes the visible cost of splitting** rather than avoiding it — `<link rel="prefetch">` on hover means the chunk is already cached in the background by the time the click lands, so the split point becomes invisible to the user even though it's real on the network (§4).
+
+The failure mode worth naming explicitly is **over-splitting**: turning every component into its own chunk sounds like more optimization, but many small requests compress worse individually than one well-sized chunk (gzip and brotli both do better with more data to find patterns across), and each extra chunk is its own HTTP request with its own overhead. The mental model: split at boundaries where "the user might not need this at all" is true — routes, and genuinely optional heavy features — not at every component boundary just because `lazy()` is available.
 
 **Q: Why are development and production builds different?**
-Dev includes warnings, element freezing, and StrictMode checks — real cost that only pays off while developing. `process.env.NODE_ENV` is replaced at build time so the minifier can delete those branches. Ship a dev build and you carry all of it into production.
+Because the two builds are optimizing for opposite things: development wants to catch your mistakes as early and loudly as possible, even at real runtime cost; production wants to be as fast and small as possible, trusting that development already caught what needed catching. Shipping the same build to both would mean picking one goal and losing the other.
+
+This is Module 2's freezing behavior, generalized. Development freezes every element and adds a warning getter on `key` (Module 2 §4.2, verified: `Object.isFrozen(element)` is `true` in dev, `false` in prod) — real work, done on every single element creation, that exists purely to throw loudly the moment you mutate something you shouldn't. Production skips that work entirely, assuming by then you don't need the guardrail.
+
+```js
+if (process.env.NODE_ENV !== 'production') {
+  warnAboutSomething();    // this whole block: kept in dev, DELETED in prod
+}
+```
+
+The mechanism that makes shipping two builds from one source line practical: the bundler replaces `process.env.NODE_ENV` with a literal string at build time, so in a production build that `if` becomes `if (false) { ... }` — dead code the minifier then deletes outright, not just skips at runtime. Nothing about StrictMode's double-render, the dev-only warnings, or element freezing survives into the production bundle; it's compiled out, not merely disabled.
+
+The mistake this explains: shipping a development build to production doesn't just mean "slightly slower" — it means carrying every one of those safety checks, every frozen-object allocation, every warning-getter lookup, into an environment where nothing is reading the warnings anyway. You pay dev's entire cost and get none of dev's benefit, because nobody's watching the console in production.
 
 ---
 

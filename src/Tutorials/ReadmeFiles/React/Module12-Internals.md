@@ -248,19 +248,76 @@ Updates queue on the hook as a linked list. The direct form queues the same comp
 ### Senior
 
 **Q: How do scheduler priorities and lanes differ?**
-Scheduler priorities (5 levels, with timeouts from 250ms to never) are generic — *when should this callback run?* Lanes are React's own 31-bit bitmask — *which updates render together?* Lanes can express a **set**, so one fiber can hold urgent and transition work at once. React maps lanes to a scheduler priority when scheduling.
+They live at two different layers solving two different questions, and conflating them is the single most common mistake in this part of the internals (§7's Common Mistakes list). The `scheduler` package is deliberately generic — it doesn't know what a fiber or a component is, only that it has callbacks with five priority levels and real millisecond timeouts (§1: `-1` immediate, `250ms` user-blocking, `5000ms` normal, `10000ms` low, effectively-never idle). Its one job is answering *"of everything queued, what should run next?"*
+
+Lanes are React's own concept, one layer up, living in the reconciler — a 31-bit bitmask on every fiber, answering a different question entirely: *"which pending updates are allowed to render together in this pass?"* The reason it has to be a bitmask and not a single number is that a fiber can genuinely be waiting on two things at once — an urgent click update **and** a queued transition — and a single priority number can only express one of them, forcing React to discard information a set doesn't have to.
+
+```
+Scheduler (generic):  5 priority levels, timeouts, min-heap  →  "run this callback when?"
+Lanes (React-specific): 31-bit set per fiber, OR'd together  →  "which updates render as one batch?"
+
+setState → React marks lanes on the fiber → React maps THOSE lanes → ONE scheduler priority → callback queued
+```
+
+So the relationship is a translation, not a duplication: React decides internally which lanes are involved in a render, then hands the scheduler a single priority derived from that lane set so the browser-facing part of the system can stay simple and generic, reusable even outside React's own reconciler.
 
 **Q: How does React prevent low-priority work from starving?**
-Every task gets an expiry (`now + timeout`) and lives in a min-heap. Low priority is 10 seconds, idle never expires. Once a task passes its expiry it's treated as urgent and jumps the queue, so background work always lands eventually.
+A naive priority queue has an obvious failure mode: if urgent work keeps arriving faster than the queue drains, the lowest-priority task can wait forever, because there's always something "more important" queued ahead of it. React's fix isn't a smarter queue — it's giving every task a hard deadline that eventually overrides priority entirely.
+
+```js
+var LOW_PRIORITY_TIMEOUT  = 10000;              // low-priority task expires in 10s
+var IDLE_PRIORITY_TIMEOUT = maxSigned31BitInt;   // idle basically never expires
+```
+
+Every task's expiry is computed once, at creation, as `now + timeout` (§1), and all tasks live together in one min-heap ordered by that expiry — not by their original priority level. The heap's root is always whichever task's deadline is soonest, regardless of whether it started as "low" or "immediate." So a low-priority task doesn't compete against urgent work on priority forever; it competes on **time**, and its clock never stops ticking just because something more urgent keeps cutting in line.
+
+The mechanism this produces: once a task's 10-second window elapses, its expiry timestamp is now in the past, which makes it the *most* urgent thing in the heap by the only metric the heap actually sorts on — it jumps straight to the front, ahead of freshly-arrived urgent work. Concretely, a background list filter that keeps getting bumped by a stream of clicks will eventually process anyway, once its own deadline arrives, even mid-stream of clicks. `IDLE_PRIORITY_TIMEOUT` is the one deliberate exception — set so high it effectively never expires, because idle work is defined as "only do this if literally nothing else ever needs the thread."
 
 **Q: Why does the `current` pointer swap between the mutation and layout phases?**
-Because layout effects and refs must observe the new tree as current — if they ran while `current` still pointed at the old tree, measurements and ref reads would be inconsistent. Swapping after mutation but before layout gives layout effects an updated DOM and an updated fiber tree, still before paint.
+Because two different things need two different views of "which tree is real," and the swap's exact position is what lets both get the view they need. The mutation phase is where the *DOM* actually changes — nodes inserted, attributes updated, text patched. The layout phase, right after, is where refs get attached and `useLayoutEffect` runs — and both of those need to see the **new** state as authoritative, not the one about to be replaced (Module 3 §4, the double-buffering model).
+
+```
+MUTATION phase:  DOM is updated to the new shape
+       ↓
+── fiberRoot.current = workInProgress ──   ← the swap happens HERE
+       ↓
+LAYOUT phase:  refs attached, useLayoutEffect SETUP runs
+       ↓
+BROWSER PAINTS
+```
+
+If the swap happened *before* mutation, layout effects would run against a `current` that claims to be the new tree while the DOM hasn't actually been updated yet — a ref read or a `getBoundingClientRect()` measurement would return stale numbers for what `current` insists is the live component. If the swap happened *after* layout, the opposite problem: layout effects would be measuring and adjusting a DOM that's already correct, but doing it while `current` still points at the old, stale tree — any code checking "what does React currently think is on screen" during that window gets the wrong answer.
+
+Putting the swap in the narrow gap between mutation and layout means both invariants hold simultaneously: the DOM is already correct (mutation just finished) and `current` already reflects it (the swap just happened) — so layout effects measure a DOM that matches what `current` claims, with zero window where the two disagree. It's one atomic assignment, timed to be the last thing true before anything that depends on "what's real" runs.
 
 **Q: Why can't React just use `requestIdleCallback`?**
-Its cadence is too unpredictable and it isn't supported consistently; it can also delay work far longer than React wants for user-visible updates. React needs a predictable small slice, so it implements its own budget with `MessageChannel` and a 5ms cutoff.
+It looks like the obvious tool — "run this when the browser is idle" is exactly what React's work loop needs conceptually — but its actual guarantees don't match what React requires in practice. `requestIdleCallback`'s cadence depends entirely on how busy the browser is; on a page under load it can fire rarely, or with a deadline of only a couple of milliseconds, which isn't enough time to make consistent progress through a large fiber tree. And it was never supported in Safari, which alone rules it out for a library that has to work everywhere.
+
+```js
+var frameYieldMs = 5;             // React's own fixed budget, from the scheduler source
+// vs. requestIdleCallback: fires "eventually", deadline varies with browser load
+```
+
+React's actual requirement is narrower and more predictable than "run when idle" — it needs a **guaranteed small time slice, on a predictable cadence**, so `performUnitOfWork` can make steady progress without ever holding the thread long enough to visibly drop a frame (a 60fps frame budget is ~16.7ms; React's 5ms slice leaves comfortable room for layout and paint even in a busy frame). `requestIdleCallback` optimizes for a different goal — using genuinely spare time without ever competing with anything — which sounds ideal but means it can go a long time between calls exactly when the app is busiest, which is precisely when React most needs to make progress on an urgent update.
+
+So React implements its own scheduler: a fixed 5ms budget, `MessageChannel` instead of `setTimeout` to avoid the 4ms clamp (§1), and its own priority queue with per-task deadlines (this section's earlier answer). It's more code than calling a browser API, but it's the same tradeoff React makes everywhere — control over the exact behavior, rather than depending on a browser primitive whose guarantees don't quite line up with what's actually needed.
 
 **Q: Why does React wrap native events at all?**
-Three reasons: consistent cross-browser semantics; propagation through the **React** tree rather than the DOM tree (which is why portal events reach their React parent); and priority assignment — the event type selects the lane, so a click renders synchronously while a scroll doesn't.
+Three separate problems get solved by the same wrapper, and each one is a real answer on its own — worth naming all three because interviewers often only expect one.
+
+**Consistency.** Different browsers have historically disagreed on event object shapes and quirks. `SyntheticBaseEvent` normalizes that into one API, so your handler code doesn't need browser-specific branches — a problem far smaller today than in 2013, but the abstraction boundary it established is still load-bearing for the other two reasons.
+
+**Propagation through the React tree, not the DOM tree.** This is the one with a genuinely surprising consequence. React listens once at the root container (§3, verified: 130 listeners there, 1 on `document`) and replays propagation itself, following the **component** tree rather than the DOM tree:
+
+```jsx
+createPortal(<button onClick={handleClick} />, document.body)
+// DOM parent: <body>          — physically outside the app
+// React parent: whatever rendered the portal — handleClick still bubbles here
+```
+
+A portalled button sits physically under `<body>`, nowhere near its logical parent in the DOM — but its click still bubbles to the React component that rendered the portal, not to `<body>`'s DOM ancestors (Module 5 §7, verified). That's only possible because React tracks propagation itself instead of relying on the browser's DOM-tree bubbling.
+
+**Priority assignment.** The event *type* is what lets React pick a lane before your handler even runs (Module 3 §6) — a click gets `SyncLane` because typing and clicking must feel instant, a scroll gets `InputContinuousLane`. Native DOM events carry no concept of "how urgent is handling this" — React has to intercept the event to attach that information, which native listeners alone can't provide.
 
 ---
 

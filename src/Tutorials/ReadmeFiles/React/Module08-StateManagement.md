@@ -341,16 +341,66 @@ Usually not. Move server data to a query library and most remaining global state
 ### Senior
 
 **Q: What is tearing and which hook prevents it?**
-Concurrent rendering can pause mid-tree. If an external store changes during that pause, components rendered before and after read different values — one commit, two truths. `useSyncExternalStore` makes React re-read the store so the commit stays consistent. It's why a module variable plus `useState` isn't a safe store.
+Tearing is one commit showing two different truths for what should be a single consistent value. It's only possible because rendering is interruptible (Module 3 §5): React can render `Header`, pause to let the browser breathe, and resume later to render `Sidebar`. If a value **outside** React's own state changes during that pause, `Header` and `Sidebar` end up rendering from two different moments in time, even though the user experiences it as one update.
+
+```jsx
+let theme = 'light';                          // ❌ a plain module variable
+function Header()  { return <span>{theme}</span>; }
+function Sidebar() { return <span>{theme}</span>; }
+```
+
+If `theme` flips to `'dark'` in the gap between `Header`'s render and `Sidebar`'s, they disagree — and nothing in React's own state tracking would have caught it, because `theme` was never state React manages. This is exactly why "just use a module variable plus `useState` to force updates" isn't a safe store under concurrent rendering, even though it works fine under the old, always-synchronous render model.
+
+`useSyncExternalStore(subscribe, getSnapshot)` closes the gap by making React re-check `getSnapshot()` right before committing and, if it detects the value changed mid-render, discarding that render and redoing it synchronously — guaranteeing every component in one commit saw the same snapshot. Every mainstream store library (Redux, Zustand, Jotai) uses this hook internally for exactly this reason, which is why hand-rolling a store with `useState` and a shared variable is a trap: it looks correct in every manual test, and only tears under real concurrent scheduling, which is hard to reproduce and easy to ship.
 
 **Q: Server state vs client state — why does the distinction matter?**
-Server state is a cache of data you don't own, so it can go stale at any moment and needs caching, revalidation, deduplication, and retries. Client state is authoritative and needs none of that. Managing server data with `useState` means hand-rolling all of it badly — most "we need Redux" situations are really "we need a query library."
+The distinction is about **who is authoritative**, and that single fact determines an entire list of problems one kind of state has and the other doesn't. Client state — a modal's open flag, a form draft, a theme toggle — is authored entirely by your app; whatever `useState` holds *is* the truth, permanently, until you change it again. Server state — a list of orders, another user's profile — is a snapshot of a fact someone else owns and can change at any moment without telling you (§6's "cached copy of someone else's notebook").
+
+```jsx
+// ❌ treats server data like client data — three variables, none of the real problems solved
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+useEffect(() => { fetch('/api/todos').then(r => r.json()).then(setData)...}, []);
+```
+
+That code compiles, works in a demo, and quietly omits caching (refetching the same data on every mount), deduplication (two components fetching the same URL simultaneously), revalidation (the data going stale the moment the tab loses and regains focus), retries, and race conditions if the component unmounts mid-request. None of these are edge cases — they're the *normal* behavior of data you don't own, and `useState` has no opinion about any of them because it was designed for data you do own.
+
+This is why "we need Redux" is so often a misdiagnosis: the actual problem was never "sharing client state globally," it was "server data is being managed as if it were client data." Swapping in TanStack Query or SWR doesn't add features so much as it correctly names the problem — and once server state moves out, what's left over is usually small enough that `useState` plus a little context was always going to be sufficient for it (§6, "Practical effect").
 
 **Q: How would you decide between context and a store?**
-Change frequency and consumer count. Rarely-changing global values (theme, locale, user) suit context. Frequently-changing state with many partial consumers needs selectors, which context can't do — splitting providers is the manual version and stops scaling around a dozen contexts.
+Two variables decide it: how often the value changes, and how many consumers only care about *part* of it. Context has exactly one lever to pull when performance suffers — split the value into more providers (§4) — and that lever has no cost when changes are rare, because "every consumer re-renders" is cheap if it almost never happens.
+
+```
+Rarely changes, most consumers read all of it     →  Context is fine (theme, locale, user)
+Changes often, consumers only need one slice each →  Context forces a rewrite per slice
+```
+
+The mechanical reason a store wins for the second case: context has no selectors (§4, verified — a `user`-only reader re-rendered on every `theme` change in a combined context). The only fix is splitting into more contexts, one per thing that changes independently. That works fine for two or three, but a dozen frequently-changing values means a dozen providers, each requiring you to have correctly guessed the boundaries in advance — and every new field is a design decision about which provider it belongs in.
+
+An external store with selectors (§5 — Zustand, Redux, Jotai) sidesteps the whole problem: one store, and each component names exactly the slice it reads (`useStore(s => s.theme)`), verified to produce the same zero-wasted-render result as manually splitting providers, without you having to pre-partition the state into separate contexts. The rule of thumb: reach for a store the moment you'd need to keep splitting contexts to chase re-renders — that's the signal you've outgrown "distribution" (what context does) and actually need "subscription" (what a store does).
 
 **Q: How do you structure state to prevent bugs by design?**
-Make impossible states unrepresentable — one `status` enum instead of several booleans that can contradict. Store facts once and derive the rest, so nothing can drift. Normalise nested data so an update touches one record instead of rebuilding a chain.
+The underlying idea is the same one Module 1 used to explain why React exists at all: turn a class of bug into something that can't be represented, rather than something you promise to avoid. Applied to state shape, that's §1's five rules, and each one removes a specific way state can silently disagree with itself.
+
+**Make impossible combinations unrepresentable.** Two independent booleans can produce states that make no sense:
+
+```jsx
+const [isSending, setIsSending] = useState(false);   // ❌ both true at once is meaningless,
+const [isSent, setIsSent] = useState(false);          //    but nothing stops it happening
+
+const [status, setStatus] = useState('typing');      // ✅ 'typing' | 'sending' | 'sent' — only one at a time, by construction
+```
+
+With two booleans, "sending AND sent" is a state the type system happily allows and your UI has to defend against. With one enum, that combination doesn't exist as a value — there's nothing to defend against, because it was never representable.
+
+**Derive instead of storing.** A `fullName` field stored alongside `firstName`/`lastName` can drift the moment one changes and you forget to update the other; computing it during render means there's only ever one thing to keep in sync.
+
+**Store the id, not the object.** A `selectedItem` object is a snapshot that goes stale the instant the underlying data changes elsewhere; a `selectedId` plus a lookup is always current, because it re-reads the live data every render (§1, rule 4).
+
+**Normalize nested data.** Deeply nested state means an update has to rebuild an entire chain of parent objects immutably — easy to get subtly wrong. Flattened, keyed-by-id state (§1, rule 5) means an update touches exactly one record.
+
+All four are the same move: don't let two things claim to represent one fact. Where there's one source of truth, drift is structurally impossible — not something you have to remember to prevent.
 
 ---
 

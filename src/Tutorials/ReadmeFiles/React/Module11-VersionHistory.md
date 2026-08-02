@@ -322,16 +322,73 @@ Because it can be called conditionally and in loops. It reads promises (suspendi
 ### Senior
 
 **Q: Trace one design decision from React 16 to today.**
-The scheduling principle. Because components return descriptions instead of mutating the DOM, React controls when they run. React 16 restructured work into interruptible fiber units to exploit that. React 17 made upgrading possible so the ecosystem could actually get there. React 18 exposed it as concurrent rendering, lanes, transitions, and streaming SSR. React 19 built Actions and Server Components on top, and 19.2's `<Activity>` uses the same priority system to pre-render hidden content while idle.
+Follow the **scheduling principle** (Module 1 §3) — "you describe UI, React decides when to render it" — and every major version since 2017 reads as one long payoff of that single decision, not four unrelated releases.
+
+```
+16 (2017)  Fiber: work becomes interruptible units, not a locked recursive call
+17 (2020)  Events move to the root: two React versions can now coexist, so teams CAN migrate
+18 (2022)  createRoot exposes it: automatic batching, lanes, transitions, streaming SSR
+19 (2024)  Built ON TOP of it: Actions, Server Components
+19.2 (2025) Same priority system, new scope: <Activity> applies it to whole subtrees
+```
+
+React 16 didn't ship anything a user could point to and call "concurrency" — it restructured rendering into fiber units specifically so that *later*, React could pause between them (Module 3 §2). That's a bet paid off five years later, not a feature. React 17 shipped almost nothing user-facing on purpose (§ "the boring release") — but moving event delegation off `document` was the precondition for two React versions coexisting on one page, which is what let large codebases adopt 18 gradually instead of all at once. React 18 is where the bet cashes in: `createRoot` gates automatic batching, transitions, and lanes-based scheduling — the exact mechanism Module 3 §6 describes, now exposed as public API. React 19's Actions and Server Components are built assuming that scheduling substrate already exists. And 19.2's `<Activity>` — keeping a subtree mounted-but-idle, deferring its updates — is the *same* lane-priority mechanism, just applied to an entire subtree instead of a single update.
+
+The interview-worthy point: nothing after 2017 required another foundational rewrite. Every version since has been spending the same architectural investment in a new direction, which is itself evidence the original bet on Fiber was sound.
 
 **Q: A team upgraded to React 18 and saw no improvement. Why?**
-They're almost certainly still calling `ReactDOM.render`, which runs legacy mode — no automatic batching outside event handlers, no transitions, no streaming Suspense. It only warns in the console. The fix is `createRoot`.
+The single most likely cause: they bumped the `react`/`react-dom` version in `package.json` but never changed the render call itself, so the app is running React 18's code in React 17's mode.
+
+```js
+// still there after "upgrading"
+ReactDOM.render(<App />, container);      // ❌ legacy mode — none of 18's features activate
+
+// what unlocks it
+import { createRoot } from 'react-dom/client';
+createRoot(container).render(<App />);    // ✅ the actual gate (Module 2 §5.4)
+```
+
+`createRoot` isn't cosmetic API renaming — it's the literal switch that turns on automatic batching everywhere, transitions, and streaming Suspense improvements. Call the old `ReactDOM.render` on React 18 and every one of those stays off. React doesn't error or block this — it just logs a console warning, which is easy to miss in a large app's build output, so teams genuinely ship this and don't notice.
+
+The second-order trap, worth mentioning as a follow-up: even with `createRoot` in place, "upgraded and saw no difference" can still be correct for a different reason — concurrency is **opt-in per feature**, not automatic just because the root changed. Automatic batching applies everywhere for free, but transitions and Suspense-driven scheduling only activate where the code actually calls `startTransition` or uses `<Suspense>`. A team that switched to `createRoot` but never touched any component code gets the batching improvement silently and correctly sees no visible change anywhere else — which is a legitimately different, more subtle version of the same complaint.
 
 **Q: What problem does `useEffectEvent` solve?**
-Effects re-running because of values they read but shouldn't react to. If an effect shows a notification using `theme`, listing `theme` as a dependency reconnects on every theme change; omitting it means a stale closure. `useEffectEvent` wraps the non-reactive part so it always reads the latest value without being a dependency.
+It fixes a genuine conflict inside the dependency array: some values an effect reads should trigger a re-run when they change (**reactive** — `roomId`), and some values it reads should always be current but should never *cause* a re-run on their own (**non-reactive** — `theme`, used only inside a notification the effect might show). Before this hook, both kinds of value went into the same array, and the array can't distinguish them.
+
+```jsx
+useEffect(() => {
+  connection.on('connected', () => {
+    showNotification('Connected!', theme);   // reads theme, but shouldn't reconnect for it
+  });
+}, [roomId, theme]);   // ❌ listing theme reconnects on every theme change
+```
+
+Two bad options existed before `useEffectEvent`: list `theme` honestly and the connection needlessly tears down and rebuilds every time the user switches themes (Module 6 §4's stale-closure section covers the mechanism — the effect's cleanup and setup both re-run). Or omit `theme` to avoid that, and the closure captures whatever `theme` was on the render that created the effect, which is exactly the stale-closure bug (Module 6 §4, verified with the interval example logging `0` forever while state moved to `9`).
+
+```jsx
+const onConnected = useEffectEvent(() => {
+  showNotification('Connected!', theme);   // always reads the LATEST theme, no closure staleness
+});
+
+useEffect(() => {
+  connection.on('connected', onConnected);
+}, [roomId]);   // ✅ theme genuinely doesn't belong here
+```
+
+`useEffectEvent` creates a function that's guaranteed to always see the latest render's values, but whose identity never changes and never appears in a dependency array — it exists specifically to hold the non-reactive half of an effect's logic, so the dependency array can go back to honestly listing only what should actually cause a re-run.
 
 **Q: Why does `<Activity>` matter architecturally?**
-It gives React a supported way to keep a subtree mounted-but-inactive — effects unmounted, updates deferred until idle. Pre-render a likely next route without competing with visible work, and preserve state on back-navigation. It's the priority system from Module 3 applied to whole subtrees rather than individual updates.
+Before it, React only really offered two states for a subtree: mounted (fully alive — effects running, updates processing normally) or unmounted (gone — state and effects destroyed). Real apps kept wanting a third state: "not visible right now, but don't throw it away, and don't let it compete for resources with what the user is actually looking at." Every team hand-rolled this with `display: none` (state survives, but effects and updates still run pointlessly in the background) or full conditional unmounting (resources freed, but state and scroll position lost on return).
+
+```jsx
+<Activity mode={isVisible ? 'visible' : 'hidden'}>
+  <NextPage />        {/* hidden: effects unmount, updates deferred until React is idle */}
+</Activity>
+```
+
+`<Activity>` gives that third state a real, supported implementation: hidden content's effects unmount (so a hidden tab's subscriptions and timers genuinely stop costing anything), but its component state and fiber tree survive, and any pending updates are deferred to whenever the scheduler is otherwise idle — not dropped, not processed at full priority, just parked.
+
+The architectural point is that this isn't a new mechanism bolted on — it's the lanes and priority system (Module 3 §6) applied at a coarser grain. A single `setState` already gets a lane and a priority; `<Activity>` extends that same idea to an entire subtree, marking all of its pending work as "lowest priority, resume when idle" in one move. Concretely, it's what lets you pre-render a likely next page in the background — starting its data fetches and component tree now — without that work ever competing with the visible page's rendering, and lets a user navigate back to a hidden tab and find their scroll position and form state exactly as they left it.
 
 ---
 

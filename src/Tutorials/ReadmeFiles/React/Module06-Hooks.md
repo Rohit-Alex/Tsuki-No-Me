@@ -479,19 +479,83 @@ For derived data (calculate during render), for event logic (put it in the handl
 ### Senior
 
 **Q: Why does the hook list make React's design simpler than a lookup by name?**
-No keys to generate, no name collisions, and no map allocation per component — just a linked list walked in order, which is also cheap to clone when a fiber is recycled (Module 3 §4). The cost is the positional-call rule, which the linter enforces for you.
+A name-based system needs a name for every hook call — `useState('count', 0)` — which forces a decision (what's the name?) and creates a new failure mode (two hooks accidentally sharing a name, or a name colliding after a refactor). A position-based linked list needs none of that: the hook itself carries no identifier, just `{ memoizedState, queue, next }` (Module 3 §3), and "which hook is this" is answered purely by "which call is this, in order."
+
+```
+fiber.memoizedState → Hook#1 → Hook#2 → Hook#3 → null
+                       (no names, no keys — just position)
+```
+
+That simplicity buys two things: hook creation is one allocation with no map or lookup involved, and — the part that connects to Fiber directly — the list is trivial to reuse across renders. When `createWorkInProgress` (Module 3 §4) clones a fiber, it copies `memoizedState` as a pointer to the same linked list; there's no re-keying, no rehashing, nothing to reconcile. A name-based store would need real identity matching across renders, which is exactly the expensive problem reconciliation already solves for elements (Module 4 §1.5) — hooks avoid needing a second version of that problem entirely.
+
+The cost is the one constraint this buys you at a price: since there are no names, the *only* thing that identifies a hook is its call order, so that order must never change between renders — which is the whole reason the Rules of Hooks exist (§2). The rules aren't arbitrary API design; they're the visible cost of choosing "no names" for a real internal simplicity win.
 
 **Q: What problem does `useSyncExternalStore` solve?**
-Tearing. With concurrent rendering, React can pause mid-render; an external store could change in that gap, so different components in the same commit would read different values. `useSyncExternalStore` makes React re-read and stay consistent.
+Tearing — different components in the *same* commit showing different values for what should be one consistent snapshot of external state. It's a new failure mode created by concurrent rendering, and understanding it requires connecting back to why render can pause at all (Module 3 §5).
+
+Picture a Redux-style store outside React, read directly in two components:
+
+```jsx
+function Header() { return <span>{store.getState().user.name}</span>; }
+function Sidebar() { return <span>{store.getState().user.name}</span>; }
+```
+
+If React renders `Header`, then yields to the browser mid-tree (§5's `shouldYield`), and the store updates in that gap before React resumes and renders `Sidebar` — the two components now render from two different states of the same store, in what the user experiences as a single update. Before concurrent rendering this couldn't happen: render was one uninterrupted synchronous pass, so the store couldn't possibly change partway through. Fiber's interruptibility, the same property that makes transitions and Suspense possible, is exactly what opens this gap.
+
+`useSyncExternalStore(subscribe, getSnapshot)` closes it by giving React a way to double-check: it re-reads `getSnapshot()` before committing and, if the value has changed since the render started, throws that render away and restarts synchronously — forcing every component to observe the same store snapshot. Libraries like Redux and Zustand use it under the hood for exactly this reason. You rarely call it directly — the value is knowing that "context is torn" isn't a real risk (context flows through React's own render, immune to this) while "an external store might be" always is.
 
 **Q: How do `useTransition` and `useDeferredValue` differ?**
-`useTransition` wraps the *update* — you control the setState and get `isPending`. `useDeferredValue` wraps a *value* you don't control, typically a prop. Both use the lanes system to render at a lower priority.
+Same underlying mechanism, different point of control. `useTransition` wraps the *action that causes the update* — you're the one calling `setState`, so you wrap that call and get an `isPending` flag back to show a loading indicator while it's in flight:
+
+```jsx
+const [isPending, startTransition] = useTransition();
+setQuery(e.target.value);                                   // urgent
+startTransition(() => setResults(filter(e.target.value)));  // low priority
+```
+
+`useDeferredValue` wraps a *value you didn't produce* — usually a prop, or state owned by a parent you can't wrap in `startTransition` yourself:
+
+```jsx
+const deferredQuery = useDeferredValue(query);   // query comes from somewhere else
+const results = useMemo(() => search(deferredQuery), [deferredQuery]);
+```
+
+Both compile down to the same primitive: marking work with a lower-priority lane (Module 3 §6) so React can render the urgent update — the keystroke itself — first, and let the low-priority work render afterward without blocking the frame.
+
+The mechanical difference: `useTransition` marks the *update* as low priority at the moment you make it, so you get precise control and a pending flag. `useDeferredValue` instead lets a value be "behind" — React renders with the old value while a background render catches up to the new one, useful exactly when you're a consumer of state rather than its producer. Pick `useTransition` when you're calling `setState` yourself; pick `useDeferredValue` when you're downstream of a value you only receive.
 
 **Q: Is `use` a hook?**
-No — and that's the point. It's a regular function, so it can be called inside conditions and loops, unlike every hook. It reads promises (suspending) or context. It can't be wrapped in try/catch because it throws internally to communicate with Suspense.
+No, and the difference is exactly why it can break the rules everything else in this module follows. Every real hook (§2) is a position in the fiber's linked list — matched purely by call order, which is why they must be unconditional (§2's locker analogy). `use` doesn't participate in that list at all, so it doesn't need positional stability:
+
+```jsx
+if (show) {
+  const theme = use(ThemeContext);          // ✅ legal — no linked-list position to lose
+  const theme2 = useContext(ThemeContext);  // ❌ illegal — a real hook, positionally tracked
+}
+```
+
+Instead, `use` works by *throwing*. Given a pending promise, it throws that promise, and the nearest Suspense boundary catches it, shows a fallback, and retries the component once the promise resolves — the same mechanism error boundaries use for errors, repurposed for "not ready yet." That's also why `try/catch` around `use` doesn't work as you'd expect: catching a thrown promise yourself just breaks Suspense's contract, so you need an Error Boundary instead for the reject case.
+
+The two failure modes worth knowing: calling `use(promise)` with a promise created fresh every render re-suspends forever, because React sees a new, still-pending promise each time — the promise has to come from something stable across renders (a cache, not `fetch()` called inline). And because `use` isn't a hook, ESLint's hooks rules don't apply to it the same way, so its conditional legality is a deliberate exception, not an oversight — it's the first hook-adjacent API designed from the start to work with control flow instead of around it.
 
 **Q: How would you design a custom hook API?**
-Return what callers need, hide the rest. Return an object for 3+ values (naming at the call site), an array for 2 (so they can rename freely, like `useState`). Keep it focused on one concern, and remember consumers get independent state — if they need shared state, that's context or a store.
+The core idea to design around: a custom hook packages *logic*, not *state* (§9) — every caller gets their own independent copy, because each has its own fiber and its own hook list (Module 3 §3). Design the API so that's obviously true, not something a caller has to discover.
+
+Return shape follows the same convention `useState` set: an array for two values, so callers can rename freely at the call site —
+
+```jsx
+const [value, setValue] = useLocalStorage('theme', 'dark');   // ✅ rename-friendly
+```
+
+— and an object once there are three or more, so call sites don't have to remember positional order:
+
+```jsx
+const { data, error, isLoading } = useFetch(url);   // ✅ self-documenting
+```
+
+Keep the hook focused on one concern — `useOnlineStatus` should only report online/offline, not also manage a websocket reconnect policy. If two pieces of logic are genuinely related but conceptually separate, that's two hooks, possibly with one calling the other.
+
+The design trap worth naming explicitly: if two components need to *share* the same live value — not just the same logic — a custom hook is the wrong tool, because each call creates independent state (verified conceptually in §9: two `useOnlineStatus()` calls don't share a boolean, they each track their own). Reaching for a custom hook when you actually need shared state produces a subtle bug where two instances silently drift apart. That's the signal to reach for Context (Module 5 §6) or an external store (Module 8) instead — the moment "shared" appears in the requirement, custom hooks alone can't deliver it.
 
 ---
 

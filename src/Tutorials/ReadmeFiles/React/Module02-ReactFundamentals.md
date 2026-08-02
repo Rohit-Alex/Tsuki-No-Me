@@ -639,10 +639,42 @@ If the tag genuinely must change, lift the state above it so remounting can't de
 The trade is worth it overall: O(n³) on a 1,000-node tree is a billion operations. React's assumptions are right for virtually all real UI.
 
 **Q: Everything works but state resets whenever the parent re-renders. Diagnose.**
-Almost certainly a component defined inside another component's body. Each parent render creates a new function identity, so `type` differs, so Rule 2 fires and React unmounts and remounts the child. Fix: hoist to module scope. Alternative causes: a changing `key`, or conditional structure moving the component to a different tree position.
+The near-universal cause is a component defined *inside* another component's function body. React decides "same component or new one?" by comparing `type` (§6.2, Rule 2) — and a function declared inside a render body is a brand-new function object every single render. Same JSX, same name, but a different `type` reference, so React can't tell it apart from swapping `<div>` for `<span>`: it destroys the old subtree, including all state, and mounts a fresh one.
+
+```jsx
+function Parent() {
+  function Child() {                      // ❌ new function identity every Parent render
+    const [v, setV] = useState(0);
+    return <input value={v} onChange={e => setV(e.target.value)} />;
+  }
+  return <Child />;                       // typed text vanishes on every Parent re-render
+}
+```
+
+Move `Child` to module scope and the identity stops changing, so React reuses the same fiber and the input keeps its value.
+
+Two other causes produce the identical symptom, so check them before assuming it's this one: a `key` that changes unexpectedly (§6.2, Rule 3 — sorting, filtering, or a `Math.random()` key regenerates it every render), or the component shifting position in the tree because a sibling was conditionally added above it (§6.3's case D — same component, but its path from the root changed). All three collapse to the same mechanism: React ties state to *identity at a position* (type + key + path), not to the component's name or your intent, so anything that perturbs identity resets state — silently, with no error to point you at the cause.
 
 **Q: How would you deliberately reset a child's state?**
-Change its `key`. Same type, different key → destroy and rebuild (verified). Idiomatic for resetting a form when the edited entity changes: `<Chat key={contactId} />`. Cleaner than a `useEffect` that resets state on prop change, which renders once with stale values first.
+Change its `key`. Same type at the same position but a different key still means "destroy and rebuild" (§6.2, Rule 3 — key beats type). You're using the exact mechanism that normally causes accidental resets, on purpose.
+
+```jsx
+<Chat key={contactId} contactId={contactId} />   // switching contacts wipes the draft
+```
+
+When `contactId` changes, React sees a new key at that position, unmounts the old `Chat` (and its draft-in-progress state) completely, and mounts a fresh one. No draft leaks from Alice's conversation into Bob's.
+
+Compare the alternative — resetting state manually in an effect:
+
+```jsx
+useEffect(() => {
+  setDraft('');            // ❌ runs AFTER a render with the stale draft already shown
+}, [contactId]);
+```
+
+This renders once with Alice's leftover draft visible, then clears it a tick later — a visible flash of wrong state. The `key` approach never renders the stale value at all, because the old component (and its state) is gone before the new one's first render. It's also fewer moving parts: no effect, no dependency array to get wrong, no risk of forgetting to reset one of several pieces of state.
+
+The general pattern worth stating in an interview: **`key` is a state-reset switch, not just a list-diffing hint.** Anywhere you want "this is conceptually a different instance," keying on the thing that changed (a contact id, a route param, a wizard step) is more reliable than manually tracking every piece of state that needs clearing when it changes.
 
 ### Staff
 
@@ -685,40 +717,7 @@ ES modules and JSX bundles are always strict, so you'll normally see the error. 
 That's React's general pattern — dev catches bugs, production trusts you. Same reason for `_store`, dev warnings, and StrictMode's double-render.
 
 **Q: Why must the render phase be pure?**
-
-Because React might run your component, throw the result away, and run it again. That's what concurrent rendering does when something more urgent comes in.
-
-Here's the bug that causes:
-
-```jsx
-let orderId = 0;
-
-function Checkout({ cart }) {
-  orderId++;                          // ❌ side effect during render
-  fetch('/api/reserve', {             // ❌ fires every render
-    method: 'POST',
-    body: JSON.stringify({ cart }),
-  });
-  return <Summary id={orderId} />;
-}
-```
-
-You expect one reservation per checkout. But React may render `Checkout` twice, or render it for a screen the user never sees — so you get duplicate orders. Nothing errors; the count is just wrong.
-
-The fix is to move it out of render:
-
-```jsx
-function Checkout({ cart }) {
-  const handleSubmit = () => {         // ✅ event handler — runs once, on click
-    fetch('/api/reserve', { method: 'POST', body: JSON.stringify({ cart }) });
-  };
-  return <button onClick={handleSubmit}>Reserve</button>;
-}
-```
-
-**Pure means:** same props and state in, same JSX out, and nothing else touched. No fetch calls, no mutating variables outside the component, no writing to `localStorage`, no `document.title = ...`.
-
-StrictMode double-renders on purpose to expose exactly this in development — you'd see two network requests instead of one, before it becomes a real bug in production.
+Because React may run your component, discard the result, and run it again — anything with a side effect (a `fetch`, a mutated outer variable) then fires an unpredictable number of times. See the full answer with a worked example in [Module 4 §9](./Module04-VirtualDOM-Diffing.md) — Q: "Why must the render phase be pure?"
 
 **Q: Argue that the Virtual DOM is a cost, not a benefit.**
 
