@@ -542,7 +542,7 @@ Object.is(obj, obj)     // true
 
 ### 27. How would you compare two non-primitive data types?
 
-[Click to open](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-deep-equal)
+see [JS DSA Questions](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-deep-equal)
 
 ### 28. Functions, arrow functions (without `this`), function expressions, callbacks, IIFE
 
@@ -987,7 +987,12 @@ CSS fundamentals (box model, box-sizing, block/inline/inline-block, position pro
 
 ## Phase 5: React & Ecosystem
 
-- React roadmap — [click to open](src/Tutorials/ReadmeFiles/ReactRoadMap.md) (also go through the other files in the roadmap folder)
+- **React Mastery course** (beginner → staff level, deep dive) — [click to open](src/Tutorials/ReadmeFiles/React/README.md)
+  - Module 1: [Why React Exists](src/Tutorials/ReadmeFiles/React/Module01-WhyReactExists.md)
+  - Module 1a: [Design Principles](src/Tutorials/ReadmeFiles/React/Module01a-DesignPrinciples.md) — why React is built the way it is
+  - Module 2: [React Fundamentals](src/Tutorials/ReadmeFiles/React/Module02-ReactFundamentals.md) — JSX compilation, elements, reconciliation, keys, StrictMode
+  - Module 3: [Fiber Architecture](src/Tutorials/ReadmeFiles/React/Module03-FiberArchitecture.md) — fiber nodes, double buffering, work loop, lanes
+  - Module 4: [Virtual DOM, Diffing & Reconciliation](src/Tutorials/ReadmeFiles/React/Module04-VirtualDOM-Diffing.md) — VDOM vs DOM, the two-pass list diff, what happens on `setState`
 - Optimization strategies — [click to open](src/Tutorials/ReadmeFiles/Optimization.md)
 - Next.js notes — [click to open](src/Tutorials/ReadmeFiles/NextJs.md)
 
