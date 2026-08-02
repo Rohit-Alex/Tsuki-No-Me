@@ -1,0 +1,15 @@
+const React = require('react');
+const util = require('util');
+console.log('React version:', React.version);
+const e = React.createElement('div', { className: 'a', key: 'k1' }, 'hello');
+console.log('own keys:', Object.keys(e));
+console.log('inspect:', util.inspect(e, { depth: 3 }));
+console.log('$$typeof:', String(e.$$typeof));
+console.log('key:', JSON.stringify(e.key), '| props:', JSON.stringify(e.props));
+console.log('frozen? element:', Object.isFrozen(e), 'props:', Object.isFrozen(e.props));
+const two = React.createElement('ul', null, React.createElement('li', null, 'a'), React.createElement('li', null, 'b'));
+const one = React.createElement('ul', null, React.createElement('li', null, 'a'));
+console.log('2 children isArray:', Array.isArray(two.props.children));
+console.log('1 child isArray:', Array.isArray(one.props.children), '| value type:', typeof one.props.children);
+const numKey = React.createElement('li', { key: 42 });
+console.log('numeric key coerced to:', JSON.stringify(numKey.key), typeof numKey.key);
