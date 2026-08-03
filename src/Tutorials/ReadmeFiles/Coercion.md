@@ -664,14 +664,8 @@ console.log({}+[]+{}+[1]);
 <summary>Show Answer</summary>
 
 ```
-0[object Object]1
+[object Object][object Object]1
 ```
-
-**Explanation:**
-- First `{}` is treated as a block statement, not an object literal
-- `+[]` converts to `+""` which is 0
-- `0 + {}` = "0[object Object]"
-- `"0[object Object]" + [1]` = "0[object Object]1"
 
 </details>
 
