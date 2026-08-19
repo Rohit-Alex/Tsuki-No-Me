@@ -508,6 +508,44 @@ while (workInProgress !== null && !shouldYield()) {
 
 `shouldYield()` is the whole point. After each unit React asks *"has the browser waited long enough?"* — and if so it stops, lets the browser paint and handle input, then resumes.
 
+### What `shouldYield()` does, and how Fiber makes rendering pausable
+
+**The problem it solves.** Before Fiber (React 15 and earlier), rendering was a single recursive function call — once React started rendering a tree, it couldn't stop until the whole thing was done. For a big tree, this could block the main thread for hundreds of ms, freezing clicks, scrolling, typing, everything (§2 covers this in full).
+
+**Fiber's fix.** React rebuilt its internals so each component instance is represented as a fiber — a plain JS object (not a function call) holding that component's type, props, state, and pointers to its parent/child/sibling fibers (§3). Because it's a linked-list-like data structure instead of a call stack, React can walk it incrementally — do one unit of work (one fiber), stop, and pick up later exactly where it left off.
+
+`shouldYield()` is the checkpoint function React calls after finishing each fiber, before moving to the next one:
+
+```js
+while (nextUnitOfWork !== null) {
+  nextUnitOfWork = performUnitOfWork(nextUnitOfWork); // process ONE fiber
+  if (shouldYield()) {
+    break; // give control back to the browser
+  }
+}
+```
+
+`shouldYield()` basically asks: *"Has this chunk of work run for about 5ms? Is there a more urgent task (like a user click) waiting?"* If yes, React stops the loop and hands control back to the browser's event loop, so it can handle whatever's next in its own queue — input events, a pending paint left over from an *earlier* commit, timers, etc. Then, on the next available tick, React resumes the loop from `nextUnitOfWork` — the fiber it stopped at — as if nothing happened.
+
+**Careful here — this is not painting the render in progress.** The workInProgress tree being built right now hasn't touched the DOM at all; that only happens in commit (§5's render-vs-commit table, and §7's three-pass commit). So yielding mid-render can't cause the browser to paint *this* update, because there's nothing in the DOM yet for it to paint. What yielding actually buys is: the main thread gets released often enough that the browser can service a queued click, keystroke, or a paint that was already pending from something *else* — instead of being locked out for the full duration of a large render.
+
+**A small trace.** Fiber list `[A] → [B] → [C] → [D] → [E] → [F] ...`, each fiber taking ~1ms to process:
+
+```
+t=0ms   process A
+t=1ms   process B
+t=2ms   process C
+t=3ms   process D
+t=4ms   process E
+t=5ms   shouldYield() → true (5ms budget used) → STOP, return control to browser
+         ...browser handles queued input / any already-pending paint...
+t=5.2ms React resumes: process F
+t=6.2ms process G
+...
+```
+
+**The key point:** the pause/resume boundary can only fall *between* fibers (`A|B|C...`), never inside one. If a single fiber's work takes 300ms, `shouldYield()` never even gets called until that whole 300ms finishes — there's no "unit of work" boundary in the middle of a function call to pause at. This is exactly why keeping individual components cheap matters even in a "pausable" architecture: Fiber can only yield at fiber boundaries, not mid-component.
+
 Each unit has two halves:
 
 **`beginWork` (going down)** — call the component, get the elements it returned, and reconcile them against the current child fibers. The output is **child fibers**, not elements — reconciliation happens immediately, so elements never accumulate as a tree.

@@ -17,9 +17,19 @@ Traces below come from **running React 18.3.1 in Node** — scripts in [verify/]
 
 ## 1. What the Virtual DOM actually is
 
-> **"Virtual DOM" refers to React's in-memory representation of the UI — which begins as a tree of React Elements and is managed internally through the Fiber architecture. The strategy: keep that representation in memory, reconcile it against what's currently mounted, and apply only the differences to the real DOM.**
+> **"Virtual DOM" refers to React's in-memory representation of the UI — a tree of React Elements, reconciled against the tree React built *last time* (today: the current Fiber tree; before React 16: the previous element tree it kept around for this purpose) so only the differences reach the real DOM. Today that reconciliation is executed via the Fiber architecture; before React 16 it ran on plain recursion. The strategy predates Fiber by four years — Fiber is the current *implementation* of it, not a requirement for it to exist (see below).**
 
 That phrasing is deliberately careful, because people use the term slightly differently. Some mean the element tree, some mean the whole mechanism. Both are defensible — so define your terms before answering, rather than assuming the interviewer's version matches yours.
+
+**Be precise about what "reconciled against" means — it is never the real DOM tree.** Three different things could be meant by "what's currently mounted," and only one is correct:
+
+| Candidate | Correct? | Why |
+|---|---|---|
+| The real DOM tree | ❌ | React never diffs against actual DOM nodes — reading the DOM to compare would be slow and is not what reconciliation does |
+| The *previous* React Element tree | ❌ (today) / ✅ (pre-Fiber) | Elements are thrown away after each reconciliation (table below) — nothing keeps last render's elements around today. Pre-2017, this WAS what got kept and compared (§ below) |
+| **The current Fiber tree** | ✅ (today) | Each fiber holds `memoizedProps` — a copy of the props from the *last committed* render. New elements are compared against that, not against DOM nodes or old elements |
+
+So today, precisely: **new React Elements are compared against the current Fiber tree's `memoizedProps`**, not against the DOM and not against a saved copy of last render's elements — because no such copy exists after Fiber. Module 4 §1 "What reconciliation actually compares" below has the source-level proof of this (`reconcileSingleElement` reading `child.key`, a **fiber** field, against `element.key`, an **element** field).
 
 Two things that are simply wrong, though:
 
@@ -34,6 +44,38 @@ Two things that are simply wrong, though:
 | What | Immutable description, recreated every render | Mutable work unit, persists across renders |
 | Holds | `type`, `key`, `props`, `ref` | element data **+ state, effects, lanes, `alternate` pointer** |
 | Lifetime | Thrown away after reconciliation | Lives as long as the component is mounted |
+
+### Before Fiber existed — how reconciliation worked in 2013
+
+Easy to misread the table above as "the VDOM needs Fiber to function." It doesn't, and the timeline proves it:
+
+```
+2013   React ships   →  Elements + reconciliation, running on plain RECURSION
+ ⋮     (4 years, React 0.x → 15)
+2017   React 16      →  Fiber replaces the EXECUTION ENGINE underneath — same rules
+```
+
+React had a working Virtual DOM for **four years** before Fiber existed. Reconciliation — compare the new element tree against **the element tree from the previous render, which React kept around specifically for this comparison** — is the *original* 2013 idea. (This is the one case where "the previous element tree" genuinely is the right answer to "what's it reconciled against" — see the precision table above. Fiber later made that old-element-tree bookkeeping unnecessary, because fibers themselves persist and hold `memoizedProps`.) The type/key rules in §1.5 below (same type → patch, different type → replace, key marks identity) are unchanged since then.
+
+What ran the comparison, before React 16, was ordinary recursion on the JS call stack:
+
+```js
+function reconcile(prevElement, nextElement, domNode) {
+  if (prevElement.type !== nextElement.type) {
+    return replaceNode(domNode, nextElement);      // Rule 2, same as today
+  }
+  patchProps(domNode, prevElement.props, nextElement.props);
+  nextElement.props.children.forEach((child, i) =>
+    reconcile(prevElement.props.children[i], child, domNode.childNodes[i])  // ← recursive call
+  );
+}
+```
+
+This is the **stack reconciler** (Module 3 §2 covers it from the other direction — why it had to go). It worked, and it produced the same diffs Fiber produces today. Its one flaw: a JS function call can't be paused. Once `reconcile()` started walking a 5,000-node tree, it ran to completion — no yielding back to the browser mid-walk, so a big update froze input for however long the walk took.
+
+**Fiber didn't change what gets compared — it changed how the comparison is *executed*.** The recursive call became a loop over a linked list of fiber nodes (Module 3 §5), so React could stop after any node and hand control back to the browser. Same element model, same diffing rules, same output. The stack reconciler *was* interruptible-render's absence; Fiber is interruptible-render's presence. Nothing about "what a Virtual DOM is" required a rewrite — only "can the browser interrupt it" did.
+
+**Interview framing:** if asked "how did the Virtual DOM work before Fiber?", the trap is answering "it didn't" or "it used Fiber too." Both are wrong. It worked identically in concept — elements, diffing, minimal DOM patches — just via recursion instead of a fiber tree, which is exactly why large updates on React 15 could visibly freeze the page.
 
 ### Shadow DOM vs Virtual DOM
 
@@ -133,6 +175,86 @@ Old node, its children, and all component state inside are discarded.
 <p key="k1">x</p>   →   <p key="k2">x</p>
 ```
 Identical tag and text, still rebuilt. Key beats type — which makes `key` a state-reset switch.
+
+### State preservation: `&&` vs ternary
+
+Rule 3 said key beats type at a fixed position. Here's a case that trips people up for the opposite reason — the position itself silently shifts, even though it looks like "the same conditional slot."
+
+**Two `&&` expressions, each its own slot:**
+
+```jsx
+<div>
+  {isPlayerA && <Counter person="Taylor" />}
+  {!isPlayerA && <Counter person="Sarah" />}
+  <button>Next player</button>
+</div>
+```
+
+`isPlayerA = true`:
+
+```
+div
+├── Counter(Taylor)  ← position 0
+├── null             ← position 1
+└── button           ← position 2
+```
+
+`isPlayerA = false`:
+
+```
+div
+├── null             ← position 0
+├── Counter(Sarah)   ← position 1
+└── button           ← position 2
+```
+
+Only one `Counter` is ever visible, but there are **two `&&` expressions**, so there are always two slots — one renders `null` while the other renders the `Counter`. Flipping `isPlayerA` doesn't move a `Counter` from slot 0 to slot 1; it removes the `Counter` that was in slot 0 and creates a new one in slot 1. Rule 2 applies: `null` at position 0 vs `Counter` at position 0 is a type change, and the state resets.
+
+```
+Taylor's score: 5
+      ↓ (click "Next player")
+Sarah's score: 0        ❌ reset — new Counter, new position
+```
+
+**One ternary, one slot:**
+
+```jsx
+<div>
+  {isPlayerA ? <Counter person="Taylor" /> : <Counter person="Sarah" />}
+  <button>Next player</button>
+</div>
+```
+
+`isPlayerA = true`:
+
+```
+div
+├── Counter(Taylor)  ← position 0
+└── button           ← position 1
+```
+
+`isPlayerA = false`:
+
+```
+div
+├── Counter(Sarah)   ← position 0
+└── button           ← position 1
+```
+
+Same position, same type (`Counter`), every time — only `props.person` changes. Rule 1 applies: React reuses the fiber and just re-renders with new props.
+
+```
+Taylor's score: 5
+      ↓ (click "Next player")
+Sarah's score: 5        ✅ preserved — same Counter, same position, new props
+```
+
+| Pattern | Slots in the tree | Result |
+|---|---|---|
+| `cond && <Counter/>` + `!cond && <Counter/>` | Two — position changes | State **resets** |
+| `cond ? <Counter/> : <Counter/>` | One — position fixed | State **preserved** |
+
+**The trap:** `false` renders nothing to the DOM, so it's tempting to think it doesn't count. It still occupies a slot in the parent's children array — which is what reconciliation actually indexes by (§1.5 above). Don't reason about *visible* DOM position; reason about *position in the parent's rendered children*, visible or not.
 
 ### Single child vs list
 
@@ -576,6 +698,9 @@ React comparing the newly returned React Elements against the current fiber tree
 
 **Q: Is Fiber the Virtual DOM?**
 See §1 above — Elements describe **what**, Fiber describes **how**; "Virtual DOM" names the strategy, Fiber is the architecture that implements it. The follow-up interviewers actually want: this distinction is why "the VDOM re-rendered" is a category error. Fiber can redo *how* it builds a tree (interrupt, restart, run twice) without that ever being visible as extra *what* — your component output is the same either way, so the only symptom of Fiber's internal churn is timing, never incorrect UI.
+
+**Q: How did the Virtual DOM work before Fiber (pre–React 16)?**
+⚠️ *Trap — the tempting wrong answers are "it didn't" and "it used Fiber too."* React shipped elements and reconciliation in 2013, four years before Fiber. The comparison ran as ordinary recursion on the JS call stack instead of a fiber loop — same type/key diffing rules as today, same minimal-DOM-patch output. The only thing missing was interruptibility: a recursive call can't pause, so a large diff on React 15 could freeze the page until it finished. Fiber (2017) replaced *how* the walk executes, not *what* it compares. (§1, "Before Fiber existed.")
 
 ### Intermediate
 

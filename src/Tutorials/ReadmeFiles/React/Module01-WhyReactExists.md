@@ -25,19 +25,176 @@ JSX, the Virtual DOM, Fiber, hooks, Suspense — all machinery serving that sent
 
 ## 2. Historical Context
 
-```text
+React didn't appear out of nowhere. Each generation of web development solved a problem from the previous one, but also introduced new challenges. Eventually, the biggest challenge became **keeping the UI synchronized with application state**, which React was designed to solve.
+
+---
+
+### 1. Static HTML
+
+Early websites were just HTML files served by the server.
+
+```
+Browser
+   ↓
+HTML File
+   ↓
+Render
+```
+
+- Websites were static documents.
+- Every user saw the same content.
+- No user interaction or dynamic data.
+
+As websites evolved, developers needed personalized and dynamic content.
+
+---
+
+### 2. Server-Rendered Pages
+
+Instead of serving static files, the server generated HTML for each request.
+
+```
+Browser
+   ↓
+Request
+   ↓
+Server generates HTML
+   ↓
+Browser renders page
+```
+
+Examples: PHP, JSP, ASP.NET, Ruby on Rails, Django
+
+Every interaction (login, navigation, form submission, etc.) required the server to generate a new HTML page, causing a full page reload.
+
+As web applications became more interactive, developers wanted to update only parts of the page instead of reloading everything.
+
+---
+
+### 3. AJAX + jQuery
+
+AJAX allowed the browser to request only data instead of an entire webpage.
+
+```
+Browser
+   ↓
+AJAX Request
+   ↓
+JSON Response
+   ↓
+JavaScript updates DOM
+```
+
+jQuery made DOM manipulation much easier.
+
+```js
+$("#title").text("React");
+```
+
+Instead of reloading the page, developers could update individual elements.
+
+As applications grew larger, manually updating the DOM in multiple places became increasingly difficult.
+
+---
+
+### 4. Single Page Applications (SPA)
+
+Instead of navigating between HTML pages, the browser loaded a single page and JavaScript controlled everything.
+
+```
+index.html
+      ↓
+JavaScript
+      ↓
+UI Updates
+```
+
+Applications like Gmail and Facebook behaved more like desktop applications.
+
+However, developers were now manually updating hundreds of DOM elements throughout the application.
+
+---
+
+### 5. State Synchronization Problem
+
+The application had two representations of data:
+
+```
+JavaScript State and DOM
+```
+
+Whenever state changed, developers had to manually keep the DOM synchronized.
+
+```js
+cart.push(product);
+
+// Update every place displaying the cart count
+header.textContent = cart.length;
+sidebar.textContent = cart.length;
+checkout.textContent = cart.length;
+```
+
+As applications became larger, this manual synchronization became difficult, error-prone, and hard to maintain.
+
+This was the real problem React set out to solve.
+
+---
+
+### 6. React (2013)
+
+React introduced a new mental model:
+
+Instead of manually updating the DOM, developers describe **what the UI should look like for a given state**.
+
+```
+State
+   ↓
+Render UI
+   ↓
+React updates the DOM
+```
+
+Rather than writing:
+
+```js
+countElement.textContent = count;
+```
+
+Developers simply write:
+
+```jsx
+<h1>{count}</h1>
+```
+
+When `count` changes, React automatically updates the DOM.
+
+The developer no longer manages the DOM directly—React does.
+
+---
+
+# Evolution Timeline
+
+```
 Static HTML
    ↓
-Server-rendered pages  (every interaction = full reload)
+Server-Rendered Pages
    ↓
-AJAX + jQuery          (page persists, data changes underneath)
+AJAX + jQuery
    ↓
-Single Page Apps       (manual DOM manipulation everywhere)
+Single Page Applications
    ↓
-State synchronization problems   ← the actual pain
+State Synchronization Problems
    ↓
 React (2013)
 ```
+
+---
+
+The DOM is no longer the source of truth—**application state is**.
+
+> **UI = f(state)**
+
+Given the current state, React determines what the UI should look like and keeps the DOM synchronized automatically.
 
 **Important correction:** by 2013, AJAX had already solved full page reloads. React was **not** created to fix reloads or because "the DOM is slow." It was created because *keeping the UI in sync with changing state* had become the dominant engineering problem.
 
@@ -129,42 +286,7 @@ You never call `document.body.appendChild()`. You return a description and React
 
 ---
 
-## 4. Mental Model
-
-```
-IMPERATIVE (jQuery)              DECLARATIVE (React)
-  state changed                    state changed
-    → you compute the diff           → you describe the new UI
-    → you write DOM mutations        → React computes the diff
-    → miss one → stale UI            → React writes the DOM
-                                     → can't miss one
-```
-
-The payoff isn't speed. **A category of bug becomes unrepresentable.** "I forgot to update the badge" can't happen if you never update the badge — you describe what it shows, and React makes it so.
-
-**The equation:**
-
-```
-UI = f(state)
-```
-
-`f` is your component tree, and its output is a *description*, not DOM nodes.
-
-⚠️ **The subtlety everyone trips on:** "re-render" does **not** mean "touch the DOM." It means "call `f` again." Most re-renders produce identical output and cause **zero** DOM mutations. Confusing these two is the #1 cause of misguided `memo` usage (Module 9).
-
-**One-way data flow:**
-
-```
-  state ──────────→ UI
-    ↑                │
-    └── setState ────┘  (explicit)
-```
-
-Given a wrong value on screen, you trace: which state produced it → which `setState` wrote it. Finite and local — exactly what the digest cycle gave away.
-
----
-
-## 5. Internal Working (overview)
+## 4. Internal Working (overview)
 
 Detail comes in Modules 2–3. The shape:
 

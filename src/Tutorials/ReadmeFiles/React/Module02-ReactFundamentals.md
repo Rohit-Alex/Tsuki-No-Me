@@ -207,6 +207,8 @@ In production the property is simply absent (`'key' in props` → `false`). So "
 const el = <ExpensiveComponent />;   // ExpensiveComponent has NOT run
 ```
 
+<ExpensiveComponent /> does not execute ExpensiveComponent(). JSX creates a React Element—a lightweight object describing what should be rendered. React only calls the component later during the Render Phase when it traverses the element tree. That's why passing elements as props (children, slots) is cheap, and why components inside branches that aren't rendered incur essentially no rendering cost. React Elements are descriptions; component execution happens later.
+
 This allocates `{ type: ExpensiveComponent, props: {} }` — one object literal. React calls the function later, if and when it renders it. This is why passing elements as props (`children`, slots) costs nothing, and why `<Foo />` inside a ternary branch that isn't taken is free.
 
 ---
@@ -278,15 +280,40 @@ Note the separation: the root is created once, `render` may be called repeatedly
 
 Verified side by side:
 
-```
---- NO StrictMode ---            --- WITH StrictMode ---
-render body ran                  render body ran
-useState initializer ran         useState initializer ran
-effect SETUP                     render body ran            ← double-invoked
-                                 useState initializer ran   ← double-invoked
-                                 effect SETUP
-                                 effect CLEANUP             ← extra remount
-                                 effect SETUP
+
+```text
+WITHOUT StrictMode
+
+Counter()
+    ├── render body ran
+    ├── useState initializer ran
+    └── return JSX
+            │
+            ▼
+        Commit DOM
+            │
+            ▼
+      effect SETUP
+
+
+
+WITH StrictMode (Development)
+
+Counter()  (1st render - discarded)
+    ├── render body ran
+    ├── useState initializer ran
+    └── return JSX
+
+Counter()  (2nd render)
+    ├── render body ran
+    ├── useState initializer ran
+    └── return JSX
+            │
+            ▼
+        Commit DOM
+            │
+            ▼
+effect SETUP → effect CLEANUP → effect SETUP
 ```
 
 **Double-invoked** (to surface impure render logic): component bodies, `useState` initializers, updater functions, `useMemo` callbacks, `useReducer` reducers, and class `constructor`/`render`/`shouldComponentUpdate`.

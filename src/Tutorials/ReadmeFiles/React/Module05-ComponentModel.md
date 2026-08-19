@@ -295,6 +295,40 @@ stable context value -> consumer re-rendered anyway? true (because PARENT re-ren
 
 That's normal child re-rendering (Module 2 §5.3), not a context bug. Context only *adds* re-renders; it never removes the ordinary ones.
 
+### Two more cases people assume wrongly
+
+The example above is easy to misread as "only components using context re-render." Two more measurements close the gap ([`context2.cjs`](./verify/context2.cjs)) — same setup, plus a plain (non-memo) sibling and a **memoized component that reads context, nested a level deep inside an unmemoized wrapper**:
+
+```jsx
+function App() {
+  const [n, setN] = useState(0);
+  return (
+    <Ctx.Provider value={{ n }}>
+      <Reader />                          {/* plain, uses context */}
+      <PlainSibling />                    {/* ❌ no memo, no context */}
+      <MemoSibling />                     {/* memo, no context */}
+      <Middle>                            {/* plain wrapper */}
+        <MemoReaderDeep />                {/* memo, BUT uses context */}
+      </Middle>
+    </Ctx.Provider>
+  );
+}
+```
+
+```
+after mount:       { reader: 1, plainSibling: 1, memoSibling: 1, memoReaderDeep: 1 }
+after 2 updates:   { reader: 3, plainSibling: 3, memoSibling: 1, memoReaderDeep: 3 }
+```
+
+**Case 1 — a plain, non-memoized sibling that doesn't even touch context still re-renders 3 times.** Nothing to do with `Ctx` at all — this is just Module 2 §5.3's default: a parent re-rendering re-renders every child unless *that specific child* is memoized. `memo` is opt-in per component, not automatic for the tree.
+
+**Case 2 — a memoized component that reads context re-renders 3 times anyway, even nested inside another component.** `memo` only blocks a re-render triggered by the *parent* passing the same props. It does nothing to stop a re-render triggered by a context value the component itself subscribes to — and it makes no difference that `Middle` in between isn't memoized; context skips straight past intermediate components to whoever calls `useContext`.
+
+So the accurate rule has two independent parts:
+
+1. **Not memoized → you re-render whenever your parent does**, context or not.
+2. **Memoized → you skip parent-driven re-renders, but you still re-render whenever any context you read changes** — memo and context subscriptions are two separate bailout mechanisms, and either one alone can still fire a render the other would have blocked.
+
 ### Two fixes
 
 **1. Stabilise the value** so consumers don't re-render on unrelated parent renders:

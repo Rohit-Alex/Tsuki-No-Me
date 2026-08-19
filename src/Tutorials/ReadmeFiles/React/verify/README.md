@@ -50,6 +50,7 @@ node inspect.cjs
 | Script | Proves |
 |---|---|
 | `context.cjs` | **The context performance trap.** Over 2 updates: a context consumer re-rendered every time (`reader=3`), while a `memo`'d **non**-consumer never did (`memoSibling=1`). `memo` cannot stop context re-renders. Also shows a referentially stable value still re-renders consumers when the parent re-renders. |
+| `context2.cjs` | **Two follow-on cases.** A plain, non-memoized sibling that doesn't even touch context still re-renders on every parent update (`plainSibling=3`) — ordinary child cascading, unrelated to context. A **memoized** component that *does* read context, nested inside an unmemoized wrapper, also re-renders every time (`memoReaderDeep=3`) — memo blocks parent-driven re-renders only, not context-driven ones. |
 | `portal.cjs` | **Portals move the DOM node, not the React tree.** A button portalled into a separate host is *not* a DOM child of `#root`, yet context still reaches it and its click still fires the React parent's `onClick`. |
 | `controlled.cjs` | The two form warnings, verbatim: `value` without `onChange`, and switching an uncontrolled input to controlled. |
 
