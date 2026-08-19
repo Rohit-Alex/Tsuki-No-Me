@@ -327,61 +327,61 @@ const treat0AsTruthy = (value) => {
 </details>
 
 
-## Question 7: Deep Equal
+## Question 7: Deep Copy
 
-Implement a `deepEqual()` function that recursively compares two values and returns whether they are deeply equal.
+Implement a `deepCopy()` function that recursively compares two values and returns whether they are deeply copy.
 
 ### Test Cases
 
 #### Primitive values
 
 ```javascript
-deepEqual(1, 1);            // true
-deepEqual(1, "1");          // false
-deepEqual(NaN, NaN);        // true
-deepEqual(-0, +0);          // false
-deepEqual(+0, +0);          // true
-deepEqual(null, null);      // true
-deepEqual(null, undefined); // false
+deepCopy(1, 1);            // true
+deepCopy(1, "1");          // false
+deepCopy(NaN, NaN);        // true
+deepCopy(-0, +0);          // false
+deepCopy(+0, +0);          // true
+deepCopy(null, null);      // true
+deepCopy(null, undefined); // false
 ```
 
 #### Flat objects
 
 ```javascript
-deepEqual({ x: 1, y: 2 }, { y: 2, x: 1 }); // true
+deepCopy({ x: 1, y: 2 }, { y: 2, x: 1 }); // true
 ```
 
 #### Nested objects & arrays
 
 ```javascript
-deepEqual({ a: { x: 1 } }, { a: { x: 1 } }); // true
-deepEqual([1, [2, 3]], [1, [2, 3]]);         // true
-deepEqual({ a: 1 }, { a: 1, b: 2 });         // false
+deepCopy({ a: { x: 1 } }, { a: { x: 1 } }); // true
+deepCopy([1, [2, 3]], [1, [2, 3]]);         // true
+deepCopy({ a: 1 }, { a: 1, b: 2 });         // false
 ```
 
 #### `NaN` inside objects
 
 ```javascript
-deepEqual({ v: NaN }, { v: NaN }); // true
+deepCopy({ v: NaN }, { v: NaN }); // true
 ```
 
 #### Array vs Object
 
 ```javascript
-deepEqual([1, 2], { 0: 1, 1: 2 }); // false
+deepCopy([1, 2], { 0: 1, 1: 2 }); // false
 ```
 
 #### Dates
 
 ```javascript
-deepEqual(new Date(0), new Date(0)); // true
+deepCopy(new Date(0), new Date(0)); // true
 ```
 
 #### Regular Expressions
 
 ```javascript
-deepEqual(/abc/g, /abc/g); // true
-deepEqual(/abc/g, /abc/i); // false
+deepCopy(/abc/g, /abc/g); // true
+deepCopy(/abc/g, /abc/i); // false
 ```
 
 ---
@@ -402,7 +402,7 @@ deepEqual(/abc/g, /abc/i); // false
 <summary><strong>Show Answer</strong></summary>
 
 ```javascript
-function deepEqual(a, b) {
+function deepCopy(a, b) {
   // Handles primitives, NaN, -0/+0, and identical object references.
   if (Object.is(a, b)) {
     return true;
@@ -445,7 +445,7 @@ function deepEqual(a, b) {
       return false;
     }
 
-    if (!deepEqual(a[key], b[key])) {
+    if (!deepCopy(a[key], b[key])) {
       return false;
     }
   }

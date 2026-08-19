@@ -255,23 +255,19 @@ console.log([1, 5, 7, 2, 9].myReduce((acc, currVal) => acc + currVal)); // no in
 ### Question 9 — `myFlat`
 
 ```javascript
-const flatArray = (ip, currLevel, targetLevel) => {
-    let op = [];
-    for (let i = 0; i < ip.length; i++) {
-        const currEle = ip[i];
-        if (typeof currEle === "object" && Array.isArray(currEle)) {
-            currLevel++;
-            if (targetLevel >= currLevel) {
-                op = op.concat(flatArray(currEle, currLevel, targetLevel));
-            } else {
-                op.push(currEle);
-            }
+const flatten = (currArr, currLvl, targetLvl) => {
+    const op = [];
+
+    for (const val of currArr) {
+        if (Array.isArray(val) && currLvl <= targetLvl) {
+            op.push(...flatten(val, currLvl + 1));
         } else {
-            op.push(currEle);
+            op.push(val);
         }
     }
+
     return op;
-};
+};   
 
 Array.prototype.myFlat = function (level) {
     return flatArray(this, 0, level);
