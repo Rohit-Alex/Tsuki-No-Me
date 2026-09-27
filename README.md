@@ -901,6 +901,7 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
 ### 49. Asynchronous behavior
 
 - Event loop — [click to open](src/Tutorials/ReadmeFiles/eventLoop.md)
+- `requestAnimationFrame` — where it sits in the event loop, the React animation pattern, why it doesn't overflow the stack — [click to open](src/Tutorials/ReadmeFiles/RequestAnimationFrame.md)
 - Async behavior and why we need promises — [click to open](src/Tutorials/ReadmeFiles/Asynchronous.md)
 - `async`/`await` & error handling — [click to open](src/Tutorials/ReadmeFiles/AsyncAwait.md)
 - Promise variants — [click to open](src/Tutorials/ReadmeFiles/PromiseVariant.md)
