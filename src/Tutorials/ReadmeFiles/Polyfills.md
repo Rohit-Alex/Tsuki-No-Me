@@ -2,7 +2,7 @@
 
 A polyfill re-implements a native method's behavior in plain JavaScript. Writing them is a common interview exercise because it tests whether you actually understand what the built-in does under the hood, not just how to call it.
 
-> This file covers `Promise.all`/`allSettled`/`race`/`any` (see below), `Object.is`, and array method polyfills. For implementing the `Promise` constructor itself — `then`/`catch`/`finally`/`resolve`/`reject`, built up incrementally with each gap and fix — see the dedicated [PromisePolyfill.md](PromisePolyfill.md).
+> This file covers `Promise.all`/`allSettled`/`race`/`any` (see below), `Object.is`, array method polyfills, and `document.getElementById`. For implementing the `Promise` constructor itself — `then`/`catch`/`finally`/`resolve`/`reject`, built up incrementally with each gap and fix — see the dedicated [PromisePolyfill.md](PromisePolyfill.md).
 
 ## `Function.prototype.call` / `apply` / `bind`
 
@@ -837,5 +837,112 @@ console.log(myNew(PrimitiveCtor, "Y")); // PrimitiveCtor { name: 'Y' }
 ```
 
 > **Note:** if a constructor returns a primitive value (string, number, boolean, etc.), `new` ignores it completely and returns the newly created object instead — only explicit object/function returns can override the new instance.
+
+</details>
+
+## `document.getElementById`
+
+> The DOM is a tree. Every element has a list of child elements (`element.children`), and each child has its own children, all the way down. `getElementById` is just "search this tree for the first element with this `id`". For more on reading and changing the DOM, see [DomManipulation.md](DomManipulation.md).
+
+### Question 21 — `myGetElementById` (recursive)
+
+```html
+<div id="app">
+    <header id="top"><h1 id="title">Hi</h1></header>
+    <main>
+        <p id="dup">first</p>
+        <section><p id="dup">second</p></section>
+    </main>
+</div>
+```
+
+```javascript
+function myGetElementById(id, root = document.documentElement) {
+    if (root.id === id) return root;
+
+    for (const child of root.children) {
+        const found = myGetElementById(id, child);
+        if (found) return found;
+    }
+
+    return null;
+}
+
+console.log(myGetElementById("title").textContent);
+console.log(myGetElementById("dup").textContent);
+console.log(myGetElementById("missing"));
+console.log(myGetElementById("title") === document.getElementById("title"));
+```
+
+<details><summary>Show Answer</summary>
+
+```
+Hi
+first
+null
+true
+```
+
+**What it does:**
+- Starts at the top of the page, `document.documentElement` (the `<html>` element).
+- Checks the current element. If its `id` matches, return it right away.
+- If not, visit each child in order, and search inside that child the same way.
+- As soon as any child's search finds a match, pass it straight up and stop.
+- If nothing matches anywhere, return `null` — the same thing the real method returns.
+
+**Why "first" and not "second"?** An `id` should be unique, but the browser does not stop you from using it twice. When that happens, the real `getElementById` returns the one that comes **first in the HTML source** (called *document order*). Our search checks an element before its children, and goes through children left to right. That is exactly the order you read the HTML, top to bottom. So the first match we hit is the first one in the source.
+
+Think of it like looking for a file in folders. You open a folder, check its name, then open its first sub-folder and search that fully before moving to the second sub-folder. You never skip ahead, so the first file you find is the one listed highest.
+
+**Why `children` and not `childNodes`?** `childNodes` also includes text and comment nodes (for example, the whitespace between tags). Those are not elements and have no `id`, so they are wasted work. `children` gives only elements.
+
+**Why return early?** Once we find a match there is no reason to keep looking. The real method also stops at the first match, so returning early is both faster and correct.
+
+</details>
+
+### Question 22 — Iterative Version With a Stack (and the Ordering Trap)
+
+Interviewers often follow up with: *"Can you do it without recursion?"* A very deep tree can overflow the call stack, so they want to see you manage your own stack.
+
+```javascript
+function myGetElementByIdIterative(id, root = document.documentElement) {
+    const stack = [root];
+
+    while (stack.length) {
+        const node = stack.pop();
+        if (node.id === id) return node;
+
+        // push children in REVERSE so the first child is popped first
+        for (let i = node.children.length - 1; i >= 0; i--) {
+            stack.push(node.children[i]);
+        }
+    }
+
+    return null;
+}
+
+console.log(myGetElementByIdIterative("dup").textContent);
+```
+
+What would it print if the loop were replaced with `stack.push(...node.children);`?
+
+<details><summary>Show Answer</summary>
+
+```
+first
+```
+
+With `stack.push(...node.children)` it prints `second` — which is **wrong**, because the real `getElementById("dup")` returns `first`.
+
+**Why the reverse push matters:** a stack is last-in, first-out, like a pile of plates. You always take the top plate, which is the one you put down last. If you put the children down in normal order (`header`, then `main`), `main` ends up on top and gets searched first. Inside `main`, `section` ends up on top of the first `<p>`, so the `<p>` inside `section` ("second") is found before the earlier `<p>` ("first").
+
+Pushing children in reverse puts the **first** child on top of the pile. Now the stack visits elements in the same top-to-bottom order as the recursive version, and matches the browser.
+
+**Recursive vs iterative:**
+- Both visit every element at most once, so both are O(n) in the number of elements.
+- The recursive version is shorter and easier to read.
+- The iterative version cannot hit "Maximum call stack size exceeded" on a very deep tree, because the stack is a normal array that lives on the heap.
+
+> **Note:** the real `getElementById` is much faster than either polyfill. Browsers keep an internal lookup table from `id` to element and update it whenever the DOM changes, so they rarely need to walk the tree at all. The polyfill shows *what* the method returns, not *how* the browser does it.
 
 </details>
