@@ -544,11 +544,15 @@ Object.is(obj, obj)     // true
 
 see [JS DSA Questions](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-deep-equal)
 
-### 28. Functions, arrow functions (without `this`), function expressions, callbacks, IIFE
+### 28. Lexical scope & lexical environment — scope chain, object literals vs scopes, lexical `this`
+
+[Click to open](src/Tutorials/ReadmeFiles/LexicalEnvironment.md)
+
+### 29. Functions, arrow functions (without `this`), function expressions, callbacks, IIFE
 
 [Click to open](src/Tutorials/ReadmeFiles/Functions.md)
 
-### 29. String methods
+### 30. String methods
 
 `slice`, `substring`, `substr` (deprecated, optional to know), `includes`, `at`, `trim`, `padStart`, `padEnd`, `split`, `join`, `match`, `matchAll`
 
@@ -577,7 +581,7 @@ see [JS DSA Questions](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-de
   String.fromCharCode(65, 66, 67); // returns "ABC"
   ```
 
-### 30. Object methods
+### 31. Object methods
 
 - Different ways to create an object — `Object.assign`, object literal, `new` keyword, classes, constructor function
 - Constructor functions for creating objects
@@ -590,11 +594,11 @@ see [JS DSA Questions](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-de
 
 **Iterator methods:** [click to open](src/Tutorials/ReadmeFiles/Iterators.md)
 
-### 31. Proxy and Reflect — traps, use cases (validation, logging, negative indexing), and gotchas
+### 32. Proxy and Reflect — traps, use cases (validation, logging, negative indexing), and gotchas
 
 [Click to open](src/Tutorials/ReadmeFiles/Proxy.md)
 
-### 32. Array methods
+### 33. Array methods
 
 - **`push()`** — adds to the end. Returns the new length. Mutates the original array.
 - **`pop()`** — removes the last element. Returns the removed element. Mutates the original array.
@@ -704,7 +708,7 @@ Dedicated file for arrays with the methods above: [click to open](src/Tutorials/
 
 Refer to [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) for more info.
 
-### 33. `delete` operator
+### 34. `delete` operator
 
 Returns `true` if the object property was deleted, else `false`.
 
@@ -734,7 +738,7 @@ console.log(delete age);  // true — here we're deleting window.age
 
 > **Note:** variables declared with `var`, `let`, or `const` cannot be deleted with the `delete` operator.
 
-### 34. `sort` method on arrays and strings
+### 35. `sort` method on arrays and strings
 
 - `Math.random()`
 - `Math.ceil()`
@@ -745,27 +749,27 @@ console.log(delete age);  // true — here we're deleting window.age
 
 > *Note: give some scenarios and ask which data type would be chosen.*
 
-### 35. Map and Set
+### 36. Map and Set
 
 [Click to open](src/Tutorials/ReadmeFiles/MapSetObject.md)
 
-### 36. Components of a URL & URL methods
+### 37. Components of a URL & URL methods
 
 [Click to open](src/Tutorials/ReadmeFiles/url.md)
 
-### 37. `JSON.stringify`, `JSON.parse`, LocalStorage, SessionStorage, cookies
+### 38. `JSON.stringify`, `JSON.parse`, LocalStorage, SessionStorage, cookies
 
 [Click to open](src/Tutorials/ReadmeFiles/StorageAndJSON.md)
 
-### 38. ES6 concepts — spread, destructuring, rest, optional chaining
+### 39. ES6 concepts — spread, destructuring, rest, optional chaining
 
 [Click to open](src/Tutorials/ReadmeFiles/ES6.md)
 
-### 39. Shallow copy and deep copy, `structuredClone`
+### 40. Shallow copy and deep copy, `structuredClone`
 
 [Click to open](src/Tutorials/ReadmeFiles/shallow&DeepCopy.md)
 
-### 40. Constructor property of an object
+### 41. Constructor property of an object
 
 Returns a reference to the constructor function that created the instance. This property holds a reference to the function itself, not a string containing its name.
 
@@ -786,9 +790,9 @@ const n = 3;
 n.constructor === Number; // true
 ```
 
-### 41. How would you check if a given argument is an array?
+### 42. How would you check if a given argument is an array?
 
-Use `Array.isArray(value)` — see the [Static `Array` methods](#32-array-methods) note under Array methods above for why this is preferred over `value instanceof Array` or `typeof value === 'object'` (the latter can't distinguish an array from any other object at all).
+Use `Array.isArray(value)` — see the [Static `Array` methods](#33-array-methods) note under Array methods above for why this is preferred over `value instanceof Array` or `typeof value === 'object'` (the latter can't distinguish an array from any other object at all).
 
 *Also, explain semicolons.*
 
@@ -822,15 +826,15 @@ alert("Hi")
 
 ## Phase 2: Advanced JavaScript
 
-### 42. Hoisting
+### 43. Hoisting
 
 [Click to open](src/Tutorials/ReadmeFiles/Hoisting.md)
 
-### 43. `call`, `apply`, `bind`
+### 44. `call`, `apply`, `bind`
 
 [Click to open](src/Tutorials/ReadmeFiles/CallApplyBind.md)
 
-### 44. Prototype inheritance & OOP in JS
+### 45. Prototype inheritance & OOP in JS
 
 - Classes are used for making scalable objects.
 - Makes use of:
@@ -843,7 +847,7 @@ alert("Hi")
 [click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
 [Click to open](src/Tutorials/ReadmeFiles/PrototypeChain.md) · 
 
-### 45. What does the `instanceof` operator do?
+### 46. What does the `instanceof` operator do?
 
 The `instanceof` operator checks whether the `constructor.prototype` appears anywhere in the prototype chain of an object. It returns a boolean.
 
@@ -886,19 +890,19 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
 
 > **Note:** `instanceof` walks the prototype chain at the time it runs, checking against whatever `constructor.prototype` currently *is* — not what it was when the object was created. That's why reassigning `Bar.prototype` after `b` was constructed makes `b instanceof Bar` return `false`.
 
-### 46. The `this` keyword
+### 47. The `this` keyword
 
 [Click to open](src/Tutorials/ReadmeFiles/thisExample.md)
 
-### 47. Closures
+### 48. Closures
 
 [Click to open](src/Tutorials/ReadmeFiles/closure.md)
 
-### 48. Currying
+### 49. Currying
 
 [Click to open](src/Tutorials/ReadmeFiles/currying.md)
 
-### 49. Asynchronous behavior
+### 50. Asynchronous behavior
 
 - Event loop — [click to open](src/Tutorials/ReadmeFiles/eventLoop.md)
 - `requestAnimationFrame` — where it sits in the event loop, the React animation pattern, why it doesn't overflow the stack — [click to open](src/Tutorials/ReadmeFiles/RequestAnimationFrame.md)
@@ -911,7 +915,7 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
   - `Promise.race`
 - Generator functions — [click to open](src/Tutorials/ReadmeFiles/generators.md)
 
-### 50. Polyfills
+### 51. Polyfills
 
 [Click to open](src/Tutorials/ReadmeFiles/Polyfills.md)
 ---
