@@ -393,6 +393,7 @@ const counter = (function () {
 
 console.log(counter.increment());
 console.log(counter.increment());
+console.log(counter.getCount());
 console.log(counter.count);
 ```
 
@@ -401,6 +402,7 @@ console.log(counter.count);
 
 ```
 1
+2
 2
 undefined
 ```
