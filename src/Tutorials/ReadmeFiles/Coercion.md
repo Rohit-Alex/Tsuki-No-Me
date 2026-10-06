@@ -298,8 +298,8 @@ Number({})                    // NaN => Note: Object mein kuch bhi ho "NaN" hi a
 Number([])                    // 0
 Number([undefined])           // 0 => string([undefined])=> '' => Number('') => 0
 Number([null])                // 0 => string([null])=> '' => Number('') => 0
-Number([null, undefined])     // 0 => string([null, undefined])=> ',' => Number(',') => NaN
-Number([null, undefined, 5])  // 0 => string([null, undefined, 5])=> ',,5' => Number(',') => NaN
+Number([null, undefined])     // NaN => string([null, undefined])=> ',' => Number(',') => NaN
+Number([null, undefined, 5])  // NaN => string([null, undefined, 5])=> ',,5' => Number(',') => NaN
 Number([24])                  // 24 => String([24]) =>'24' => Number('24') => 24
 Number([24, 5])               // NaN => String([24, 5]) => '24,5' => Number('24,5') => NaN
 ```
@@ -411,7 +411,7 @@ true
 ### Question 6
 
 ```javascript
-console.log("foo" + + "bar");
+console.log("foo" + +"bar");
 ```
 
 <details>
@@ -829,7 +829,7 @@ true
 
 </details>
 
-## Special Value: -0
+## Special Value: -0 (For most relational comparison -0 is treated as 0. .toString() as well)
 
 **Setup used by the questions below:**
 
