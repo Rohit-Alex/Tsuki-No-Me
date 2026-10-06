@@ -1,6 +1,6 @@
 # Array Methods and Exercises
 
-> See also the main [Array methods](../../../README.md#32-array-methods) reference in the README for the full method list (`push`/`pop`/`map`/`filter`/`find`/... and the static `Array.isArray`/`Array.from`/`Array.of`). This file focuses on `Array` constructor quirks, generating arrays programmatically, and worked practice exercises.
+> See also the main [Array methods](../../../README.md#33-array-methods) reference in the README for the full method list (`push`/`pop`/`map`/`filter`/`find`/... and the static `Array.isArray`/`Array.from`/`Array.of`). This file focuses on `Array` constructor quirks, generating arrays programmatically, and worked practice exercises.
 
 ## The `Array` Constructor — Quirks
 
