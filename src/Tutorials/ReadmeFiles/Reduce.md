@@ -178,6 +178,6 @@ console.log(allSongs);
 ]
 ```
 
-**Explanation:** The initial value here isn't an empty array — it's `["Until i found you"]`, a **seed** value that's already got one song in it. Each iteration spreads the accumulator so far, plus that person's `favSongs`, into a fresh array — a `reduce`-based alternative to `songs.flatMap(s => s.favSongs)` (see [Array methods](../../../README.md#32-array-methods) for `flatMap`), useful specifically because it lets you seed the result with something extra up front.
+**Explanation:** The initial value here isn't an empty array — it's `["Until i found you"]`, a **seed** value that's already got one song in it. Each iteration spreads the accumulator so far, plus that person's `favSongs`, into a fresh array — a `reduce`-based alternative to `songs.flatMap(s => s.favSongs)` (see [Array methods](../../../README.md#33-array-methods) for `flatMap`), useful specifically because it lets you seed the result with something extra up front.
 
 </details>
