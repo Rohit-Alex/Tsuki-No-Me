@@ -94,11 +94,12 @@ This is *why* puzzles like `{}+[]+{}+[1]` (Question 55 below) behave the way the
 
 ```javascript
 console.log(null.toString());
+console.log(undefined.toString());
 ```
 
 <details>
 <summary>Show Answer</summary>
-**TypeError** : null` has no `toString` method — it's not an object
+**TypeError** : null/undefined` has no `toString` method — it's not an object
 </details>
 
 ```javascript
