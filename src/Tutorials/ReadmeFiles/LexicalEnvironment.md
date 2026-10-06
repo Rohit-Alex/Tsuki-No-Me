@@ -370,6 +370,12 @@ for (var j = 0; j < 3; j++) withVar.push(() => j);
 withVar.map((f) => f()); // [3, 3, 3] — one shared j in the function/global environment
 ```
 
+every time this executes:
+```
+() => j
+```
+JavaScript creates a new function object.
+That function needs to know what `j` means, so the function gets a reference to its lexical environment.
 ```
 Function #1
    │
