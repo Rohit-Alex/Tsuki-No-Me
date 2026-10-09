@@ -25,11 +25,14 @@
   3. Suspend the current async function right here, unconditionally —
      regardless of whether that Promise is already settled or still
      pending. Control returns to the caller immediately.
+     (if some part of code is left after await -> considered pending)
+     (if returned a plain text/value -> considered resolved)
+     (if returned a promise (e.g. Promise.resolve(5)) -> considered pending (promise adopts the state of the returned promise, which costs a microtask hop to resolve))
        │
        ▼
   4. Once that Promise settles (fulfills or rejects) — whether that
      takes zero extra ticks (already-resolved) or many (a pending
-     setTimeout/fetch/etc.) — the rest of the async function is
+     setTimeout/fetch/etc.) — the rest of the async function after await is
      enqueued as a microtask.
        │
        ▼
@@ -1048,7 +1051,7 @@ Settimeout
 1. `"started"` logs.
 2. `setTimeout(...)` registers a **macrotask** (lowest priority — see [eventLoop.md](eventLoop.md) for the microtask-vs-macrotask queue distinction) and returns immediately; nothing logs yet.
 3. `new Promise((resolve, reject) => { ... })` — per the [prerequisite section](#prerequisite-a-promises-executor-runs-synchronously-immediately), its executor runs immediately: `"Promise"` logs, `resolve()` is called. `.then(...)` is registered on the now-fulfilled promise (queued as microtask #1).
-4. `async1()` is called — runs synchronously: `"async1 started"` logs, then reaches `await async2().then(...)`. Per the rule at the top of this file, the expression to the right of `await` is evaluated *fully* first: `async2()` is called and runs synchronously (`"async 2"` logs, implicitly returns `Promise.resolve(undefined)`), and `.then(r => console.log("hey", r))` is immediately chained onto it (queued as microtask #2). *Then*, and only then, does `async1` actually suspend on the combined `.then()`-chain promise.
+4. `async1()` is called — runs synchronously: `"async1 started"` logs, then reaches `await async2().then(...)` which is basically `await (async2().then(...)))`. Per the rule at the top of this file, the expression to the right of `await` is evaluated *fully* first: `async2()` is called and runs synchronously (`"async 2"` logs, implicitly returns `Promise.resolve(undefined)`), and `.then(r => console.log("hey", r))` is immediately chained onto it (queued as microtask #2). *Then*, and only then, does `async1` actually suspend on the combined `.then()`-chain promise.
 5. Back in the outer synchronous code: `"Ended"` logs.
 
 Synchronous phase over — microtask queue drains in registration order:

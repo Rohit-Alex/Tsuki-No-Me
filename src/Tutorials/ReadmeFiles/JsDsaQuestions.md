@@ -327,61 +327,61 @@ const treat0AsTruthy = (value) => {
 </details>
 
 
-## Question 7: Deep Copy
+## Question 7: Deep Compare
 
-Implement a `deepCopy()` function that recursively compares two values and returns whether they are deeply copy.
+Implement a `deepCompare()` function that recursively compares two values and returns whether they are deeply equal.
 
 ### Test Cases
 
 #### Primitive values
 
 ```javascript
-deepCopy(1, 1);            // true
-deepCopy(1, "1");          // false
-deepCopy(NaN, NaN);        // true
-deepCopy(-0, +0);          // false
-deepCopy(+0, +0);          // true
-deepCopy(null, null);      // true
-deepCopy(null, undefined); // false
+deepCompare(1, 1);            // true
+deepCompare(1, "1");          // false
+deepCompare(NaN, NaN);        // true
+deepCompare(-0, +0);          // false
+deepCompare(+0, +0);          // true
+deepCompare(null, null);      // true
+deepCompare(null, undefined); // false
 ```
 
 #### Flat objects
 
 ```javascript
-deepCopy({ x: 1, y: 2 }, { y: 2, x: 1 }); // true
+deepCompare({ x: 1, y: 2 }, { y: 2, x: 1 }); // true
 ```
 
 #### Nested objects & arrays
 
 ```javascript
-deepCopy({ a: { x: 1 } }, { a: { x: 1 } }); // true
-deepCopy([1, [2, 3]], [1, [2, 3]]);         // true
-deepCopy({ a: 1 }, { a: 1, b: 2 });         // false
+deepCompare({ a: { x: 1 } }, { a: { x: 1 } }); // true
+deepCompare([1, [2, 3]], [1, [2, 3]]);         // true
+deepCompare({ a: 1 }, { a: 1, b: 2 });         // false
 ```
 
 #### `NaN` inside objects
 
 ```javascript
-deepCopy({ v: NaN }, { v: NaN }); // true
+deepCompare({ v: NaN }, { v: NaN }); // true
 ```
 
 #### Array vs Object
 
 ```javascript
-deepCopy([1, 2], { 0: 1, 1: 2 }); // false
+deepCompare([1, 2], { 0: 1, 1: 2 }); // false
 ```
 
 #### Dates
 
 ```javascript
-deepCopy(new Date(0), new Date(0)); // true
+deepCompare(new Date(0), new Date(0)); // true
 ```
 
 #### Regular Expressions
 
 ```javascript
-deepCopy(/abc/g, /abc/g); // true
-deepCopy(/abc/g, /abc/i); // false
+deepCompare(/abc/g, /abc/g); // true
+deepCompare(/abc/g, /abc/i); // false
 ```
 
 ---
@@ -403,13 +403,30 @@ deepCopy(/abc/g, /abc/i); // false
 
 ```javascript
 function deepCopy(a, b) {
-  // Handles primitives, NaN, -0/+0, and identical object references.
+
+  /* Handles primitives, NaN, -0/+0, and identical object references.
+
+    Object.is(10, 10);        // true
+    Object.is("hello", "hello"); // true
+    Object.is(NaN, NaN);      // true
+    Object.is(null, null);    // true
+
+    const obj = {};
+    Object.is(obj, obj);      // true
+  */
+
   if (Object.is(a, b)) {
     return true;
   }
 
-  // If either value is primitive (or null), they cannot be equal here
-  // because Object.is() already handled all equal primitive cases.
+  /* If either value is primitive (or null), they cannot be equal here
+     because Object.is() already handled all equal primitive cases.
+
+    deepEqual(10, 20);              // false
+    deepEqual("hello", "world");    // false
+    deepEqual({ age: 25 }, 25);     // false
+    deepEqual(null, {});            // false
+  */
   if (
     a === null ||
     b === null ||
@@ -419,7 +436,14 @@ function deepCopy(a, b) {
     return false;
   }
 
-  // Different object types (Array vs Object, Date vs Object, etc.)
+
+
+  /* Different object types (Array vs Object, Date vs Object, etc.)
+
+      deepEqual([], {});                // false
+      deepEqual(new Date(), {});        // false
+      deepEqual(new RegExp("abc"), {}); // false
+  */
   if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
     return false;
   }
@@ -476,16 +500,59 @@ const deepFlatArr = (arr) => {
   return op;
 };
 
-const deepClone = (ipObj) => {
-  if (ipObj === null || typeof ipObj !== "object") return ipObj;
-  if (Array.isArray(ipObj)) return ipObj.map((e) => deepClone(e));
-  const op = {};
-  for (let key in ipObj) op[key] = deepClone(ipObj[key]);
-  return op;
-};
+### Question 13 — A Naive Recursive Implementation
 
-console.log(deepClone([1, {a: 1}, 2]));   // [ 1, { a: 1 }, 2 ]
-console.log(deepClone(null));             // null
+```javascript
+function deepCloneNaive(value) {
+  if (value === null || typeof value !== 'object') return value;
+ 
+
+  const result = Array.isArray(value) ? [] : {};
+  for (const key in value) {
+    result[key] = deepCloneNaive(value[key]);
+  }
+  return result;
+}
+
+const original = { name: 'Amane', nested: { deep: { value: 42 } } };
+const cloned = deepCloneNaive(original);
+cloned.nested.deep.value = 999;
+
+console.log(original.nested.deep.value);
+console.log(cloned.nested.deep.value);
 ```
 
+<details>
+<summary>Show Answer</summary>
+
+```
+42
+999
+```
+
+**Explanation:** Primitives (`typeof value !== 'object'`, plus the explicit `null` check since `typeof null === 'object'`) are returned as-is — copying a primitive by value is automatic in JS, nothing to do there. Arrays and objects recurse into each of their own values, rebuilding a brand new structure at every level, all the way down. This correctly handles Questions 5–8's cases.
+
+</details>
+
+### Question 14 — The Naive Version's Circular Reference Bug
+
+```javascript
+const circular = { a: 1 };
+circular.self = circular;
+
+deepCloneNaive(circular);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+RangeError: Maximum call stack size exceeded
+```
+
+**Explanation:** `deepCloneNaive` has no memory of what it's already visited — cloning `circular.self` means cloning `circular` again, which means cloning `circular.self` again, forever, until the call stack overflows. This is the exact same category of bug as `JSON.stringify` throwing on circular data (Question 10's contrast), just manifesting as an infinite loop instead of an immediate, clean error.
+
+</details>
+
+### Question 15 — Fixing It with a `WeakMap`
 </details>

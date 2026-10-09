@@ -135,9 +135,9 @@ function myObjectIs(x, y) {
     const xNegZero = isNegZero(x);
     const yNegZero = isNegZero(y);
 
-    if (xNegZero || yNegZero) {
-        return xNegZero && yNegZero;
-    } else if (isItNaN(x) && isItNaN(y)) {
+    if ((xNegZero && !yNegZero) || (!xNegZero && yNegZero) ) {
+        return false;
+    }  else if (isItNaN(x) && isItNaN(y)) {
         return true;
     } else {
         return x === y;
@@ -259,7 +259,7 @@ const flatten = (currArr, currLvl, targetLvl) => {
     const op = [];
 
     for (const val of currArr) {
-        if (Array.isArray(val) && currLvl <= targetLvl) {
+        if (Array.isArray(val) && currLvl < targetLvl) {
             op.push(...flatten(val, currLvl + 1));
         } else {
             op.push(val);

@@ -149,6 +149,27 @@ numArr.sort((a, b) => {
 console.log(numArr);
 ```
 
+here we are hardcoding the proiority, we can do it in a better way by using a priority array and then using indexOf to get the index of the element in the priority array and then we can use that index to sort the array.
+
+```javascript
+const numArr = [2, 10, 24, 1998, 1999]; // already ascending, from Question 3
+const priority = {
+  24: 0,
+  2: 1,
+};
+
+numArr.sort((a, b) => {
+  const priorityA = priority[a] ?? 2;
+  const priorityB = priority[b] ?? 2;
+
+  if (priorityA !== priorityB) {
+    return priorityA - priorityB;
+  }
+
+  return a - b;
+});
+```
+
 <details>
 <summary>Show Answer</summary>
 
@@ -247,9 +268,16 @@ const plansData = [
 ]
 
 // Sort such that order is EXCLUSIVE > PREMIUM > LIFETIME > REGULAR > SAVERS
+const priority = {
+  EXCLUSIVE: 0,
+  PREMIUM: 1,
+  LIFETIME: 2,
+  REGULAR: 3,
+  SAVERS: 4,
+};
+
 plansData.sort((a, b) => {
-    const order = ['EXCLUSIVE', 'PREMIUM', 'LIFETIME', 'REGULAR', 'SAVERS'];
-    return order.indexOf(a.plan_type) - order.indexOf(b.plan_type);
+  return priority[a.plan_type] - priority[b.plan_type];
 });
 
 console.log(plansData.map(p => p.plan_type));
