@@ -692,7 +692,7 @@ console.log(Array.of(7));          // [7] — one real element
     console.log(arr.concat([3, 4]));         // 1,2,3,4
     console.log(arr.concat([3, 4], [5, 6])); // 1,2,3,4,5,6
     console.log(arr.concat([3, 4], 5, 6));   // 1,2,3,4,5,6
-    console.log(arr.push(3, 4, 5, 6));       // 1,2,3,4,5,6
+    console.log(arr.push(3, 4, 5, 6));       // 6
 
     arr = ["I", "go", "home"];
     delete arr[1]; // remove "go"
@@ -926,8 +926,7 @@ b instanceof Bar;    // false — Bar.prototype no longer matches what's in b's 
 
 Revision and I/O questions:
 
-- Some DSA questions based on arrays, objects & strings — [click to open](src/Tutorials/interviewCodingQues.js)
-- Some clubbed questions — [click to open](src/Tutorials/InputOutput.js)
+- Some DSA questions based on arrays, objects & strings — [click to open](src/Tutorials/ReadmeFiles/JsDsaQuestions.md)
 - More input/output questions (150 important questions) — [click to open](https://github.com/lydiahallie/javascript-questions)
 
 ---
