@@ -74,6 +74,8 @@ function Groom(name, age, hobbies, height, occupation, salary) {
 }
 ```
 
+For a full deep dive on constructor functions (prototypes, `new`, return values, inheritance), see [ConstructorFunction.md](ConstructorFunction.md).
+
 ## Classes
 
 ```javascript

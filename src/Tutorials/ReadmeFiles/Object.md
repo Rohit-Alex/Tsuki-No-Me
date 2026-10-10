@@ -6,7 +6,7 @@
 
 1. **Object literal** — e.g. `const obj = {key: 'value'}`
 2. **Using `new Object()`** — e.g. `const obj = new Object({ key: 'value' })`
-3. **Using a constructor function** — see the [Constructor Functions](#constructor-functions) section below.
+3. **Using a constructor function** — see the [Constructor Functions](#constructor-functions) section below (deep dive: [ConstructorFunction.md](ConstructorFunction.md)).
 4. **Using classes** — covered in depth in [PrototypalInheritance.md](PrototypalInheritance.md) (OOP notes).
 5. **Using `Object.create()`** — see below.
 
@@ -675,46 +675,29 @@ console.log(Object.fromEntries(arr1))
 
 ## Constructor Functions
 
-Suppose you want to maintain a record of your lovers by tracking `name`, `reasonForDecline`, `dayLeft`, and methods to increase/decrease `dayLeft`.
-
-**The problem — writing it out as separate object literals doesn't scale:**
+When you need many objects with the **same shape but different values**, writing each one as an object literal means copy-pasting the same properties and methods again and again. A constructor function is a template: call it with `new` and it builds a fresh object for you.
 
 ```javascript
-const lover1 = {
-  name: "namoona1",
-  reasonForDecline: "Pasand nhi aur upar se annoying hai",
-  dayLeft: 30,
-  extendExpiry: function (extendBy) {
+function Lover(name, reasonForDecline) {
+  this.name = name;
+  this.reasonForDecline = reasonForDecline;
+  this.dayLeft = 30;
+  this.extendExpiry = function (extendBy) {
     this.dayLeft += extendBy;
     return `${this.dayLeft} days tak maje leti hu 😊`;
-  },
-  shortenExpiry: function (shortenBy) {
-    this.dayLeft -= shortenBy;
-    return `${this.dayLeft} days bus. Bahut ho rha iska ab 😠`;
-  },
-};
+  };
+}
 
-const lover2 = {
-  name: "namoona2",
-  reasonForDecline: "Chota hai warna sochti",
-  dayLeft: 180,
-  extendExpiry: function (extendBy) {
-    this.dayLeft += extendBy;
-    return `${this.dayLeft} days tak maje leti hu 😊`;
-  },
-  shortenExpiry: function (shortenBy) {
-    this.dayLeft -= shortenBy;
-    return `${this.dayLeft} days mein ise bhi chor dunhi 😂`;
-  },
-};
+const lover1 = new Lover("namoona1", "Pasand nhi aur upar se annoying hai");
+const lover2 = new Lover("namoona2", "Chota hai warna sochti");
 ```
 
 ### Question 26
 
 ```javascript
-console.log(lover1.reasonForDecline)
-console.log(lover1.extendExpiry(10))
-console.log(lover1.shortenExpiry(30));
+console.log(lover1.reasonForDecline);
+console.log(lover1.extendExpiry(10));
+console.log(lover2.dayLeft);
 ```
 
 <details>
@@ -723,61 +706,31 @@ console.log(lover1.shortenExpiry(30));
 ```
 Pasand nhi aur upar se annoying hai
 40 days tak maje leti hu 😊
-10 days bus. Bahut ho rha iska ab 😠
+30
 ```
 
-**Explanation:** `dayLeft` starts at `30`. `extendExpiry(10)` adds 10 → `40`. `shortenExpiry(30)` then subtracts 30 from the *updated* `40` → `10`. Each method mutates the shared `this.dayLeft`, so the calls are cumulative.
+**Explanation:** `new Lover(...)` creates a new object, sets `this` to it, runs the body, and returns it. Each instance gets its own `dayLeft`, so extending `lover1` doesn't touch `lover2`.
 
 </details>
-
-**Same shape, repeated code.** Mainly used when we want to make objects with the same properties/methods but different values, and writing them out longhand like this is repetitive — that's exactly the problem constructor functions solve:
-
-```javascript
-function Lovers(name, reasonForDecline) {
-  let dayLeft = 365;
-  this.name = name;
-  this.reasonForDecline = reasonForDecline;
-  this.extendExpiry = function(extendBy) {
-    dayLeft += extendBy;
-    return `${dayLeft} days tak maje leti hu 😊`;
-  }
-  this.shortenExpiry = function(shortenBy) {
-    dayLeft -= shortenBy;
-    return `${dayLeft} days mein ise bhi chor dunhi 😂`;
-  }
-}
-
-const lover3 = new Lovers('namoona1', 'Pasand nhi aur upar se annoying hai')
-const lover4 = new Lovers('namoona2', 'Chota hai warna sochti')
-```
 
 ### Question 27
 
 ```javascript
-console.log(lover3.reasonForDecline)
-console.log(lover3.extendExpiry(10))
-console.log(lover3.shortenExpiry(365));
-
-console.log(lover4.reasonForDecline)
-console.log(lover4.extendExpiry(30))
-console.log(lover4.shortenExpiry(300));
+console.log(lover1.extendExpiry === lover2.extendExpiry);
 ```
 
 <details>
 <summary>Show Answer</summary>
 
 ```
-Pasand nhi aur upar se annoying hai
-375 days tak maje leti hu 😊
-10 days mein ise bhi chor dunhi 😂
-Chota hai warna sochti
-395 days tak maje leti hu 😊
-95 days mein ise bhi chor dunhi 😂
+false
 ```
 
-**Explanation:** Each call to `new Lovers(...)` creates its own independent `dayLeft` closure variable starting at `365` — `lover3` and `lover4` don't share state, even though they came from the same constructor. This is what makes constructor functions scale: same shape, independent instances, without repeating the object literal every time.
+**Explanation:** The method is created inside the constructor, so every `new Lover(...)` makes its own copy. With thousands of instances, that's thousands of identical functions. Putting the method on `Lover.prototype` instead lets all instances share one copy.
 
 </details>
+
+> **Want to go deeper?** Sharing methods via `prototype`, replacing vs. adding to a prototype, calling without `new`, constructor return values, inheritance without classes, and `this` gotchas are all covered in [ConstructorFunction.md](ConstructorFunction.md).
 
 ## `Object.freeze` vs. `Object.seal` vs. `Object.preventExtensions`
 
