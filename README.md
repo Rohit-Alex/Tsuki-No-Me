@@ -584,7 +584,7 @@ see [JS DSA Questions](src/Tutorials/ReadmeFiles/JsDsaQuestions.md#question-7-de
 ### 31. Object methods
 
 - Different ways to create an object — `Object.assign`, object literal, `new` keyword, classes, constructor function
-- Constructor functions for creating objects
+- Constructor functions for creating objects — deep dive [here](src/Tutorials/ReadmeFiles/ConstructorFunction.md)
 - `Object.freeze` vs `Object.seal` vs `Object.preventExtensions`
 - `Object.freeze` only performs a shallow freeze — how would you make it a deep freeze?
 - ES6 shorthand syntax
@@ -846,6 +846,9 @@ alert("Hi")
 [click to open](src/Tutorials/ReadmeFiles/PrototypalInheritance.md) · 
 [click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
 [Click to open](src/Tutorials/ReadmeFiles/PrototypeChain.md) · 
+[Constructor functions deep dive](src/Tutorials/ReadmeFiles/ConstructorFunction.md)
+
+**Class-based design — Cookie Consent Manager SDK:** [code](src/Tutorials/CookieConsentManager/CookieConsentManager.js) · [design notes (how services learn about consent changes)](src/Tutorials/CookieConsentManager/README.md)
 
 ### 46. What does the `instanceof` operator do?
 
