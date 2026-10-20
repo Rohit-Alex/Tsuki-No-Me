@@ -850,6 +850,8 @@ alert("Hi")
 
 **Class-based design — Cookie Consent Manager SDK:** [code](src/Tutorials/CookieConsentManager/CookieConsentManager.js) · [design notes (how services learn about consent changes)](src/Tutorials/CookieConsentManager/README.md)
 
+**Caching and subscribe pattern — Feature Flag Store (function + class versions):** [code](src/Tutorials/FeatureFlagStore/FeatureFlagStore.js) · [design notes (cache, subscribe, gotchas)](src/Tutorials/FeatureFlagStore/README.md)
+
 ### 46. What does the `instanceof` operator do?
 
 The `instanceof` operator checks whether the `constructor.prototype` appears anywhere in the prototype chain of an object. It returns a boolean.
