@@ -261,16 +261,14 @@ console.log(JSON.stringify(removeFalsyValuesFixed({ a: 1, b: null, c: 'x' })));
 
 ```javascript
 const isPrimitive = (value) => {
-    return typeof value !== 'object' && typeof value !== 'function'
-}
-
+    return value === null || (typeof value !== 'object' && typeof value !== 'function');
+};
 const isObject = (obj) => {
-    return typeof obj === 'object' && obj.constructor === Object
-}
-
+    return obj !== null && typeof obj === 'object' && obj.constructor === Object;
+};
 const isArray = (arr) => {
-    return typeof arr === 'object' && arr.constructor === Array && Array.isArray(arr)
-}
+    return arr !== null && Array.isArray(arr);
+};
 
 console.log(isPrimitive(5));
 console.log(isObject({}));
@@ -282,25 +280,6 @@ true
 true
 ```
 
-<details><summary>Show Answer</summary>
-
-```javascript
-const isPrimitive = (value) => {
-    return value === null || (typeof value !== 'object' && typeof value !== 'function');
-};
-const isObject = (obj) => {
-    return obj !== null && typeof obj === 'object' && obj.constructor === Object;
-};
-const isArray = (arr) => {
-    return arr !== null && Array.isArray(arr);
-};
-
-console.log(isPrimitiveFixed(null)); // true
-console.log(isObjectFixed(null));    // false, no crash
-console.log(isArrayFixed(null));     // false, no crash
-```
-
-</details>
 
 ## Question 6 — Custom Truthiness Helpers
 
@@ -481,26 +460,10 @@ function deepCopy(a, b) {
 </details>
 
 
-## Question 8 — `deepFlatArr`, `deepClone`, `deepFreeze`
+## Question 8 — `deepClone`
 
 **Challenge:** three small recursive utilities over nested arrays/objects — flatten an arbitrarily-nested array, deep-clone a nested object, and deep-freeze a nested object.
 
-<details><summary>Show Answer</summary>
-
-```javascript
-const deepFlatArr = (arr) => {
-  let op = [];
-  for (let val of arr) {
-    if (Array.isArray(val)) {
-      op = op.concat(deepFlatArr(val));
-    } else {
-      op.push(val);
-    }
-  }
-  return op;
-};
-
-### Question 13 — A Naive Recursive Implementation
 
 ```javascript
 function deepCloneNaive(value) {
@@ -555,4 +518,224 @@ RangeError: Maximum call stack size exceeded
 </details>
 
 ### Question 15 — Fixing It with a `WeakMap`
+
+```javascript
+function deepCloneSafe(value, seen = new WeakMap()) {
+  if (value === null || typeof value !== 'object') return value;
+  if (seen.has(value)) return seen.get(value);
+
+  const result = Array.isArray(value) ? [] : {};
+  seen.set(value, result);
+
+  for (const key in value) {
+    result[key] = deepCloneSafe(value[key], seen);
+  }
+  return result;
+}
+
+const circular = { a: 1 };
+circular.self = circular;
+
+const cloned = deepCloneSafe(circular);
+console.log(cloned.self === cloned);
+console.log(cloned !== circular);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+true
+true
+```
+
+**Explanation:** `seen` tracks every object already being cloned, mapping **original → its (in-progress) clone**, *before* recursing into that object's properties. So when the recursion reaches `circular.self` and finds `circular` already in `seen`, it returns the **already-created** clone instead of recursing infinitely — correctly wiring up `cloned.self` to point back at `cloned` itself. A `WeakMap` (rather than a `Map`) is used specifically so these tracking entries don't prevent the original objects from being garbage-collected once cloning is done — see [MapSetObject.md](MapSetObject.md) for the full `WeakMap` explanation.
+
 </details>
+
+### Additional recursive problems
+
+```javascript
+const data = [
+  {
+    link: "Pants",
+    hasChild: true,
+    child: [
+      {
+        link: "Trousers",
+        hasChild: true,
+        child: [
+          {
+            link: "Black",
+            hasChild: true,
+            child: [
+              { link: "XL", hasChild: false },
+              { link: "L", hasChild: false },
+              { link: "M", hasChild: false }
+            ]
+          },
+          { link: "blue", hasChild: false }
+        ]
+      }
+    ]
+  },
+  { link: "shirts", hasChild: false }
+];
+
+/*
+[
+  "Pants/Trousers/Black/XL",
+  "Pants/Trousers/Black/L",
+  "Pants/Trousers/Black/M",
+  "Pants/Trousers/blue",
+  "shirts"
+]
+*/
+
+const data = [
+  {
+    name: "Electronics",
+    children: [
+      {
+        name: "Phones",
+        children: [
+          { name: "iPhone", active: true },
+          { name: "Pixel", active: false },
+        ],
+      },
+      {
+        name: "Laptops",
+        children: [
+          { name: "MacBook", active: true },
+          { name: "ThinkPad", active: true },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Clothing",
+    children: [
+      { name: "Shirts", active: false },
+      { name: "Jeans", active: true },
+    ],
+  },
+];
+
+/*
+[
+  "Electronics/Phones/iPhone",
+  "Electronics/Laptops/MacBook",
+  "Electronics/Laptops/ThinkPad",
+  "Clothing/Jeans",
+]
+*/
+
+const data = {
+  id: 1,
+  name: "root",
+  config: {
+    theme: "dark",
+    settings: {
+      language: "en",
+      notifications: {
+        email: true,
+        sms: false
+      }
+    }
+  },
+  metadata: {
+    version: 2
+  }
+};
+
+/*
+findValueByKey(data, "theme");    // "dark"
+findValueByKey(data, "email");    // true
+findValueByKey(data, "version");  // 2
+findValueByKey(data, "sms");      // false
+findValueByKey(data, "unknown");  // null
+*/
+
+
+const data = {
+  user: {
+    profile: {
+      address: {
+        city: "Bengaluru"
+      }
+    }
+  },
+  status: "active"
+};
+
+/*
+findPath(data, "city"); // ["user", "profile", "address", "city"]
+
+findPath(data, "status"); // ["status"]
+
+findPath(data, "unknown"); // null
+*/
+
+const data = {
+  user: {
+    profile: {
+      status: "active",
+      city: "Delhi"
+    },
+    settings: {
+      status: "inactive"
+    }
+  },
+  admin: {
+    status: "active"
+  }
+};
+
+/*
+findAllPaths(data, "active");
+
+// [
+//   ["user", "profile", "status"],
+//   ["admin", "status"]
+// ]
+*/
+
+
+const data = [
+  {
+    name: "Electronics",
+    children: [
+      {
+        name: "Phones",
+        children: [
+          { name: "iPhone", active: true },
+          { name: "Pixel", active: false },
+        ],
+      },
+      {
+        name: "Laptops",
+        children: [
+          { name: "MacBook", active: true },
+          { name: "ThinkPad", active: true },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Clothing",
+    children: [
+      { name: "Shirts", active: false },
+      { name: "Jeans", active: true },
+    ],
+  },
+];
+
+/*
+[
+  "Electronics/Phones/iPhone",
+  "Electronics/Laptops/MacBook",
+  "Electronics/Laptops/ThinkPad",
+  "Clothing/Jeans",
+]
+*/
+```

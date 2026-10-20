@@ -373,6 +373,45 @@ Object.defineProperty(NotificationCenter.prototype, "constructor", {
 
 **Interview takeaway:** The `constructor` property is an ordinary property inherited through the prototype chain. It is not a guaranteed record of which function originally created an object.
 
+### 1. Public properties vs. private local variables in constructor functions
+
+A useful rule of thumb:
+- Properties assigned with this (for example, this.cache = {}) are public instance properties. They can be accessed through the instance, such as instance.cache.
+- Variables declared with const, let, or var inside the constructor are local to that constructor invocation. They are not automatically properties of the instance, so instance.cache cannot access a local variable named cache.
+- Functions declared inside the constructor are also local unless exposed through this or another accessible reference.
+- Functions assigned to this are public instance methods.
+- Methods created inside the constructor can access local variables through closures, even though callers cannot access those variables directly.
+
+```javascript
+function CacheAndSubscribe() {
+  this.cache = {};                 // Public instance property
+  this.listeners = new Set();      // Public instance property
+
+  let count = 0;                   // Local variable (not an instance property)
+
+  this.increment = function () {   // Public method; closes over `count`
+    count += 1;
+    return count;
+  };
+
+  function resetCount() {          // Local function
+    count = 0;
+  }
+}
+
+const instance = new CacheAndSubscribe();
+
+console.log(instance.cache);       // {}
+console.log(instance.listeners);   // Set(0) {}
+console.log(instance.count);       // undefined
+console.log(instance.resetCount);  // undefined
+
+console.log(instance.increment()); // 1
+console.log(instance.increment()); // 2
+```
+
+Important nuance: local variables are hidden from direct instance access, but a public method can expose their values or allow them to be changed. This is closure-based privacy, not the same language-enforced privacy as private class fields such as #cache.
+
 ## Calling a Constructor Function Without `new`
 
 When a constructor function is called without `new`, JavaScript does not create a new instance automatically.
