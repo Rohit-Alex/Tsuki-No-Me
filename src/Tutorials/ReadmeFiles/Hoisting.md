@@ -641,6 +641,176 @@ console.log(a, 'lasteest')
 _Blog_: https://dev.to/rkirsling/tales-from-ecma-s-crypt-annex-b-3-3-56go
 </details>
 
+### Question 22 — `var` Inside a `catch` Block
+
+```javascript
+function test() {
+  try {
+    throw "Error";
+  } catch (err) {
+    var err = 5;
+    console.log("Inside:", err);
+  }
+
+  console.log("Outside:", err);
+}
+
+test();
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+Inside: 5
+Outside: undefined
+```
+
+**Why:**
+
+1. **`var err` is hoisted to the function scope.** The declaration `var err` inside the catch block is hoisted to the top of `test()`, so the function has its own `err` variable, initially `undefined`.
+2. **The catch parameter creates a separate block-scoped binding.** `catch (err)` creates a new `err` that exists only inside the catch block, and it holds `"Error"` at first. This shadows the function-level `err` within the block.
+3. **`var err = 5` inside the catch block assigns to the catch parameter, not the hoisted variable.** The `var` declaration is hoisted, but the *initializer* (`= 5`) is just an assignment, and assignments go to the nearest binding in scope. The nearest `err` is the catch parameter, so the catch parameter becomes `5`.
+4. `console.log("Inside:", err)` reads the catch parameter, which is now `5`.
+5. `console.log("Outside:", err)` is outside the catch block, so the catch parameter is out of scope. It sees the function-level `err` (from the hoisted `var`), which was never assigned. It's still `undefined`.
+
+**Mental model:** it behaves roughly like this:
+
+```javascript
+function test() {
+  var err;                     // hoisted declaration (function scope)
+  try {
+    throw "Error";
+  } catch (err) {              // new block-scoped binding
+    err = 5;                   // assigns to the catch param
+    console.log("Inside:", err);   // 5
+  }
+  console.log("Outside:", err);    // undefined
+}
+```
+
+**Analogy:** think of two people named "err" — one sitting in the office (function scope) and one standing at the front desk (catch block). When you walk up to the front desk and shout "err, take this 5!", the person at the desk takes it. The one in the office never hears you.
+
+**Notes:**
+- Redeclaring a catch parameter with `var` is only allowed because of a legacy rule in the spec's **Annex B**. Most other "same name twice in a block" cases are errors.
+- With `let` it's a `SyntaxError`: `catch (e) { let e = 1; }` → `Identifier 'e' has already been declared`.
+- With a destructured catch parameter, even `var` is a `SyntaxError`: `catch ({ message }) { var message = 1; }` throws.
+- Strict mode gives the same output here.
+
+</details>
+
+### Question 23 — `var` Without an Initializer Inside `catch`
+
+```javascript
+function test() {
+  try {
+    throw "Error";
+  } catch (err) {
+    var err;
+    console.log("Inside:", err);
+  }
+  console.log("Outside:", err);
+}
+test();
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+Inside: Error
+Outside: undefined
+```
+
+**Explanation:** A common guess is that `var err;` "resets" `err` to `undefined` inside the block. It doesn't. A bare `var err;` has no `= value` part, so after hoisting there is **nothing left on that line to run**. The hoisted declaration goes to the function scope, and the line itself does nothing.
+
+So inside the block, `err` is still the catch parameter, holding `"Error"`. Outside the block, `err` is the hoisted function-level `var`, which nobody ever assigned — `undefined`.
+
+Rule of thumb: `var x;` never changes a value. Only the `= something` part does, and that part stays on its original line.
+
+</details>
+
+### Question 24 — Catch Parameter Shadowing a Global
+
+```javascript
+var x = "global";
+
+function test() {
+  try {
+    throw "Error";
+  } catch (x) {
+    var x = "local";
+    console.log(x);
+  }
+  console.log(x);
+}
+
+test();
+console.log(x);
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+local
+undefined
+global
+```
+
+**Explanation:** There are **three** different `x` bindings here:
+
+| Binding | Where it lives | Final value |
+|---|---|---|
+| global `x` | global scope | `"global"` |
+| function `x` | hoisted from `var x` to the top of `test()` | `undefined` |
+| catch `x` | the catch block only | `"local"` |
+
+1. `var x` inside the catch is hoisted to the top of `test()`. That creates a function-level `x` which **shadows the global** for the whole function.
+2. `x = "local"` goes to the nearest `x`, which is the catch parameter. Logs **`local`**.
+3. After the catch block, the catch `x` is gone. The nearest `x` is now the function-level one, never assigned. Logs **`undefined`** — *not* `"global"`, because the hoisted `var` hides the global everywhere inside `test()`.
+4. Outside `test()`, only the global `x` is visible, and nothing touched it. Logs **`global`**.
+
+The trap is step 3: people expect `"global"` because they forget that the `var` inside the catch still creates a variable for the whole function.
+
+</details>
+
+### Question 25 — Catch Parameter Captured by a Closure
+
+```javascript
+function test() {
+  try {
+    throw "Error";
+  } catch (err) {
+    var err = 5;
+    setTimeout(() => console.log("Timeout:", err), 0);
+  }
+  err = 10;
+  console.log("Sync:", err);
+}
+test();
+```
+
+<details>
+<summary>Show Answer</summary>
+
+```
+Sync: 10
+Timeout: 5
+```
+
+**Explanation:**
+
+1. `var err = 5` inside the catch sets the **catch parameter** to `5` (same rule as Question 22).
+2. The arrow function passed to `setTimeout` is created inside the catch block, so it closes over the **catch parameter** `err`, not the function-level one.
+3. `err = 10` runs outside the catch block. There, the nearest `err` is the function-level hoisted `var`, so that one becomes `10`. The catch parameter is untouched and stays `5`.
+4. `console.log("Sync:", err)` runs right away and reads the function-level `err` → **`Sync: 10`**.
+5. Later, the timeout callback runs. It reads the `err` it closed over — the catch parameter — which is still `5` → **`Timeout: 5`**.
+
+Many people expect `Timeout: 10`, reasoning "the timeout runs last, and the last assignment was `10`." That would be true if there were only one `err`. But a closure remembers **which variable** it saw, not just the name. The callback is holding on to the catch block's `err`, and nothing ever changed that one after it became `5`.
+
+</details>
+
 ## Key Takeaways
 
 1. **Function declarations** are fully hoisted (name + body)
@@ -653,6 +823,7 @@ _Blog_: https://dev.to/rkirsling/tales-from-ecma-s-crypt-annex-b-3-3-56go
 8. **`typeof` is only "safe" on genuinely undeclared variables** — on a variable that's declared but still in the TDZ, `typeof` throws the same `ReferenceError` as reading it directly
 9. A `switch` statement's `{ }` is **one shared block** — a `let`/`const` declared in one `case` is in the TDZ (or already initialized) for every other `case` in the same `switch`, not scoped per-case
 10. **Function declarations inside a block behave differently in strict vs. non-strict mode** — strict mode block-scopes them cleanly; non-strict mode additionally syncs their value out to an enclosing `var` of the same name exactly once (Annex B legacy behavior), then the two bindings diverge
+11. **`var` with the same name as a `catch` parameter creates two variables** — the declaration is hoisted to the function, but the `= value` part writes to the catch parameter. Outside the catch block you see the function-level one, usually still `undefined`
 
 ## Best Practices
 

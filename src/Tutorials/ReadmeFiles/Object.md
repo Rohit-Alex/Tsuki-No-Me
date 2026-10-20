@@ -836,11 +836,22 @@ true
 `Object.freeze()` only does a shallow freeze — how would you make it a *deep* freeze?
 
 ```javascript
-const deepFreeze = (obj) => {
-  for (const key in obj) {
-      if (typeof obj[key] === "object") deepFreeze(obj[key]);
+const deepFreeze = (obj, seen = new WeakSet()) => {
+  if (
+    obj === null ||
+    typeof obj !== "object" ||
+    seen.has(obj)
+  ) {
+    return obj;
   }
-  Object.freeze(obj);
+
+  seen.add(obj);
+
+  for (const key of Reflect.ownKeys(obj)) {
+    deepFreeze(obj[key], seen);
+  }
+
+  return Object.freeze(obj);
 };
 
 const nested = { name: 'Amane', address: { city: 'Vadodara' } };
@@ -869,11 +880,22 @@ true true
 `Object.seal()` also only seals *shallowly* — how would you make it a *deep* seal, and how does the result differ from a deep freeze?
 
 ```javascript
-const deepSeal = (obj) => {
-  for (const key in obj) {
-      if (typeof obj[key] === "object") deepSeal(obj[key]);
+const deepSeal = (obj, seen = new WeakSet()) => {
+  if (
+    obj === null ||
+    typeof obj !== "object" ||
+    seen.has(obj)
+  ) {
+    return obj;
   }
-  Object.seal(obj);
+
+  seen.add(obj);
+
+  for (const key of Reflect.ownKeys(obj)) {
+    deepSeal(obj[key], seen);
+  }
+
+  return Object.seal(obj);
 };
 
 const nested = { name: 'Amane', address: { city: 'Vadodara' } };
