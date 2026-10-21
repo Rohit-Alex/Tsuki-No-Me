@@ -54,6 +54,7 @@ __proto__ is a legacy accessor for the hidden `[[Prototype]]` property. Now we h
 const protoObj = Object.create(Object.getPrototypeOf(AmaneLife));
 protoObj.partTime = 'Annoying rohit';
 Object.setPrototypeOf(AmaneLife, protoObj);
+```
 
 <details><summary>Show Answer</summary>
 
