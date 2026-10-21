@@ -843,10 +843,10 @@ alert("Hi")
   - Inheritance
   - Polymorphism
 
-[click to open](src/Tutorials/ReadmeFiles/PrototypalInheritance.md) · 
-[click to open](src/Tutorials/ReadmeFiles/OopsConcept.md)
-[Click to open](src/Tutorials/ReadmeFiles/PrototypeChain.md) · 
+[Prototypal inheritance](src/Tutorials/ReadmeFiles/PrototypalInheritance.md) · 
+[Prototype chain](src/Tutorials/ReadmeFiles/PrototypeChain.md) · 
 [Constructor functions deep dive](src/Tutorials/ReadmeFiles/ConstructorFunction.md)
+[OOPs concepts](src/Tutorials/ReadmeFiles/OopsConcept.md)
 
 **Class-based design — Cookie Consent Manager SDK:** [code](src/Tutorials/CookieConsentManager/CookieConsentManager.js) · [design notes (how services learn about consent changes)](src/Tutorials/CookieConsentManager/README.md)
 
