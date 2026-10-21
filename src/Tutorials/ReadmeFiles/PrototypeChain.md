@@ -148,7 +148,7 @@ console.log(arr1.myFun());
 #### using Object.setPrototypeOf:
 
 ```javascript
-const localProto = Object.create(Array.prototype)
+const localProto = Object.create(Array.prototype) // or const localProto =  new Array()
 localProto.myFun = function () { return this.includes(3) }
 
 Object.setPrototypeOf(arr, localProto)
