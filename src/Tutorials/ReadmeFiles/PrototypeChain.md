@@ -345,6 +345,37 @@ Instance inheritance (looking up a property on something built with `new fun()`)
 
 Note that `fun.prototype` never appears in the *first* chain, and `Function.prototype` never appears in the *second* chain — they're independent lookup paths that both happen to bottom out at `Object.prototype`.
 
+### The two chains at a glance
+
+| | `[[Prototype]]` | `prototype` property |
+|---|---|---|
+| What it is | Internal link every object has | Ordinary property on regular functions |
+| Used for | Property lookup on **this object** | Becomes the `[[Prototype]]` of objects created with `new` |
+| Question it answers | "What can I call on `fun` itself?" | "What will instances made by `new fun()` inherit?" |
+| Chain | `fun` → `Function.prototype` → `Object.prototype` → `null` | `instance` → `fun.prototype` → `Object.prototype` → `null` |
+| Exists on | Every object, including functions | Regular functions and classes only (not arrows or methods) |
+
+- In `console.dir(fun)`, the entry named `prototype` is chain 2's object; the entry named `[[Prototype]]` at the bottom (`ƒ ()`) is chain 1.
+- `fun.prototype` is just an object until `fun` is called with `new`. It starts with a single property, `constructor`, pointing back to `fun`.
+- **Arrow functions and methods have no `prototype` property**, so only the `[[Prototype]]` chain applies to them, and they can't be used with `new`.
+- Only the `[[Prototype]]` link is followed during lookup. `prototype` is a property that `new` reads once to set up the link.
+
+Verifying the links:
+
+```javascript
+function UserCreator(name) { this.name = name }
+const user1 = new UserCreator('Eva')
+
+Object.getPrototypeOf(user1) === UserCreator.prototype             // true
+Object.getPrototypeOf(UserCreator) === Function.prototype          // true
+Object.getPrototypeOf(UserCreator.prototype) === Object.prototype  // true
+Object.getPrototypeOf(Function.prototype) === Object.prototype     // true
+UserCreator.prototype.constructor === UserCreator                  // true
+
+user1.call           // undefined: Function.prototype is NOT on the instance chain
+UserCreator.login    // undefined: UserCreator.prototype is NOT UserCreator's [[Prototype]]
+```
+
 ### Question 10 — Adding a Utility to `Function.prototype`
 
 Suppose you want a new utility method available on *every* function, the same way `call`/`apply`/`bind`/`toString` already are. Since those live on `Function.prototype`, adding your own method there makes it available everywhere a function is available — this is exactly how `call`/`apply`/`bind` themselves are implemented.
