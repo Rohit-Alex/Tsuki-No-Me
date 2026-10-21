@@ -381,7 +381,7 @@ deepCompare(/abc/g, /abc/i); // false
 <summary><strong>Show Answer</strong></summary>
 
 ```javascript
-function deepCopy(a, b) {
+function deepCopy(a, b, seen = new WeakMap()) {
 
   /* Handles primitives, NaN, -0/+0, and identical object references.
 
@@ -435,6 +435,13 @@ function deepCopy(a, b) {
   if (a instanceof RegExp) {
     return a.toString() === b.toString();
   }
+
+  // Handle circular references
+  if(seen.has(a)) {
+     return see.get(a) === b
+  }
+
+  seen.set(a, b)
 
   const keysA = Object.keys(a);
   const keysB = Object.keys(b);
